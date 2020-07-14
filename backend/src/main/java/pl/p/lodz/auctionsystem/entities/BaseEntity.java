@@ -1,6 +1,5 @@
 package pl.p.lodz.auctionsystem.entities;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 
 import javax.persistence.Column;
@@ -9,15 +8,14 @@ import javax.persistence.Version;
 import java.util.UUID;
 
 @MappedSuperclass
+@Getter
 public abstract class BaseEntity {
 
     @Version
     @Column(name = "version", nullable = false)
-    @Getter
     private long version;
 
     @Column(name = "business_key", nullable = false, unique = true, updatable = false)
-    @Getter
     private UUID businessKey;
 
     @Override
