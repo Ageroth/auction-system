@@ -25,9 +25,7 @@ public class UserAccessLevel extends BaseEntity {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof UserAccessLevel)) {
-            return false;
-        }
+        if (!(object instanceof UserAccessLevel)) return false;
         UserAccessLevel other = (UserAccessLevel) object;
         return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }

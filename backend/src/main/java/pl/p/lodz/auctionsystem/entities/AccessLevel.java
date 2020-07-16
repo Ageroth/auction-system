@@ -20,9 +20,7 @@ public class AccessLevel extends BaseEntity {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof AccessLevel)) {
-            return false;
-        }
+        if (!(object instanceof AccessLevel)) return false;
         AccessLevel other = (AccessLevel) object;
         return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }

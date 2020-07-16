@@ -35,7 +35,6 @@ public class User extends BaseEntity {
     private boolean activated;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     @Column(name = "activation_code", nullable = false, unique = true, length = 128)
@@ -59,9 +58,7 @@ public class User extends BaseEntity {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof User)) {
-            return false;
-        }
+        if (!(object instanceof User)) return false;
         User other = (User) object;
         return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
