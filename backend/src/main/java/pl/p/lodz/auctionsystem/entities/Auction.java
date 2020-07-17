@@ -1,10 +1,8 @@
 package pl.p.lodz.auctionsystem.entities;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,21 +21,15 @@ public class Auction extends BaseEntity {
     @ManyToOne(optional = false)
     private User user;
 
+    @JoinColumn(name = "item_id", referencedColumnName = "id", updatable = false, nullable = false)
+    @OneToOne(optional = false)
+    private Item item;
+
     @Column(name = "start_date", nullable = false, updatable = false)
     private LocalDateTime startDate;
 
     @Column(name = "end_date", nullable = false, updatable = false)
     private LocalDateTime endDate;
-
-    @Column(name = "name", table = "item", nullable = false, updatable = false, length = 32)
-    private String name;
-
-    @Column(name = "starting_price", table = "item", nullable = false, updatable = false)
-    private BigDecimal startingPrice;
-
-    @Column(name = "description", table = "item", nullable = false, length = 4096)
-    @Setter
-    private String description;
 
     @Override
     public boolean equals(Object object) {
