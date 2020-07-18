@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "auction")
-@SecondaryTable(name = "item", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"))
 @Getter
 public class Auction extends BaseEntity {
 
@@ -22,7 +21,7 @@ public class Auction extends BaseEntity {
     private User user;
 
     @JoinColumn(name = "item_id", referencedColumnName = "id", updatable = false, nullable = false)
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Item item;
 
     @Column(name = "start_date", nullable = false, updatable = false)
