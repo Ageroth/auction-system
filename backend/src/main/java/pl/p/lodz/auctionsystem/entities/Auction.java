@@ -1,12 +1,14 @@
 package pl.p.lodz.auctionsystem.entities;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "auction")
+@NoArgsConstructor
 @Getter
 public class Auction extends BaseEntity {
 

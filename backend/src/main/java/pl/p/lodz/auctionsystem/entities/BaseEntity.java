@@ -13,10 +13,14 @@ public abstract class BaseEntity {
 
     @Version
     @Column(name = "version", nullable = false)
-    private long version;
+    private Long version;
 
     @Column(name = "business_key", nullable = false, unique = true, updatable = false)
     private UUID businessKey;
+
+    public BaseEntity() {
+        this.businessKey = UUID.randomUUID();
+    }
 
     @Override
     public int hashCode() {

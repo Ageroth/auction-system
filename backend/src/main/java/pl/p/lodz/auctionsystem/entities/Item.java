@@ -1,6 +1,7 @@
 package pl.p.lodz.auctionsystem.entities;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "item")
+@NoArgsConstructor
 @Getter
 public class Item extends BaseEntity {
 

@@ -1,11 +1,13 @@
 package pl.p.lodz.auctionsystem.entities;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "user_access_level", uniqueConstraints = @UniqueConstraint(columnNames = {"access_level_id", "user_id"}))
+@NoArgsConstructor
 @Getter
 public class UserAccessLevel extends BaseEntity {
 

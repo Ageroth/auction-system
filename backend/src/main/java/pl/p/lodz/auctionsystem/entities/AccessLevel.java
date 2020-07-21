@@ -1,11 +1,13 @@
 package pl.p.lodz.auctionsystem.entities;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "access_level")
+@NoArgsConstructor
 @Getter
 public class AccessLevel extends BaseEntity {
 

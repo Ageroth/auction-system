@@ -1,11 +1,15 @@
 package pl.p.lodz.auctionsystem.entities;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "image")
+@NoArgsConstructor
 @Getter
 public class Image extends BaseEntity {
 
@@ -20,6 +24,8 @@ public class Image extends BaseEntity {
     private Item item;
 
     @Column(name = "lob", nullable = false, updatable = false)
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
     private byte[] lob;
 
     @Override

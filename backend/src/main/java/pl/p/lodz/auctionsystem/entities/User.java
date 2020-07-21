@@ -1,6 +1,7 @@
 package pl.p.lodz.auctionsystem.entities;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.Collection;
 @Entity
 @Table(name = "\"user\"")
 @SecondaryTable(name = "user_details", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"))
+@NoArgsConstructor
 @Getter
 public class User extends BaseEntity {
 
@@ -37,7 +39,7 @@ public class User extends BaseEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "activation_code", nullable = false, unique = true, length = 128)
+    @Column(name = "activation_code", unique = true, length = 128)
     @Setter
     private String activationCode;
 

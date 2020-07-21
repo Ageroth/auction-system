@@ -1,6 +1,7 @@
 package pl.p.lodz.auctionsystem.entities;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "opinion")
+@NoArgsConstructor
 @Getter
 public class Opinion extends BaseEntity {
 
