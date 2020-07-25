@@ -58,6 +58,18 @@ public class User extends BaseEntity {
     @Setter
     private String phoneNumber;
 
+    public User(String login, String password, String email, String firstName, String lastName, String phoneNumber) {
+        super();
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.activated = false;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.createdAt = LocalDateTime.now();
+    }
+
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof User)) return false;

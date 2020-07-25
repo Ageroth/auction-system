@@ -25,6 +25,12 @@ public class UserAccessLevel extends BaseEntity {
     @ManyToOne(optional = false)
     private User user;
 
+    public UserAccessLevel(User user, AccessLevel accessLevel) {
+        super();
+        this.user = user;
+        this.accessLevel = accessLevel;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof UserAccessLevel)) return false;
