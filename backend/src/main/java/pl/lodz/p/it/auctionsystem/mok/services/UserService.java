@@ -18,6 +18,7 @@ import java.util.UUID;
 
 @SuppressWarnings("ALL")
 @Service
+@Transactional(rollbackFor = ApplicationException.class)
 public class UserService implements IUserService {
     
     private final UserRepository userRepository;
@@ -38,7 +39,6 @@ public class UserService implements IUserService {
     }
     
     @Override
-    @Transactional
     public void createUser(User user) throws ApplicationException {
         String passwordHash = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordHash);
@@ -89,9 +89,30 @@ public class UserService implements IUserService {
     
     @Override
     public void activateUser(String activationCode) throws ApplicationException {
+        //        TODO: Throw an exception in case user is not found
         Optional<User> user = userRepository.findUserByActivationCode(activationCode);
         
         user.get().setActivated(true);
         user.get().setActivationCode(null);
+    }
+    
+    @Override
+    public void updateUserDetailsByUserId(Long userId, User user) throws ApplicationException {
+        Optional<User> userFromRepository = getUserById(userId);
+        
+        updateUserDetails(userFromRepository.get(), user);
+    }
+    
+    @Override
+    public void updateUserDetailsByUserLogin(String userLogin, User user) throws ApplicationException {
+        Optional<User> userFromRepository = getUserByLogin(userLogin);
+        
+        updateUserDetails(userFromRepository.get(), user);
+    }
+    
+    private void updateUserDetails(User userFromRepository, User user) {
+        userFromRepository.setFirstName(user.getFirstName());
+        userFromRepository.setLastName(user.getLastName());
+        userFromRepository.setPhoneNumber(user.getPhoneNumber());
     }
 }

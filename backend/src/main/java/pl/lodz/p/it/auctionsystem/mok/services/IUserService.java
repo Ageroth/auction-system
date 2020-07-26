@@ -58,4 +58,30 @@ public interface IUserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void activateUser(String activationCode) throws ApplicationException;
+    
+    /**
+     * Metoda aktualizująca dane personalne użytkownika o podanym id.
+     *
+     * @param userId id użytkownika
+     * @param user   dane użytkownika
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void updateUserDetailsByUserId(Long userId, User user) throws ApplicationException;
+    
+    /**
+     * Metoda aktualizująca dane personalne użytkownika o podanym loginie.
+     *
+     * @param userLogin login użytkownika
+     * @param user      dane użytkownika
+     * @throws ApplicationException wyjątek aplikacyjny, jeśli operacja nie zakończy się powodzeniem
+     */
+    void updateUserDetailsByUserLogin(String userLogin, User user) throws ApplicationException;
+    
+    /**
+     //     * Metoda aktualizująca dane personalne użytkownika.
+     //     *
+     //     * @param userFromRepository modyfikowany użytkownik
+     //     * @param user               nowe dane personalne użytkownika
+     //     */
+//    void updateUserDetails(User userFromRepository, User user);
 }
