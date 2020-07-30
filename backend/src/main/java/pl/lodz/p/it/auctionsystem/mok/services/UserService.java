@@ -12,6 +12,7 @@ import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
 import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -66,8 +67,8 @@ public class UserService implements IUserService {
         user.getUserAccessLevels().add(userAccessLevel);
         
         userRepository.save(user);
-        
-        mailService.sendVerificationMail(user);
+    
+        mailService.sendAccountVerificationMail(user);
     }
     
     @Override
@@ -84,35 +85,70 @@ public class UserService implements IUserService {
     @Override
     public Optional<User> getUserByLogin(String login) throws ApplicationException {
 //        TODO: Throw an exception in case user is not found
-        return userRepository.findUserByLogin(login);
+        return userRepository.findByLogin(login);
     }
     
     @Override
     public void activateUser(String activationCode) throws ApplicationException {
         //        TODO: Throw an exception in case user is not found
-        Optional<User> user = userRepository.findUserByActivationCode(activationCode);
+        Optional<User> user = userRepository.findByActivationCode(activationCode);
         
         user.get().setActivated(true);
         user.get().setActivationCode(null);
     }
     
     @Override
-    public void updateUserDetailsByUserId(Long userId, User user) throws ApplicationException {
+    public void updateUserDetails(User user, Long userId) throws ApplicationException {
         Optional<User> userFromRepository = getUserById(userId);
         
         updateUserDetails(userFromRepository.get(), user);
     }
     
     @Override
-    public void updateUserDetailsByUserLogin(String userLogin, User user) throws ApplicationException {
-        Optional<User> userFromRepository = getUserByLogin(userLogin);
-        
-        updateUserDetails(userFromRepository.get(), user);
+    public void updateUserDetails(User user) throws ApplicationException {
+        Optional<User> userFromRepository = getUserByLogin(user.getLogin());
+        User user2 = userFromRepository.get();
+        updateUserDetails(user2, user);
     }
     
-    private void updateUserDetails(User userFromRepository, User user) {
+    public void updateUserDetails(User userFromRepository, User user) {
         userFromRepository.setFirstName(user.getFirstName());
         userFromRepository.setLastName(user.getLastName());
         userFromRepository.setPhoneNumber(user.getPhoneNumber());
+    }
+    
+    @Override
+    public void sendResetPasswordMail(User user) throws ApplicationException {
+        Optional<User> userFromRepository = userRepository.findByLogin(user.getLogin());
+        String resetPasswordCode = UUID.randomUUID().toString().replace("-", "");
+        
+        userFromRepository.get().setResetPasswordCode(resetPasswordCode);
+        userFromRepository.get().setResetPasswordCodeAddDate(LocalDateTime.now());
+        mailService.sendResetPasswordMail(user);
+    }
+    
+    @Override
+    public void resetPassword(User user) throws ApplicationException {
+        Optional<User> userFromRepository = userRepository.findByResetPasswordCode(user.getResetPasswordCode());
+        LocalDateTime resetPasswordCodeAddDate = userFromRepository.get().getResetPasswordCodeAddDate();
+        String passwordHash = passwordEncoder.encode(user.getPassword());
+        
+        userFromRepository.get().setPassword(passwordHash);
+    }
+    
+    @Override
+    public void changePassword(User user, String oldPassword) throws ApplicationException {
+        Optional<User> userFromRepository = userRepository.findByLogin(user.getLogin());
+        String passwordHash = passwordEncoder.encode(user.getPassword());
+        
+        userFromRepository.get().setPassword(passwordHash);
+    }
+    
+    @Override
+    public void changePassword(User user, Long userId) throws ApplicationException {
+        Optional<User> userFromRepository = userRepository.findById(userId);
+        String passwordHash = passwordEncoder.encode(user.getPassword());
+        
+        userFromRepository.get().setPassword(passwordHash);
     }
 }

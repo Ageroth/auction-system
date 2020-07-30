@@ -60,28 +60,53 @@ public interface IUserService {
     void activateUser(String activationCode) throws ApplicationException;
     
     /**
-     * Metoda aktualizująca dane personalne użytkownika o podanym id.
+     * Metoda aktualizująca dane użytkownika o podanym id.
      *
-     * @param userId id użytkownika
      * @param user   dane użytkownika
+     * @param userId id użytkownika
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateUserDetailsByUserId(Long userId, User user) throws ApplicationException;
+    void updateUserDetails(User user, Long userId) throws ApplicationException;
     
     /**
-     * Metoda aktualizująca dane personalne użytkownika o podanym loginie.
+     * Metoda aktualizująca dane użytkownika.
      *
-     * @param userLogin login użytkownika
-     * @param user      dane użytkownika
-     * @throws ApplicationException wyjątek aplikacyjny, jeśli operacja nie zakończy się powodzeniem
+     * @param user dane użytkownika
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateUserDetailsByUserLogin(String userLogin, User user) throws ApplicationException;
+    void updateUserDetails(User user) throws ApplicationException;
     
     /**
-     //     * Metoda aktualizująca dane personalne użytkownika.
-     //     *
-     //     * @param userFromRepository modyfikowany użytkownik
-     //     * @param user               nowe dane personalne użytkownika
-     //     */
-//    void updateUserDetails(User userFromRepository, User user);
+     * Metoda wysyłająca na podany email wiadomość z linkiem, pod którym można zresetować zapomniane hasło.
+     *
+     * @param email adres email użytkownika powiązany z kontem
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void sendResetPasswordMail(User user) throws ApplicationException;
+    
+    /**
+     * Metoda umożliwiająca zmianę zapomnianego hasła.
+     *
+     * @param user obiekt z danymi użytkownika potrzebnymi do zresetowania hasła
+     * @throws ApplicationException
+     */
+    void resetPassword(User user) throws ApplicationException;
+    
+    /**
+     * Metoda umożliwiająca użytkownikowi zmianę własnego hasła.
+     *
+     * @param user        obiekt przechowujący dane wprowadzone w formularzu
+     * @param oldPassword stare hasło
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void changePassword(User user, String oldPassword) throws ApplicationException;
+    
+    /**
+     * Metoda umożliwiająca administratorowi zmianę hasła innego użytkownika.
+     *
+     * @param user   obiekt przechowujący dane wprowadzone w formularzu
+     * @param userId id użytkownika, którego hasło ma zostać zmienione
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void changePassword(User user, Long userId) throws ApplicationException;
 }

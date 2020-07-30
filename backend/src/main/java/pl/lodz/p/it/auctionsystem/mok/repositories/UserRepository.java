@@ -10,12 +10,14 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    boolean existsUserByLogin(String login);
-
-    boolean existsUserByEmail(String email);
-
-    Optional<User> findUserByLogin(String login);
-
-    Optional<User> findUserByActivationCode(String activationCode);
+    
+    boolean existsByLogin(String login);
+    
+    boolean existsByEmail(String email);
+    
+    Optional<User> findByLogin(String login);
+    
+    Optional<User> findByActivationCode(String activationCode);
+    
+    Optional<User> findByResetPasswordCode(String resetPasswordCode);
 }
