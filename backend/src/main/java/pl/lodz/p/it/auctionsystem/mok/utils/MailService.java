@@ -31,11 +31,11 @@ public class MailService {
         
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    
             helper.setFrom(email);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(text);
-            
             javaMailSender.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -43,10 +43,10 @@ public class MailService {
     }
     
     public void sendAccountVerificationMail(User user) {
-        final String subject = messageService.getMessage("verification.subject");
+        final String subject = messageService.getMessage("accountVerification.subject");
         final String url = "<a href=" + "\"" + baseUrl + "/verify_account?token=" + user.getActivationCode() +
                 "\">Link</a>";
-        final String text = messageService.getMessage("verification.text");
+        final String text = messageService.getMessage("accountVerification.text");
         final String to = user.getEmail();
         
         sendMessage(subject, text + "\n" + url, to);

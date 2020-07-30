@@ -8,10 +8,10 @@ import javax.annotation.Resource;
 
 @Component
 public class MessageService {
-
+    
     @Resource
     private MessageSource messageSource;
-
+    
     public String getMessage(String code) {
         return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
     }

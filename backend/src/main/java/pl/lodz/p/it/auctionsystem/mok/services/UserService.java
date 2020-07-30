@@ -41,33 +41,27 @@ public class UserService implements IUserService {
     
     @Override
     public void createUser(User user) throws ApplicationException {
-        String passwordHash = passwordEncoder.encode(user.getPassword());
-        user.setPassword(passwordHash);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActivated(true);
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
-        
+    
         UserAccessLevel userAccessLevel = new UserAccessLevel(user,
-                accessLevelRepository.findAccessLevelByName(CLIENT_ACCESS_LEVEL));
+                accessLevelRepository.findByName(CLIENT_ACCESS_LEVEL));
         
         user.getUserAccessLevels().add(userAccessLevel);
-        
         userRepository.save(user);
     }
     
     @Override
     public void registerUser(User user) throws ApplicationException {
-        String passwordHash = passwordEncoder.encode(user.getPassword());
-        
-        user.setPassword(passwordHash);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
-        
+    
         UserAccessLevel userAccessLevel = new UserAccessLevel(user,
-                accessLevelRepository.findAccessLevelByName(CLIENT_ACCESS_LEVEL));
+                accessLevelRepository.findByName(CLIENT_ACCESS_LEVEL));
         
         user.getUserAccessLevels().add(userAccessLevel);
-        
         userRepository.save(user);
-    
         mailService.sendAccountVerificationMail(user);
     }
     
@@ -108,6 +102,7 @@ public class UserService implements IUserService {
     public void updateUserDetails(User user) throws ApplicationException {
         Optional<User> userFromRepository = getUserByLogin(user.getLogin());
         User user2 = userFromRepository.get();
+    
         updateUserDetails(user2, user);
     }
     
