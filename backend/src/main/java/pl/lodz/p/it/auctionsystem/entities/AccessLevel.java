@@ -3,6 +3,7 @@ package pl.lodz.p.it.auctionsystem.entities;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 
 import javax.persistence.*;
 
@@ -19,6 +20,7 @@ public class AccessLevel extends BaseEntity {
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private Long id;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, unique = true, updatable = false, length = 32)
-    private String name;
+    private AccessLevelEnum name;
 }

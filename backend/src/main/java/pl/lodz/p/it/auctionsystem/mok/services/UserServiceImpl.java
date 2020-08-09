@@ -10,6 +10,7 @@ import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
+import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
 
 import java.time.LocalDateTime;
@@ -47,9 +48,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActivated(true);
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
-        
+    
         UserAccessLevel userAccessLevel = new UserAccessLevel(user,
-                accessLevelRepository.findByName(CLIENT_ACCESS_LEVEL));
+                accessLevelRepository.findByName(AccessLevelEnum.CLIENT));
         
         user.getUserAccessLevels().add(userAccessLevel);
         userRepository.save(user);
@@ -59,9 +60,9 @@ public class UserServiceImpl implements UserService {
     public void registerUser(User user) throws ApplicationException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
-        
+    
         UserAccessLevel userAccessLevel = new UserAccessLevel(user,
-                accessLevelRepository.findByName(CLIENT_ACCESS_LEVEL));
+                accessLevelRepository.findByName(AccessLevelEnum.CLIENT));
         
         user.getUserAccessLevels().add(userAccessLevel);
         userRepository.save(user);
