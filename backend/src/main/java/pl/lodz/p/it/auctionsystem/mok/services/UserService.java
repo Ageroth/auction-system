@@ -1,149 +1,112 @@
 package pl.lodz.p.it.auctionsystem.mok.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.User;
-import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
-import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
-import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
-import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @SuppressWarnings("ALL")
 @Service
-@Transactional(rollbackFor = ApplicationException.class)
-public class UserService implements IUserService {
+public interface UserService {
+    /**
+     * Metoda pozwalająca administratorowi na dodanie nowego użytkownika.
+     *
+     * @param user użytkownik do dodania
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void createUser(User user) throws ApplicationException;
     
-    private final UserRepository userRepository;
-    private final AccessLevelRepository accessLevelRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final MailService mailService;
-    @Value("${CLIENT_ACCESS_LEVEL}")
-    private String CLIENT_ACCESS_LEVEL;
+    /**
+     * Metoda pozwalająca na samodzielną rejestrację użytkownika.
+     *
+     * @param user rejestrujący się użytkownik
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void registerUser(User user) throws ApplicationException;
     
+    /**
+     * Metoda zwracająca wszystkich użytkowników.
+     *
+     * @return lista użytkowników
+     */
+    List<User> getAllUsers();
     
-    @Autowired
-    public UserService(UserRepository userRepository, AccessLevelRepository accessLevelRepository,
-                       PasswordEncoder passwordEncoder, MailService mailService) {
-        this.userRepository = userRepository;
-        this.accessLevelRepository = accessLevelRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.mailService = mailService;
-    }
+    /**
+     * Metoda zwracająca użytkownika o podanym id.
+     *
+     * @param userId ID użytkownika
+     * @return użytkownik o podanym userId
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    Optional<User> getUserById(Long userId) throws ApplicationException;
     
-    @Override
-    public void createUser(User user) throws ApplicationException {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setActivated(true);
-        user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
+    /**
+     * Metoda zwracająca użytkownika o podanej nazwie użytkownika.
+     *
+     * @param username nazwa użytkownika
+     * @return użytkownik o podanej nazwie użytkownika
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    Optional<User> getUserByUsername(String username) throws ApplicationException;
     
-        UserAccessLevel userAccessLevel = new UserAccessLevel(user,
-                accessLevelRepository.findByName(CLIENT_ACCESS_LEVEL));
-        
-        user.getUserAccessLevels().add(userAccessLevel);
-        userRepository.save(user);
-    }
+    /**
+     * Metoda aktywująca konto użytkownika o przypisanym kodzie aktywacyjnym.
+     *
+     * @param activationCode kod aktywacyjny przypisany do konta użytkownika
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void activateUser(String activationCode) throws ApplicationException;
     
-    @Override
-    public void registerUser(User user) throws ApplicationException {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
+    /**
+     * Metoda aktualizująca dane użytkownika o podanym id.
+     *
+     * @param user   dane użytkownika
+     * @param userId id użytkownika
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void updateUserDetails(User user, Long userId) throws ApplicationException;
     
-        UserAccessLevel userAccessLevel = new UserAccessLevel(user,
-                accessLevelRepository.findByName(CLIENT_ACCESS_LEVEL));
-        
-        user.getUserAccessLevels().add(userAccessLevel);
-        userRepository.save(user);
-        mailService.sendAccountVerificationMail(user);
-    }
+    /**
+     * Metoda aktualizująca dane użytkownika.
+     *
+     * @param user dane użytkownika
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void updateUserDetails(User user) throws ApplicationException;
     
-    @Override
-    public List<User> getAllUsers() {
-        return null;
-    }
+    /**
+     * Metoda wysyłająca na podany email wiadomość z linkiem, pod którym można zresetować zapomniane hasło.
+     *
+     * @param email adres email użytkownika powiązany z kontem
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void sendResetPasswordMail(User user) throws ApplicationException;
     
-    @Override
-    public Optional<User> getUserById(Long userId) throws ApplicationException {
-//        TODO: Throw an exception in case user is not found
-        return userRepository.findById(userId);
-    }
+    /**
+     * Metoda umożliwiająca zmianę zapomnianego hasła.
+     *
+     * @param user obiekt z danymi użytkownika potrzebnymi do zresetowania hasła
+     * @throws ApplicationException
+     */
+    void resetPassword(User user) throws ApplicationException;
     
-    @Override
-    public Optional<User> getUserByLogin(String login) throws ApplicationException {
-//        TODO: Throw an exception in case user is not found
-        return userRepository.findByLogin(login);
-    }
+    /**
+     * Metoda umożliwiająca użytkownikowi zmianę własnego hasła.
+     *
+     * @param user        obiekt przechowujący dane wprowadzone w formularzu
+     * @param oldPassword stare hasło
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void changePassword(User user, String oldPassword) throws ApplicationException;
     
-    @Override
-    public void activateUser(String activationCode) throws ApplicationException {
-        //        TODO: Throw an exception in case user is not found
-        Optional<User> user = userRepository.findByActivationCode(activationCode);
-        
-        user.get().setActivated(true);
-        user.get().setActivationCode(null);
-    }
-    
-    @Override
-    public void updateUserDetails(User user, Long userId) throws ApplicationException {
-        Optional<User> userFromRepository = getUserById(userId);
-        
-        updateUserDetails(userFromRepository.get(), user);
-    }
-    
-    @Override
-    public void updateUserDetails(User user) throws ApplicationException {
-        Optional<User> userFromRepository = getUserByLogin(user.getLogin());
-        User user2 = userFromRepository.get();
-    
-        updateUserDetails(user2, user);
-    }
-    
-    public void updateUserDetails(User userFromRepository, User user) {
-        userFromRepository.setFirstName(user.getFirstName());
-        userFromRepository.setLastName(user.getLastName());
-        userFromRepository.setPhoneNumber(user.getPhoneNumber());
-    }
-    
-    @Override
-    public void sendResetPasswordMail(User user) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findByLogin(user.getLogin());
-        String resetPasswordCode = UUID.randomUUID().toString().replace("-", "");
-        
-        userFromRepository.get().setResetPasswordCode(resetPasswordCode);
-        userFromRepository.get().setResetPasswordCodeAddDate(LocalDateTime.now());
-        mailService.sendResetPasswordMail(user);
-    }
-    
-    @Override
-    public void resetPassword(User user) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findByResetPasswordCode(user.getResetPasswordCode());
-        LocalDateTime resetPasswordCodeAddDate = userFromRepository.get().getResetPasswordCodeAddDate();
-        String passwordHash = passwordEncoder.encode(user.getPassword());
-        
-        userFromRepository.get().setPassword(passwordHash);
-    }
-    
-    @Override
-    public void changePassword(User user, String oldPassword) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findByLogin(user.getLogin());
-        String passwordHash = passwordEncoder.encode(user.getPassword());
-        
-        userFromRepository.get().setPassword(passwordHash);
-    }
-    
-    @Override
-    public void changePassword(User user, Long userId) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findById(userId);
-        String passwordHash = passwordEncoder.encode(user.getPassword());
-        
-        userFromRepository.get().setPassword(passwordHash);
-    }
+    /**
+     * Metoda umożliwiająca administratorowi zmianę hasła innego użytkownika.
+     *
+     * @param user   obiekt przechowujący dane wprowadzone w formularzu
+     * @param userId id użytkownika, którego hasło ma zostać zmienione
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void changePassword(User user, Long userId) throws ApplicationException;
 }

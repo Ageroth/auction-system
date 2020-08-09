@@ -1,5 +1,6 @@
 package pl.lodz.p.it.auctionsystem.entities;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "bid")
 @NoArgsConstructor
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class Bid extends BaseEntity {
 
     @Id
@@ -32,13 +34,4 @@ public class Bid extends BaseEntity {
 
     @Column(name = "price", nullable = false, updatable = false)
     private BigDecimal price;
-
-    @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof Bid)) {
-            return false;
-        }
-        Bid other = (Bid) object;
-        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
-    }
 }

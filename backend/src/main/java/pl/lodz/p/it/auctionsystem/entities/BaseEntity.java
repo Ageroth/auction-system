@@ -1,5 +1,6 @@
 package pl.lodz.p.it.auctionsystem.entities;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.persistence.Column;
@@ -9,28 +10,17 @@ import java.util.UUID;
 
 @MappedSuperclass
 @Getter
+@EqualsAndHashCode
 public abstract class BaseEntity {
-
+    
     @Version
     @Column(name = "version", nullable = false)
     private Long version;
-
+    
     @Column(name = "business_key", nullable = false, unique = true, updatable = false)
     private UUID businessKey;
-
+    
     public BaseEntity() {
         this.businessKey = UUID.randomUUID();
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (businessKey != null ? businessKey.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public String toString() {
-        return this.getClass().getName() + " [business_key=" + businessKey + " version=" + version + "]";
     }
 }

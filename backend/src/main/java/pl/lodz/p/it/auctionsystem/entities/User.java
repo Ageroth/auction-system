@@ -1,5 +1,6 @@
 package pl.lodz.p.it.auctionsystem.entities;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.Collection;
 @SecondaryTable(name = "user_details", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"))
 @NoArgsConstructor
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
     
     @Id
@@ -22,8 +24,8 @@ public class User extends BaseEntity {
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private Long id;
     
-    @Column(name = "login", nullable = false, unique = true, updatable = false, length = 32)
-    private String login;
+    @Column(name = "username", nullable = false, unique = true, updatable = false, length = 32)
+    private String username;
     
     @Column(name = "password", nullable = false, length = 64)
     @Setter
@@ -66,9 +68,9 @@ public class User extends BaseEntity {
     @Setter
     private String phoneNumber;
     
-    public User(String login, String password, String email, String firstName, String lastName, String phoneNumber) {
+    public User(String username, String password, String email, String firstName, String lastName, String phoneNumber) {
         super();
-        this.login = login;
+        this.username = username;
         this.password = password;
         this.email = email;
         this.activated = false;
@@ -76,12 +78,5 @@ public class User extends BaseEntity {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.createdAt = LocalDateTime.now();
-    }
-    
-    @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof User)) return false;
-        User other = (User) object;
-        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 }

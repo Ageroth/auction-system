@@ -1,4 +1,4 @@
-package pl.lodz.p.it.auctionsystem.configuration;
+package pl.lodz.p.it.auctionsystem.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

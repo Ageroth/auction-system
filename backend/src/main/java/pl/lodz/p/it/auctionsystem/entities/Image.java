@@ -1,5 +1,6 @@
 package pl.lodz.p.it.auctionsystem.entities;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Table(name = "image")
 @NoArgsConstructor
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class Image extends BaseEntity {
 
     @Id
@@ -26,11 +28,4 @@ public class Image extends BaseEntity {
     @Lob
     @Type(type = "org.hibernate.type.BinaryType")
     private byte[] lob;
-
-    @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof Image)) return false;
-        Image other = (Image) object;
-        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
-    }
 }
