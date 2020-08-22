@@ -16,18 +16,18 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 public class UserDetailsImpl implements UserDetails {
     
-    private Long id;
+    private final Long id;
     
-    private String username;
+    private final String username;
     
     @JsonIgnore
-    private String password;
+    private final String password;
     
-    private String email;
+    private final String email;
     
-    private boolean enabled;
+    private final boolean enabled;
     
-    private Collection<? extends GrantedAuthority> authorities;
+    private final Collection<? extends GrantedAuthority> authorities;
     
     public UserDetailsImpl(Long id, String username, String password, String email, boolean activated,
                            Collection<? extends GrantedAuthority> authorities) {

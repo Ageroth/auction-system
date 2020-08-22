@@ -23,13 +23,17 @@ public class JwtTokenAuthFilter extends OncePerRequestFilter {
     
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenAuthFilter.class);
     
-    private final JwtTokenUtils jwtTokenUtils;
+    private JwtTokenUtils jwtTokenUtils;
     
-    private final UserDetailsServiceImpl userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
     
     @Autowired
-    public JwtTokenAuthFilter(JwtTokenUtils jwtTokenUtils, UserDetailsServiceImpl userDetailsService) {
+    public void setJwtTokenUtils(JwtTokenUtils jwtTokenUtils) {
         this.jwtTokenUtils = jwtTokenUtils;
+    }
+    
+    @Autowired
+    public void setUserDetailsService(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
     
@@ -37,9 +41,9 @@ public class JwtTokenAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            String jwt = parseJwt(request);
+            String jwt = getJwtFromRequest(request);
             
-            if (jwt != null && jwtTokenUtils.validateToken(jwt)) {
+            if (StringUtils.hasText(jwt) && jwtTokenUtils.validateToken(jwt)) {
                 String username = jwtTokenUtils.getUsernameFromToken(jwt);
                 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -49,18 +53,19 @@ public class JwtTokenAuthFilter extends OncePerRequestFilter {
                 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+            
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+            logger.error("Could not set user authentication in security context", e);
         }
         
         filterChain.doFilter(request, response);
     }
     
-    private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
         
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7, bearerToken.length());
         }
         
         return null;

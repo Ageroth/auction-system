@@ -13,16 +13,23 @@ import javax.mail.internet.MimeMessage;
 @Component
 public class MailService {
     
-    private final JavaMailSender javaMailSender;
-    private final MessageService messageService;
+    private JavaMailSender javaMailSender;
+    
+    private MessageService messageService;
+    
     @Value("${base-url}")
     private String baseUrl;
+    
     @Value("${email}")
     private String email;
     
     @Autowired
-    public MailService(JavaMailSender javaMailSender, MessageService messageService) {
+    public void setJavaMailSender(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
+    }
+    
+    @Autowired
+    public void setMessageService(MessageService messageService) {
         this.messageService = messageService;
     }
     
@@ -31,7 +38,7 @@ public class MailService {
         
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-    
+            
             helper.setFrom(email);
             helper.setTo(to);
             helper.setSubject(subject);

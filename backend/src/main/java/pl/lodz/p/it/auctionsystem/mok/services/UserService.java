@@ -16,7 +16,7 @@ public interface UserService {
      * @param user użytkownik do dodania
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void createUser(User user) throws ApplicationException;
+    User createUser(User user) throws ApplicationException;
     
     /**
      * Metoda pozwalająca na samodzielną rejestrację użytkownika.
@@ -24,7 +24,7 @@ public interface UserService {
      * @param user rejestrujący się użytkownik
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void registerUser(User user) throws ApplicationException;
+    User registerUser(User user) throws ApplicationException;
     
     /**
      * Metoda zwracająca wszystkich użytkowników.

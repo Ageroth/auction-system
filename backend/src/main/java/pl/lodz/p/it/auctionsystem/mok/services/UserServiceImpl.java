@@ -44,29 +44,31 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void createUser(User user) throws ApplicationException {
+    public User createUser(User user) throws ApplicationException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActivated(true);
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
     
         UserAccessLevel userAccessLevel = new UserAccessLevel(user,
                 accessLevelRepository.findByName(AccessLevelEnum.CLIENT));
-        
+    
         user.getUserAccessLevels().add(userAccessLevel);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
     
     @Override
-    public void registerUser(User user) throws ApplicationException {
+    public User registerUser(User user) throws ApplicationException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
-    
+        
         UserAccessLevel userAccessLevel = new UserAccessLevel(user,
                 accessLevelRepository.findByName(AccessLevelEnum.CLIENT));
         
         user.getUserAccessLevels().add(userAccessLevel);
-        userRepository.save(user);
+        
         mailService.sendAccountVerificationMail(user);
+        
+        return userRepository.save(user);
     }
     
     @Override
