@@ -1,7 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +16,7 @@ import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
 import pl.lodz.p.it.auctionsystem.mok.dtos.JwtTokenDto;
-import pl.lodz.p.it.auctionsystem.mok.dtos.SignInDto;
+import pl.lodz.p.it.auctionsystem.mok.dtos.LogInDto;
 import pl.lodz.p.it.auctionsystem.mok.dtos.SignUpDto;
 import pl.lodz.p.it.auctionsystem.mok.services.UserServiceImpl;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
@@ -25,6 +24,7 @@ import pl.lodz.p.it.auctionsystem.security.jwt.JwtTokenUtils;
 import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,10 +50,10 @@ public class AuthController {
         this.messageService = messageService;
     }
     
-    @PostMapping("/signIn")
-    public ResponseEntity<?> signIn(@Valid @RequestBody SignInDto signInDto) {
+    @PostMapping("/login")
+    public ResponseEntity<?> logIn(@Valid @RequestBody LogInDto logInDto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(signInDto.getUsername(), signInDto.getPassword()));
+                new UsernamePasswordAuthenticationToken(logInDto.getUsername(), logInDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
         String jwt = jwtTokenUtils.generateToken(authentication);
@@ -64,9 +64,7 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         
-        return new ResponseEntity<>(
-                new JwtTokenDto(jwt, userDetails.getUsername(), accessLevels),
-                HttpStatus.OK);
+        return ResponseEntity.ok().body(new JwtTokenDto(jwt, userDetails.getUsername(), accessLevels));
     }
     
     @PostMapping("/signup")
@@ -74,15 +72,24 @@ public class AuthController {
         User user = new User(signUpDto.getUsername(), signUpDto.getPassword(),
                 signUpDto.getEmail(), signUpDto.getFirstName(), signUpDto.getLastName(),
                 signUpDto.getPhoneNumber());
-        
+    
         User result = userService.registerUser(user);
-        
+    
         URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/users/{username}")
-                .buildAndExpand(result.getUsername()).toUri();
-        
-        String message = messageService.getMessage("userRegistration");
-        
+                .fromCurrentContextPath().path("/users/{userId}")
+                .buildAndExpand(result.getId()).toUri();
+    
+        String message = messageService.getMessage("userRegistered");
+    
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+    }
+    
+    @PostMapping("/activation")
+    public ResponseEntity<?> activateUser(@PathParam("code") String code) throws ApplicationException {
+        userService.activateUser(code);
+        
+        String message = messageService.getMessage("userActivated");
+        
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
 }

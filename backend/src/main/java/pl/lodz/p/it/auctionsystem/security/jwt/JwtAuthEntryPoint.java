@@ -8,7 +8,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,10 +26,9 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
     
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
-        String message = messageService.getMessage("authorizationError");
-        
+                         AuthenticationException authException) throws IOException {
+    
         logger.error("Unauthorized error: {}", authException.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getLocalizedMessage());
     }
 }
