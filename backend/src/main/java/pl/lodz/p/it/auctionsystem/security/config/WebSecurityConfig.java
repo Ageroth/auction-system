@@ -22,23 +22,18 @@ import pl.lodz.p.it.auctionsystem.security.services.UserDetailsServiceImpl;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
-    private UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
     
-    private JwtAuthEntryPoint unauthorizedHandler;
+    private final JwtAuthEntryPoint unauthorizedHandler;
+    
+    private final JwtTokenAuthFilter authenticationFilter;
     
     @Autowired
-    public void setUserDetailsService(UserDetailsServiceImpl userDetailsService) {
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthEntryPoint unauthorizedHandler,
+                             JwtTokenAuthFilter authenticationFilter) {
         this.userDetailsService = userDetailsService;
-    }
-    
-    @Autowired
-    public void setUnauthorizedHandler(JwtAuthEntryPoint unauthorizedHandler) {
         this.unauthorizedHandler = unauthorizedHandler;
-    }
-    
-    @Bean
-    public JwtTokenAuthFilter authenticationFilter() {
-        return new JwtTokenAuthFilter();
+        this.authenticationFilter = authenticationFilter;
     }
     
     @Bean
@@ -68,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated();
-        
-        http.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    
+        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

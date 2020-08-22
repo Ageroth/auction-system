@@ -17,7 +17,7 @@ import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
 import pl.lodz.p.it.auctionsystem.mok.dtos.JwtTokenDto;
-import pl.lodz.p.it.auctionsystem.mok.dtos.LoginDto;
+import pl.lodz.p.it.auctionsystem.mok.dtos.SignInDto;
 import pl.lodz.p.it.auctionsystem.mok.dtos.SignUpDto;
 import pl.lodz.p.it.auctionsystem.mok.services.UserServiceImpl;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
@@ -33,43 +33,33 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 public class AuthController {
     
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
     
-    private UserServiceImpl userService;
+    private final UserServiceImpl userService;
     
-    private JwtTokenUtils jwtTokenUtils;
+    private final JwtTokenUtils jwtTokenUtils;
     
-    private MessageService messageService;
+    private final MessageService messageService;
     
     @Autowired
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+    public AuthController(AuthenticationManager authenticationManager, UserServiceImpl userService,
+                          JwtTokenUtils jwtTokenUtils, MessageService messageService) {
         this.authenticationManager = authenticationManager;
-    }
-    
-    @Autowired
-    public void setUserService(UserServiceImpl userService) {
         this.userService = userService;
-    }
-    
-    @Autowired
-    public void setJwtTokenUtils(JwtTokenUtils jwtTokenUtils) {
         this.jwtTokenUtils = jwtTokenUtils;
-    }
-    
-    @Autowired
-    public void setMessageService(MessageService messageService) {
         this.messageService = messageService;
     }
     
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
+    @PostMapping("/signIn")
+    public ResponseEntity<?> signIn(@Valid @RequestBody SignInDto signInDto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
-        
+                new UsernamePasswordAuthenticationToken(signInDto.getUsername(), signInDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        
         String jwt = jwtTokenUtils.generateToken(authentication);
         
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        
         List<String> accessLevels = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
@@ -80,18 +70,18 @@ public class AuthController {
     }
     
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpDto signUpDto) throws ApplicationException {
-        final User user = new User(signUpDto.getUsername(), signUpDto.getPassword(),
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto signUpDto) throws ApplicationException {
+        User user = new User(signUpDto.getUsername(), signUpDto.getPassword(),
                 signUpDto.getEmail(), signUpDto.getFirstName(), signUpDto.getLastName(),
                 signUpDto.getPhoneNumber());
         
-        final User result = userService.registerUser(user);
+        User result = userService.registerUser(user);
         
-        final URI location = ServletUriComponentsBuilder
+        URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{username}")
                 .buildAndExpand(result.getUsername()).toUri();
         
-        final String message = messageService.getMessage("userRegistration");
+        String message = messageService.getMessage("userRegistration");
         
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }

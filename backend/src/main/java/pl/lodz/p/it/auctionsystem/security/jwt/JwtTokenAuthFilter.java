@@ -23,17 +23,13 @@ public class JwtTokenAuthFilter extends OncePerRequestFilter {
     
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenAuthFilter.class);
     
-    private JwtTokenUtils jwtTokenUtils;
+    private final JwtTokenUtils jwtTokenUtils;
     
-    private UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
     
     @Autowired
-    public void setJwtTokenUtils(JwtTokenUtils jwtTokenUtils) {
+    public JwtTokenAuthFilter(JwtTokenUtils jwtTokenUtils, UserDetailsServiceImpl userDetailsService) {
         this.jwtTokenUtils = jwtTokenUtils;
-    }
-    
-    @Autowired
-    public void setUserDetailsService(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
     
@@ -65,7 +61,7 @@ public class JwtTokenAuthFilter extends OncePerRequestFilter {
         String bearerToken = request.getHeader("Authorization");
         
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7, bearerToken.length());
+            return bearerToken.substring(7);
         }
         
         return null;

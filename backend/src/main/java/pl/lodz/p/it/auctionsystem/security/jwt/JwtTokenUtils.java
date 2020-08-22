@@ -12,6 +12,7 @@ import java.util.Date;
 
 @Component
 public class JwtTokenUtils {
+    
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtils.class);
     
     @Value("${jwtSecret}")

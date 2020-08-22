@@ -8,22 +8,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
+import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     
     private UserRepository userRepository;
     
+    private MessageService messageService;
+    
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
+    public void setUserRepository(UserRepository userRepository, MessageService messageService) {
         this.userRepository = userRepository;
+        this.messageService = messageService;
     }
     
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        String message = messageService.getMessage("userNotFound");
+        
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with entered username: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(message + ": " + username));
         
         return UserDetailsImpl.build(user);
     }
