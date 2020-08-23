@@ -1,10 +1,11 @@
 package pl.lodz.p.it.auctionsystem.mok.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 
-import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("ALL")
@@ -31,7 +32,9 @@ public interface UserService {
      *
      * @return lista użytkowników
      */
-    List<User> getAllUsers();
+    Page<User> getAllUsers(Pageable pageable);
+    
+    Page<User> getFilteredUsers(String name, Pageable pageable);
     
     /**
      * Metoda zwracająca użytkownika o podanym id.

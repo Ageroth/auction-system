@@ -30,4 +30,3 @@ public class EntityNotFoundException extends ApplicationException {
         this.entityClass = entityClass;
     }
 }
-

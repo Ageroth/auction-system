@@ -2,6 +2,8 @@ package pl.lodz.p.it.auctionsystem.mok.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +16,10 @@ import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.containsTextInName;
 
 @SuppressWarnings("ALL")
 @Service
@@ -65,15 +68,19 @@ public class UserServiceImpl implements UserService {
                 accessLevelRepository.findByName(AccessLevelEnum.CLIENT));
         
         user.getUserAccessLevels().add(userAccessLevel);
-        
+    
         mailService.sendAccountVerificationMail(user);
-        
+    
         return userRepository.save(user);
     }
     
     @Override
-    public List<User> getAllUsers() {
-        return null;
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+    
+    public Page<User> getFilteredUsers(String text, Pageable pageable) {
+        return userRepository.findAll(containsTextInName(text), pageable);
     }
     
     @Override

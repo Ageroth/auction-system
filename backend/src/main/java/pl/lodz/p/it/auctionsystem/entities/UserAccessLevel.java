@@ -1,5 +1,6 @@
 package pl.lodz.p.it.auctionsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class UserAccessLevel extends BaseEntity {
     @ManyToOne(optional = false)
     private AccessLevel accessLevel;
     
+    @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     private User user;
