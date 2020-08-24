@@ -15,4 +15,8 @@ public class UserSpecs {
                 builder.like(root.get("username"), finalText)
         );
     }
+    
+    public static Specification<User> isActive(Boolean status) {
+        return (root, query, builder) -> builder.equal(root.get("activated"), status);
+    }
 }

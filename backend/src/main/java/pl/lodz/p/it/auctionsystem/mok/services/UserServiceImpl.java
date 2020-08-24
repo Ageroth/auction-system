@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.containsTextInName;
+import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.isActive;
 
 @SuppressWarnings("ALL")
 @Service
@@ -79,8 +80,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable);
     }
     
-    public Page<User> getFilteredUsers(String text, Pageable pageable) {
-        return userRepository.findAll(containsTextInName(text), pageable);
+    public Page<User> getFilteredUsers(String query, boolean status, Pageable pageable) {
+        return userRepository.findAll(containsTextInName(query).and(isActive(status)), pageable);
+    }
+    
+    public Page<User> getFilteredUsers(String query, Pageable pageable) {
+        return userRepository.findAll(containsTextInName(query), pageable);
+    }
+    
+    public Page<User> getFilteredUsers(boolean status, Pageable pageable) {
+        return userRepository.findAll(isActive(status), pageable);
     }
     
     @Override

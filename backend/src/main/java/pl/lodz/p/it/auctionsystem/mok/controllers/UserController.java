@@ -42,25 +42,31 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(required = false) String text,
-            @RequestParam(defaultValue = "desc") String order) {
-        
+            @RequestParam(defaultValue = "desc") String order,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) Boolean status) {
+    
         Direction direction = SortDirection.getSortDirection(order);
         List<User> users;
         Pageable paging = PageRequest.of(page, pageSize, Sort.by(direction, "createdAt"));
         Page<User> usersPage;
-        
-        if (text == null)
+    
+        if (query == null && status == null)
             usersPage = userService.getAllUsers(paging);
-        else
-            usersPage = userService.getFilteredUsers(text, paging);
-        
+        else if (query != null && status == null)
+            usersPage = userService.getFilteredUsers(query, paging);
+        else if (query == null) {
+            usersPage = userService.getFilteredUsers(status, paging);
+        } else
+            usersPage = userService.getFilteredUsers(query, status, paging);
+    
+    
         users = usersPage.getContent();
-        
+    
         if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        
+    
         Map<String, Object> response = new HashMap<>();
         response.put("users", users);
         response.put("currentPage", usersPage.getNumber());

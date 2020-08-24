@@ -34,7 +34,12 @@ public interface UserService {
      */
     Page<User> getAllUsers(Pageable pageable);
     
-    Page<User> getFilteredUsers(String name, Pageable pageable);
+    Page<User> getFilteredUsers(String query, boolean status, Pageable pageable);
+    
+    Page<User> getFilteredUsers(String query, Pageable pageable);
+    
+    Page<User> getFilteredUsers(boolean status, Pageable pageable);
+    
     
     /**
      * Metoda zwracająca użytkownika o podanym id.
