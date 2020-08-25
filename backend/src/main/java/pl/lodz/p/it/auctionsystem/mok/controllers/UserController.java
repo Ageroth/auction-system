@@ -1,5 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,14 +32,17 @@ public class UserController {
     
     private final UserService userService;
     
+    private final ModelMapper modelMapper;
+    
     private final MessageService messageService;
     
     @Value("${pageSize}")
     private int pageSize;
     
     @Autowired
-    public UserController(UserService userService, MessageService messageService) {
+    public UserController(UserService userService, ModelMapper modelMapper, MessageService messageService) {
         this.userService = userService;
+        this.modelMapper = modelMapper;
         this.messageService = messageService;
     }
     
@@ -82,9 +86,8 @@ public class UserController {
     @GetMapping("/me")
     public UserSummaryDto getCurrentUser(Authentication authentication) {
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
-        
-        return new UserSummaryDto(currentUser.getUsername(),
-                currentUser.getFirstName(), currentUser.getLastName(), currentUser.getEmail());
+    
+        return modelMapper.map(currentUser, UserSummaryDto.class);
     }
     
     @GetMapping("/username-availability")

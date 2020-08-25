@@ -1,5 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,14 +40,17 @@ public class AuthController {
     
     private final JwtTokenUtils jwtTokenUtils;
     
+    private final ModelMapper modelMapper;
+    
     private final MessageService messageService;
     
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserServiceImpl userService,
-                          JwtTokenUtils jwtTokenUtils, MessageService messageService) {
+                          JwtTokenUtils jwtTokenUtils, ModelMapper modelMapper, MessageService messageService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtTokenUtils = jwtTokenUtils;
+        this.modelMapper = modelMapper;
         this.messageService = messageService;
     }
     
@@ -69,9 +73,7 @@ public class AuthController {
     
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto signUpDto) throws ApplicationException {
-        User user = new User(signUpDto.getUsername(), signUpDto.getPassword(),
-                signUpDto.getEmail(), signUpDto.getFirstName(), signUpDto.getLastName(),
-                signUpDto.getPhoneNumber());
+        User user = modelMapper.map(signUpDto, User.class);
     
         User result = userService.registerUser(user);
     
