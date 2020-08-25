@@ -29,15 +29,26 @@ public class UserDetailsImpl implements UserDetails {
     
     private final Collection<? extends GrantedAuthority> authorities;
     
+    private final String firstName;
+    
+    private final String lastName;
+    
+    private final String phoneNumber;
+    
     public UserDetailsImpl(Long id, String username, String password, String email, boolean activated,
-                           Collection<? extends GrantedAuthority> authorities) {
+                           Collection<? extends GrantedAuthority> authorities, String firstName, String lastName,
+                           String phoneNumber) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.enabled = activated;
         this.authorities = authorities;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
     }
+    
     
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getUserAccessLevels().stream()
@@ -50,7 +61,10 @@ public class UserDetailsImpl implements UserDetails {
                 user.getPassword(),
                 user.getEmail(),
                 user.isActivated(),
-                authorities);
+                authorities,
+                user.getFirstName(),
+                user.getLastName(),
+                user.getPhoneNumber());
     }
     
     @Override

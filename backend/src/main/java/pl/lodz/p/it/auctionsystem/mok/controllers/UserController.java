@@ -9,14 +9,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.auctionsystem.entities.User;
+import pl.lodz.p.it.auctionsystem.mok.dtos.UserSummaryDto;
 import pl.lodz.p.it.auctionsystem.mok.services.UserService;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
+import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +77,14 @@ public class UserController {
         response.put("totalPages", usersPage.getTotalPages());
     
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    
+    @GetMapping("/me")
+    public UserSummaryDto getCurrentUser(Authentication authentication) {
+        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        
+        return new UserSummaryDto(currentUser.getUsername(),
+                currentUser.getFirstName(), currentUser.getLastName(), currentUser.getEmail());
     }
     
     @GetMapping("/username-availability")

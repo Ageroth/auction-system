@@ -40,7 +40,6 @@ public interface UserService {
     
     Page<User> getFilteredUsers(boolean status, Pageable pageable);
     
-    
     /**
      * Metoda zwracająca użytkownika o podanym id.
      *
@@ -58,7 +57,6 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     Optional<User> getUserByUsername(String username) throws ApplicationException;
-    
     
     boolean existsByUsername(String username);
     
