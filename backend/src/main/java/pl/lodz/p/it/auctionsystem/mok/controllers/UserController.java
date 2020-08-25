@@ -72,7 +72,17 @@ public class UserController {
         response.put("currentPage", usersPage.getNumber());
         response.put("totalItems", usersPage.getTotalElements());
         response.put("totalPages", usersPage.getTotalPages());
-        
+    
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    
+    @GetMapping("/username-availability")
+    public boolean checkUsernameAvailability(@RequestParam(value = "username") String username) {
+        return !userService.existsByUsername(username);
+    }
+    
+    @GetMapping("/email-availability")
+    public boolean checkEmailAvailability(@RequestParam(value = "email") String email) {
+        return !userService.existsByEmail(email);
     }
 }

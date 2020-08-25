@@ -105,6 +105,16 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+    
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+    
+    @Override
     public void activateUser(String activationCode) throws ApplicationException {
         //        TODO: Throw an exception in case user is not found
         Optional<User> user = userRepository.findByActivationCode(activationCode);

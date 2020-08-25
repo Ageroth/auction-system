@@ -59,6 +59,11 @@ public interface UserService {
      */
     Optional<User> getUserByUsername(String username) throws ApplicationException;
     
+    
+    boolean existsByUsername(String username);
+    
+    boolean existsByEmail(String email);
+    
     /**
      * Metoda aktywująca konto użytkownika o przypisanym kodzie aktywacyjnym.
      *
