@@ -8,10 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
@@ -25,7 +22,6 @@ import pl.lodz.p.it.auctionsystem.security.jwt.JwtTokenUtils;
 import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,7 +83,7 @@ public class AuthController {
     }
     
     @PostMapping("/activation")
-    public ResponseEntity<?> activateUser(@PathParam("code") String code) throws ApplicationException {
+    public ResponseEntity<?> activateUser(@RequestParam("code") String code) throws ApplicationException {
         userService.activateUser(code);
         
         String message = messageService.getMessage("userActivated");
