@@ -14,12 +14,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
+import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
+import pl.lodz.p.it.auctionsystem.mok.dtos.EditUserDetailsDto;
 import pl.lodz.p.it.auctionsystem.mok.dtos.UserSummaryDto;
 import pl.lodz.p.it.auctionsystem.mok.services.UserService;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
 import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,5 +107,17 @@ public class UserController {
     @GetMapping("/email-availability")
     public boolean checkEmailAvailability(@RequestParam(value = "email") String email) {
         return !userService.existsByEmail(email);
+    }
+    
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
+                                               @Valid @RequestBody EditUserDetailsDto editUserDetailsDto) throws ApplicationException {
+        User user = modelMapper.map(editUserDetailsDto, User.class);
+        
+        userService.updateUserDetails(user, userId);
+        
+        String message = messageService.getMessage("userActivated");
+        
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
 }

@@ -14,8 +14,8 @@ import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
 import pl.lodz.p.it.auctionsystem.mok.dtos.JwtTokenDto;
-import pl.lodz.p.it.auctionsystem.mok.dtos.LogInDto;
-import pl.lodz.p.it.auctionsystem.mok.dtos.SignUpDto;
+import pl.lodz.p.it.auctionsystem.mok.dtos.LoginDto;
+import pl.lodz.p.it.auctionsystem.mok.dtos.SignupDto;
 import pl.lodz.p.it.auctionsystem.mok.services.UserServiceImpl;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.security.jwt.JwtTokenUtils;
@@ -51,9 +51,9 @@ public class AuthController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<?> logIn(@Valid @RequestBody LogInDto logInDto) {
+    public ResponseEntity<?> logIn(@Valid @RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(logInDto.getUsername(), logInDto.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
         String jwt = jwtTokenUtils.generateToken(authentication);
@@ -68,25 +68,27 @@ public class AuthController {
     }
     
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto signUpDto) throws ApplicationException {
-        User user = modelMapper.map(signUpDto, User.class);
-    
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignupDto signupDto) throws ApplicationException {
+        User user = new User(signupDto.getUsername(), signupDto.getPassword(),
+                signupDto.getEmail(), signupDto.getFirstName(), signupDto.getLastName(),
+                signupDto.getPhoneNumber());
+        
         User result = userService.registerUser(user);
-    
+        
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{userId}")
                 .buildAndExpand(result.getId()).toUri();
-    
+        
         String message = messageService.getMessage("userRegistered");
-    
+        
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
     
     @PostMapping("/activation")
     public ResponseEntity<?> activateUser(@RequestParam("code") String code) throws ApplicationException {
         userService.activateUser(code);
-        
-        String message = messageService.getMessage("userActivated");
+    
+        String message = messageService.getMessage("userDetailsUpdated");
         
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
