@@ -124,20 +124,6 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void updateUserDetails(User user, Long userId) throws ApplicationException {
-        Optional<User> userFromRepository = getUserById(userId);
-        
-        updateUserDetails(userFromRepository.get(), user);
-    }
-    
-    @Override
-    public void updateUserDetails(User user) throws ApplicationException {
-        Optional<User> userFromRepository = getUserByUsername(user.getUsername());
-        User user2 = userFromRepository.get();
-        
-        updateUserDetails(user2, user);
-    }
-    
     public void updateUserDetails(User userFromRepository, User user) {
         userFromRepository.setFirstName(user.getFirstName());
         userFromRepository.setLastName(user.getLastName());

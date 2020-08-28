@@ -70,22 +70,8 @@ public interface UserService {
      */
     void activateUser(String activationCode) throws ApplicationException;
     
-    /**
-     * Metoda aktualizująca dane użytkownika o podanym id.
-     *
-     * @param user   dane użytkownika
-     * @param userId id użytkownika
-     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
-     */
-    void updateUserDetails(User user, Long userId) throws ApplicationException;
     
-    /**
-     * Metoda aktualizująca dane użytkownika.
-     *
-     * @param user dane użytkownika
-     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
-     */
-    void updateUserDetails(User user) throws ApplicationException;
+    void updateUserDetails(User userFromRepository, User user) throws ApplicationException;
     
     /**
      * Metoda wysyłająca na podany email wiadomość z linkiem, pod którym można zresetować zapomniane hasło.

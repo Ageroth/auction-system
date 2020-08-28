@@ -88,7 +88,7 @@ public class UserController {
     @GetMapping("/{userId}")
     public UserSummaryDto getUserProfile(@PathVariable(value = "userId") Long userId) throws ApplicationException {
         Optional<User> user = userService.getUserById(userId);
-        
+    
         return modelMapper.map(user.get(), UserSummaryDto.class);
     }
     
@@ -97,6 +97,20 @@ public class UserController {
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
         
         return modelMapper.map(currentUser, UserSummaryDto.class);
+    }
+    
+    @PutMapping("/me")
+    public ResponseEntity<?> updateUserDetails(@Valid @RequestBody EditUserDetailsDto editUserDetailsDto,
+                                               Authentication authentication) throws ApplicationException {
+        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        Optional<User> userFromRepository = userService.getUserByUsername(currentUser.getUsername());
+        User user = modelMapper.map(editUserDetailsDto, User.class);
+        
+        userService.updateUserDetails(userFromRepository.get(), user);
+        
+        String message = messageService.getMessage("userDetailsUpdated");
+        
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
     @GetMapping("/username-availability")
@@ -112,12 +126,14 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
                                                @Valid @RequestBody EditUserDetailsDto editUserDetailsDto) throws ApplicationException {
+    
+        Optional<User> userFromRepository = userService.getUserById(userId);
         User user = modelMapper.map(editUserDetailsDto, User.class);
-        
-        userService.updateUserDetails(user, userId);
-        
-        String message = messageService.getMessage("userActivated");
-        
+    
+        userService.updateUserDetails(userFromRepository.get(), user);
+    
+        String message = messageService.getMessage("userDetailsUpdated");
+    
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
 }
