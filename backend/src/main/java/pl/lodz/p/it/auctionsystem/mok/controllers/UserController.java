@@ -14,9 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
-import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
-import pl.lodz.p.it.auctionsystem.mok.dtos.EditUserDetailsDto;
-import pl.lodz.p.it.auctionsystem.mok.dtos.UserSummaryDto;
+import pl.lodz.p.it.auctionsystem.mok.dtos.*;
 import pl.lodz.p.it.auctionsystem.mok.services.UserService;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
@@ -99,20 +97,6 @@ public class UserController {
         return modelMapper.map(currentUser, UserSummaryDto.class);
     }
     
-    @PutMapping("/me")
-    public ResponseEntity<?> updateUserDetails(@Valid @RequestBody EditUserDetailsDto editUserDetailsDto,
-                                               Authentication authentication) throws ApplicationException {
-        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
-        Optional<User> userFromRepository = userService.getUserByUsername(currentUser.getUsername());
-        User user = modelMapper.map(editUserDetailsDto, User.class);
-        
-        userService.updateUserDetails(userFromRepository.get(), user);
-        
-        String message = messageService.getMessage("userDetailsUpdated");
-        
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
-    }
-    
     @GetMapping("/username-availability")
     public boolean checkUsernameAvailability(@RequestParam(value = "username") String username) {
         return !userService.existsByUsername(username);
@@ -123,17 +107,51 @@ public class UserController {
         return !userService.existsByEmail(email);
     }
     
-    @PutMapping("/{userId}")
+    @PutMapping("/me/details")
+    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody EditUserDetailsDto editUserDetailsDto,
+                                              Authentication authentication) throws ApplicationException {
+        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        User user = modelMapper.map(editUserDetailsDto, User.class);
+        
+        userService.updateUserDetails(currentUser.getId(), user);
+        
+        String message = messageService.getMessage("userDetailsUpdated");
+        
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+    }
+    
+    @PatchMapping("/me/password")
+    public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody ChangeOwnPasswordDto changeOwnPasswordDto,
+                                               Authentication authentication) throws ApplicationException {
+        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        
+        userService.changePassword(currentUser.getId(), changeOwnPasswordDto.getNewPassword(),
+                changeOwnPasswordDto.getOldPassword());
+        
+        String message = messageService.getMessage("userPasswordChanged");
+        
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+    }
+    
+    @PutMapping("/{userId}/details")
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
                                                @Valid @RequestBody EditUserDetailsDto editUserDetailsDto) throws ApplicationException {
-    
-        Optional<User> userFromRepository = userService.getUserById(userId);
         User user = modelMapper.map(editUserDetailsDto, User.class);
-    
-        userService.updateUserDetails(userFromRepository.get(), user);
-    
+        
+        userService.updateUserDetails(userId, user);
+        
         String message = messageService.getMessage("userDetailsUpdated");
+        
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+    }
     
+    @PatchMapping("/{userId}/password")
+    public ResponseEntity<?> changeUserPassword(@PathVariable(value = "userId") Long userId,
+                                                @Valid @RequestBody ChangeUserPasswordDto changeUserPasswordDto) throws ApplicationException {
+        userService.changePassword(userId, changeUserPasswordDto.getNewPassword());
+        
+        String message = messageService.getMessage("userPasswordChanged");
+        
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
 }

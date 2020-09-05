@@ -71,7 +71,7 @@ public interface UserService {
     void activateUser(String activationCode) throws ApplicationException;
     
     
-    void updateUserDetails(User userFromRepository, User user) throws ApplicationException;
+    void updateUserDetails(Long userId, User user) throws ApplicationException;
     
     /**
      * Metoda wysyłająca na podany email wiadomość z linkiem, pod którym można zresetować zapomniane hasło.
@@ -96,7 +96,7 @@ public interface UserService {
      * @param oldPassword stare hasło
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void changePassword(User user, String oldPassword) throws ApplicationException;
+    void changePassword(Long userId, String newPassword, String oldPassword) throws ApplicationException;
     
     /**
      * Metoda umożliwiająca administratorowi zmianę hasła innego użytkownika.
@@ -105,5 +105,5 @@ public interface UserService {
      * @param userId id użytkownika, którego hasło ma zostać zmienione
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void changePassword(User user, Long userId) throws ApplicationException;
+    void changePassword(Long userId, String newPassword) throws ApplicationException;
 }

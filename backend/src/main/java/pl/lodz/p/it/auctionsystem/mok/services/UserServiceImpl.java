@@ -124,10 +124,12 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void updateUserDetails(User userFromRepository, User user) {
-        userFromRepository.setFirstName(user.getFirstName());
-        userFromRepository.setLastName(user.getLastName());
-        userFromRepository.setPhoneNumber(user.getPhoneNumber());
+    public void updateUserDetails(Long userId, User user) {
+        Optional<User> userFromRepository = userRepository.findById(userId);
+        
+        userFromRepository.get().setFirstName(user.getFirstName());
+        userFromRepository.get().setLastName(user.getLastName());
+        userFromRepository.get().setPhoneNumber(user.getPhoneNumber());
     }
     
     @Override
@@ -150,17 +152,17 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void changePassword(User user, String oldPassword) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findByUsername(user.getUsername());
-        String passwordHash = passwordEncoder.encode(user.getPassword());
+    public void changePassword(Long userId, String newPassword, String oldPassword) throws ApplicationException {
+        Optional<User> userFromRepository = userRepository.findById(userId);
+        String passwordHash = passwordEncoder.encode(newPassword);
         
         userFromRepository.get().setPassword(passwordHash);
     }
     
     @Override
-    public void changePassword(User user, Long userId) throws ApplicationException {
+    public void changePassword(Long userId, String newPassword) throws ApplicationException {
         Optional<User> userFromRepository = userRepository.findById(userId);
-        String passwordHash = passwordEncoder.encode(user.getPassword());
+        String passwordHash = passwordEncoder.encode(newPassword);
         
         userFromRepository.get().setPassword(passwordHash);
     }
