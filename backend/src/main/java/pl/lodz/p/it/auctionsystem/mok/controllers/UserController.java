@@ -108,15 +108,15 @@ public class UserController {
     }
     
     @PutMapping("/me/details")
-    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody EditUserDetailsDto editUserDetailsDto,
+    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody UpdateUserDetailsDto updateUserDetailsDto,
                                               Authentication authentication) throws ApplicationException {
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
-        User user = modelMapper.map(editUserDetailsDto, User.class);
-        
+        User user = modelMapper.map(updateUserDetailsDto, User.class);
+    
         userService.updateUserDetails(currentUser.getId(), user);
-        
+    
         String message = messageService.getMessage("userDetailsUpdated");
-        
+    
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
@@ -135,8 +135,8 @@ public class UserController {
     
     @PutMapping("/{userId}/details")
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
-                                               @Valid @RequestBody EditUserDetailsDto editUserDetailsDto) throws ApplicationException {
-        User user = modelMapper.map(editUserDetailsDto, User.class);
+                                               @Valid @RequestBody UpdateUserDetailsDto updateUserDetailsDto) throws ApplicationException {
+        User user = modelMapper.map(updateUserDetailsDto, User.class);
         
         userService.updateUserDetails(userId, user);
         
