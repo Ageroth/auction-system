@@ -9,7 +9,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ChangeUserPasswordDto {
+public class UserDetailsUpdateDto {
     
-    private String newPassword;
+    private String firstName;
+    
+    private String lastName;
+    
+    private String phoneNumber;
 }

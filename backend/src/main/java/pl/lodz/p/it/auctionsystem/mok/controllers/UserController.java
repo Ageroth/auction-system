@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.dtos.*;
@@ -21,6 +22,7 @@ import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
 import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,18 +48,63 @@ public class UserController {
         this.messageService = messageService;
     }
     
+    @PostMapping("/me")
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignupDto signupDto) throws ApplicationException {
+        User user = new User(signupDto.getUsername(), signupDto.getPassword(),
+                signupDto.getEmail(), signupDto.getFirstName(), signupDto.getLastName(),
+                signupDto.getPhoneNumber());
+        
+        User result = userService.registerUser(user);
+        
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{userId}")
+                .buildAndExpand(result.getId()).toUri();
+        
+        String message = messageService.getMessage("userRegistered");
+        
+        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+    }
+    
+    @PostMapping("/me/activation/{activationCode}")
+    public ResponseEntity<?> activateUser(@PathVariable(value = "activationCode") String activationCode) throws ApplicationException {
+        userService.activateUser(activationCode);
+        
+        String message = messageService.getMessage("userActivated");
+        
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+    }
+    
+    @PostMapping("/me/password-reset")
+    public ResponseEntity<?> sendPasswordResetMail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
+        userService.sendPasswordResetMail(passwordResetEmailDto.getEmail());
+        
+        String message = messageService.getMessage("passwordResetLinkSent");
+        
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+    }
+    
+    @PostMapping("/me/password-reset/{resetPasswordCode}")
+    public ResponseEntity<?> resetPassword(@PathVariable(value = "resetPasswordCode") String resetPasswordCode,
+                                           @Valid @RequestBody PasswordResetDto passwordResetDto) throws ApplicationException {
+        userService.resetPassword(resetPasswordCode, passwordResetDto.getNewPassword());
+        
+        String message = messageService.getMessage("passwordReset");
+        
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+    }
+    
     @GetMapping
     public ResponseEntity<?> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "desc") String order,
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Boolean status) {
-    
+        
         Direction direction = SortDirection.getSortDirection(order);
         List<User> users;
         Pageable paging = PageRequest.of(page, pageSize, Sort.by(direction, "createdAt"));
         Page<User> usersPage;
-    
+        
         if (query == null && status == null)
             usersPage = userService.getAllUsers(paging);
         else if (query != null && status == null)
@@ -66,20 +113,20 @@ public class UserController {
             usersPage = userService.getFilteredUsers(status, paging);
         } else
             usersPage = userService.getFilteredUsers(query, status, paging);
-    
-    
+        
+        
         users = usersPage.getContent();
-    
+        
         if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-    
+        
         Map<String, Object> response = new HashMap<>();
         response.put("users", users);
         response.put("currentPage", usersPage.getNumber());
         response.put("totalItems", usersPage.getTotalElements());
         response.put("totalPages", usersPage.getTotalPages());
-    
+        
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
@@ -108,25 +155,25 @@ public class UserController {
     }
     
     @PutMapping("/me/details")
-    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody UpdateUserDetailsDto updateUserDetailsDto,
+    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
-        User user = modelMapper.map(updateUserDetailsDto, User.class);
-    
+        User user = modelMapper.map(userDetailsUpdateDto, User.class);
+        
         userService.updateUserDetails(currentUser.getId(), user);
-    
+        
         String message = messageService.getMessage("userDetailsUpdated");
-    
+        
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
     @PatchMapping("/me/password")
-    public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody ChangeOwnPasswordDto changeOwnPasswordDto,
+    public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
                                                Authentication authentication) throws ApplicationException {
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
         
-        userService.changePassword(currentUser.getId(), changeOwnPasswordDto.getNewPassword(),
-                changeOwnPasswordDto.getOldPassword());
+        userService.changePassword(currentUser.getId(), ownPasswordChangeDto.getNewPassword(),
+                ownPasswordChangeDto.getOldPassword());
         
         String message = messageService.getMessage("userPasswordChanged");
         
@@ -135,8 +182,8 @@ public class UserController {
     
     @PutMapping("/{userId}/details")
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
-                                               @Valid @RequestBody UpdateUserDetailsDto updateUserDetailsDto) throws ApplicationException {
-        User user = modelMapper.map(updateUserDetailsDto, User.class);
+                                               @Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto) throws ApplicationException {
+        User user = modelMapper.map(userDetailsUpdateDto, User.class);
         
         userService.updateUserDetails(userId, user);
         
@@ -147,8 +194,8 @@ public class UserController {
     
     @PatchMapping("/{userId}/password")
     public ResponseEntity<?> changeUserPassword(@PathVariable(value = "userId") Long userId,
-                                                @Valid @RequestBody ChangeUserPasswordDto changeUserPasswordDto) throws ApplicationException {
-        userService.changePassword(userId, changeUserPasswordDto.getNewPassword());
+                                                @Valid @RequestBody UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException {
+        userService.changePassword(userId, userPasswordChangeDto.getNewPassword());
         
         String message = messageService.getMessage("userPasswordChanged");
         

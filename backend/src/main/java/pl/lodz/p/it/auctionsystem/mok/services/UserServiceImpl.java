@@ -133,22 +133,24 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void sendResetPasswordMail(User user) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findByUsername(user.getUsername());
+    public void sendPasswordResetMail(String email) throws ApplicationException {
+        Optional<User> userFromRepository = userRepository.findByEmail(email);
         String resetPasswordCode = UUID.randomUUID().toString().replace("-", "");
         
         userFromRepository.get().setResetPasswordCode(resetPasswordCode);
         userFromRepository.get().setResetPasswordCodeAddDate(LocalDateTime.now());
-        mailService.sendResetPasswordMail(user);
+        mailService.sendPasswordResetMail(userFromRepository.get());
     }
     
     @Override
-    public void resetPassword(User user) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findByResetPasswordCode(user.getResetPasswordCode());
+    public void resetPassword(String resetPasswordCode, String newPassword) throws ApplicationException {
+        Optional<User> userFromRepository = userRepository.findByResetPasswordCode(resetPasswordCode);
         LocalDateTime resetPasswordCodeAddDate = userFromRepository.get().getResetPasswordCodeAddDate();
-        String passwordHash = passwordEncoder.encode(user.getPassword());
+        String passwordHash = passwordEncoder.encode(newPassword);
         
         userFromRepository.get().setPassword(passwordHash);
+        userFromRepository.get().setResetPasswordCode(null);
+        userFromRepository.get().setResetPasswordCodeAddDate(null);
     }
     
     @Override

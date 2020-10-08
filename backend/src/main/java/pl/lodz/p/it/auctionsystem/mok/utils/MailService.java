@@ -51,18 +51,16 @@ public class MailService {
     
     public void sendAccountVerificationMail(User user) {
         final String subject = messageService.getMessage("accountVerification.subject");
-        final String url = "<a href=" + "\"" + baseUrl + "/verify_account?token=" + user.getActivationCode() +
-                "\">Link</a>";
+        final String url = baseUrl + "/verify_account/" + user.getActivationCode();
         final String text = messageService.getMessage("accountVerification.text");
         final String to = user.getEmail();
         
         sendMessage(subject, text + "\n" + url, to);
     }
     
-    public void sendResetPasswordMail(User user) {
+    public void sendPasswordResetMail(User user) {
         final String subject = messageService.getMessage("passwordReset.subject");
-        final String url = "<a href=" + "\"" + baseUrl + "/reset-password?token=" + user.getResetPasswordCode() +
-                "\">Link</a>";
+        final String url = baseUrl + "/reset-password/" + user.getResetPasswordCode();
         final String text = messageService.getMessage("passwordReset.text");
         final String to = user.getEmail();
         

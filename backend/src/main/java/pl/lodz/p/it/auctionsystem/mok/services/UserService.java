@@ -79,7 +79,7 @@ public interface UserService {
      * @param email adres email użytkownika powiązany z kontem
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void sendResetPasswordMail(User user) throws ApplicationException;
+    void sendPasswordResetMail(String email) throws ApplicationException;
     
     /**
      * Metoda umożliwiająca zmianę zapomnianego hasła.
@@ -87,7 +87,7 @@ public interface UserService {
      * @param user obiekt z danymi użytkownika potrzebnymi do zresetowania hasła
      * @throws ApplicationException
      */
-    void resetPassword(User user) throws ApplicationException;
+    void resetPassword(String resetPasswordCode, String newPassword) throws ApplicationException;
     
     /**
      * Metoda umożliwiająca użytkownikowi zmianę własnego hasła.
