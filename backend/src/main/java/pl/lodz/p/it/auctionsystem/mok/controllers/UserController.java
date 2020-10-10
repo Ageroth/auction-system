@@ -155,17 +155,19 @@ public class UserController {
     }
     
     @GetMapping("/{userId}")
-    public UserSummaryDto getUserProfile(@PathVariable(value = "userId") Long userId) throws ApplicationException {
+    public ResponseEntity<?> getUserProfile(@PathVariable(value = "userId") Long userId) throws ApplicationException {
         Optional<User> user = userService.getUserById(userId);
+        UserSummaryDto userSummaryDto = modelMapper.map(user.get(), UserSummaryDto.class);
     
-        return modelMapper.map(user.get(), UserSummaryDto.class);
+        return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
     }
     
     @GetMapping("/me")
-    public UserSummaryDto getCurrentUser(Authentication authentication) {
+    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        UserSummaryDto userSummaryDto = modelMapper.map(currentUser, UserSummaryDto.class);
         
-        return modelMapper.map(currentUser, UserSummaryDto.class);
+        return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
     }
     
     @GetMapping("/username-availability")
