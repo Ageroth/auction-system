@@ -13,10 +13,14 @@ import javax.persistence.Enumerated;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AccessLevelDto {
+public class UserAccessLevelDto {
     
     private Long id;
     
+    private Long userId;
+    
+    private Long accessLevelId;
+    
     @Enumerated(EnumType.STRING)
-    private AccessLevelEnum name;
+    private AccessLevelEnum accessLevelName;
 }

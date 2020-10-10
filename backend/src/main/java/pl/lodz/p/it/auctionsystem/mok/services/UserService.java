@@ -43,7 +43,7 @@ public interface UserService {
     /**
      * Metoda zwracająca użytkownika o podanym id.
      *
-     * @param userId ID użytkownika
+     * @param userId id użytkownika
      * @return użytkownik o podanym userId
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
