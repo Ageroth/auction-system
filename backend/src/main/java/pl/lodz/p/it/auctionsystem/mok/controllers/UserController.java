@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -93,6 +94,23 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
+    @PostMapping
+    public ResponseEntity<?> addUser(@Valid @RequestBody SignupDto signupDto) throws ApplicationException {
+        User user = new User(signupDto.getUsername(), signupDto.getPassword(),
+                signupDto.getEmail(), signupDto.getFirstName(), signupDto.getLastName(),
+                signupDto.getPhoneNumber());
+        
+        User result = userService.createUser(user);
+        
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{userId}")
+                .buildAndExpand(result.getId()).toUri();
+        
+        String message = messageService.getMessage("userAdded");
+        
+        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+    }
+    
     @GetMapping
     public ResponseEntity<?> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
@@ -102,6 +120,7 @@ public class UserController {
         
         Direction direction = SortDirection.getSortDirection(order);
         List<User> users;
+        List<UserDto> userDtos;
         Pageable paging = PageRequest.of(page, pageSize, Sort.by(direction, "createdAt"));
         Page<User> usersPage;
         
@@ -121,8 +140,13 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         
+        userDtos = users.stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
+        
+        
         Map<String, Object> response = new HashMap<>();
-        response.put("users", users);
+        response.put("users", userDtos);
         response.put("currentPage", usersPage.getNumber());
         response.put("totalItems", usersPage.getTotalElements());
         response.put("totalPages", usersPage.getTotalPages());
