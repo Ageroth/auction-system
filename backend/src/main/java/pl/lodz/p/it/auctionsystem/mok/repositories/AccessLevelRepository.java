@@ -6,9 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
 import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 
+import java.util.Optional;
+
 @Repository
 @Transactional
 public interface AccessLevelRepository extends JpaRepository<AccessLevel, Long> {
     
-    AccessLevel findByName(AccessLevelEnum name);
+    Optional<AccessLevel> findByName(AccessLevelEnum name);
 }

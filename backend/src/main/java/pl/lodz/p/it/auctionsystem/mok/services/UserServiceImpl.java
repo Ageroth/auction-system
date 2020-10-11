@@ -7,13 +7,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
+import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
 import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
 import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
+import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -35,16 +38,19 @@ public class UserServiceImpl implements UserService {
     
     private final MailService mailService;
     
+    private final MessageService messageService;
+    
     @Value("${CLIENT_ACCESS_LEVEL}")
     private String CLIENT_ACCESS_LEVEL;
     
     @Autowired
     public UserServiceImpl(UserRepository userRepository, AccessLevelRepository accessLevelRepository,
-                           PasswordEncoder passwordEncoder, MailService mailService) {
+                           PasswordEncoder passwordEncoder, MailService mailService, MessageService messageService) {
         this.userRepository = userRepository;
         this.accessLevelRepository = accessLevelRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
+        this.messageService = messageService;
     }
     
     @Override
@@ -53,8 +59,11 @@ public class UserServiceImpl implements UserService {
         user.setActivated(true);
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
     
-        UserAccessLevel userAccessLevel = new UserAccessLevel(user,
-                accessLevelRepository.findByName(AccessLevelEnum.CLIENT));
+        AccessLevel clientAccessLevel =
+                accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException
+                        (messageService.getMessage("clientAccessLevelNotFound")));
+    
+        UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
     
         user.getUserAccessLevels().add(userAccessLevel);
         return userRepository.save(user);
@@ -64,10 +73,13 @@ public class UserServiceImpl implements UserService {
     public User registerUser(User user) throws ApplicationException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
-        
-        UserAccessLevel userAccessLevel = new UserAccessLevel(user,
-                accessLevelRepository.findByName(AccessLevelEnum.CLIENT));
-        
+    
+        AccessLevel clientAccessLevel =
+                accessLevelRepository.findByName(AccessLevelEnum.DUPA).orElseThrow(() -> new EntityNotFoundException(
+                        (messageService.getMessage("clientAccessLevelNotFound"))));
+    
+        UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
+    
         user.getUserAccessLevels().add(userAccessLevel);
     
         mailService.sendAccountVerificationMail(user);
