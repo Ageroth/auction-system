@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService {
 //        TODO: invalid resetPasswordCode(up) exception
     
         if (LocalDateTime.now().isAfter(resetPasswordCodeValidityDate)) {
-            String resetPasswordCodeMessage = messageService.getMessage("incorrectPassword");
+            String resetPasswordCodeMessage = messageService.getMessage("resetPasswordCodeExpired");
         
             throw new ResetPasswordCodeExpiredException(resetPasswordCodeMessage);
         }
