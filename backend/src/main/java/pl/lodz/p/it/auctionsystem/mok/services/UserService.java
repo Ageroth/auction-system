@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 
-import java.util.Optional;
-
 @SuppressWarnings("ALL")
 @Service
 public interface UserService {
@@ -47,7 +45,7 @@ public interface UserService {
      * @return użytkownik o podanym userId
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    Optional<User> getUserById(Long userId) throws ApplicationException;
+    User getUserById(Long userId) throws ApplicationException;
     
     /**
      * Metoda zwracająca użytkownika o podanej nazwie użytkownika.
@@ -56,7 +54,7 @@ public interface UserService {
      * @return użytkownik o podanej nazwie użytkownika
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    Optional<User> getUserByUsername(String username) throws ApplicationException;
+    User getUserByUsername(String username) throws ApplicationException;
     
     boolean existsByUsername(String username);
     

@@ -105,15 +105,19 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public Optional<User> getUserById(Long userId) throws ApplicationException {
-//        TODO: Throw an exception in case user is not found
-        return userRepository.findById(userId);
+    public User getUserById(Long userId) throws ApplicationException {
+        String message = messageService.getMessage("userNotFound");
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException((message)));
+        
+        return user;
     }
     
     @Override
-    public Optional<User> getUserByUsername(String username) throws ApplicationException {
-//        TODO: Throw an exception in case user is not found
-        return userRepository.findByUsername(username);
+    public User getUserByUsername(String username) throws ApplicationException {
+        String message = messageService.getMessage("userNotFound");
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException((message)));
+        
+        return user;
     }
     
     @Override
@@ -128,20 +132,23 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public void activateUser(String activationCode) throws ApplicationException {
-        //        TODO: Throw an exception in case user is not found
-        Optional<User> user = userRepository.findByActivationCode(activationCode);
-        
-        user.get().setActivated(true);
-        user.get().setActivationCode(null);
+        String message = messageService.getMessage("userNotFound");
+        User user =
+                userRepository.findByActivationCode(activationCode).orElseThrow(() -> new EntityNotFoundException((message)));
+    
+        user.setActivated(true);
+        user.setActivationCode(null);
     }
     
     @Override
-    public void updateUserDetails(Long userId, User user) {
-        Optional<User> userFromRepository = userRepository.findById(userId);
+    public void updateUserDetails(Long userId, User user) throws ApplicationException {
+        String message = messageService.getMessage("userNotFound");
+        User userFromRepository =
+                userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException((message)));
         
-        userFromRepository.get().setFirstName(user.getFirstName());
-        userFromRepository.get().setLastName(user.getLastName());
-        userFromRepository.get().setPhoneNumber(user.getPhoneNumber());
+        userFromRepository.setFirstName(user.getFirstName());
+        userFromRepository.setLastName(user.getLastName());
+        userFromRepository.setPhoneNumber(user.getPhoneNumber());
     }
     
     @Override

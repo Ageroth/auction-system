@@ -26,7 +26,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -156,8 +155,8 @@ public class UserController {
     
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserProfile(@PathVariable(value = "userId") Long userId) throws ApplicationException {
-        Optional<User> user = userService.getUserById(userId);
-        UserSummaryDto userSummaryDto = modelMapper.map(user.get(), UserSummaryDto.class);
+        User user = userService.getUserById(userId);
+        UserSummaryDto userSummaryDto = modelMapper.map(user, UserSummaryDto.class);
     
         return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
     }
