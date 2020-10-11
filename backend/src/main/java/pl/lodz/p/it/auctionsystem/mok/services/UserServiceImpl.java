@@ -12,6 +12,8 @@ import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
+import pl.lodz.p.it.auctionsystem.exceptions.IncorrectPasswordException;
+import pl.lodz.p.it.auctionsystem.exceptions.ResetPasswordCodeExpiredException;
 import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
 import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
@@ -19,7 +21,6 @@ import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.containsTextInName;
@@ -43,6 +44,9 @@ public class UserServiceImpl implements UserService {
     @Value("${CLIENT_ACCESS_LEVEL}")
     private String CLIENT_ACCESS_LEVEL;
     
+    @Value("${resetPasswordCodeValidTime}")
+    private Long resetPasswordCodeValidTime;
+    
     @Autowired
     public UserServiceImpl(UserRepository userRepository, AccessLevelRepository accessLevelRepository,
                            PasswordEncoder passwordEncoder, MailService mailService, MessageService messageService) {
@@ -55,31 +59,27 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public User createUser(User user) throws ApplicationException {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setActivated(true);
-        user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
-    
+        String message = messageService.getMessage("clientAccessLevelNotFound");
         AccessLevel clientAccessLevel =
-                accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException
-                        (messageService.getMessage("clientAccessLevelNotFound")));
-    
+                accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException(message));
         UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
     
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setActivated(true);
         user.getUserAccessLevels().add(userAccessLevel);
+    
         return userRepository.save(user);
     }
     
     @Override
     public User registerUser(User user) throws ApplicationException {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
-    
+        String message = messageService.getMessage("clientAccessLevelNotFound");
         AccessLevel clientAccessLevel =
-                accessLevelRepository.findByName(AccessLevelEnum.DUPA).orElseThrow(() -> new EntityNotFoundException(
-                        (messageService.getMessage("clientAccessLevelNotFound"))));
-    
+                accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException(message));
         UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
     
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
         user.getUserAccessLevels().add(userAccessLevel);
     
         mailService.sendAccountVerificationMail(user);
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long userId) throws ApplicationException {
         String message = messageService.getMessage("userNotFound");
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException((message)));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(message));
         
         return user;
     }
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUsername(String username) throws ApplicationException {
         String message = messageService.getMessage("userNotFound");
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException((message)));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(message));
         
         return user;
     }
@@ -134,8 +134,8 @@ public class UserServiceImpl implements UserService {
     public void activateUser(String activationCode) throws ApplicationException {
         String message = messageService.getMessage("userNotFound");
         User user =
-                userRepository.findByActivationCode(activationCode).orElseThrow(() -> new EntityNotFoundException((message)));
-    
+                userRepository.findByActivationCode(activationCode).orElseThrow(() -> new EntityNotFoundException(message));
+//        TODO: invalid activation code(up)
         user.setActivated(true);
         user.setActivationCode(null);
     }
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
     public void updateUserDetails(Long userId, User user) throws ApplicationException {
         String message = messageService.getMessage("userNotFound");
         User userFromRepository =
-                userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException((message)));
+                userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(message));
         
         userFromRepository.setFirstName(user.getFirstName());
         userFromRepository.setLastName(user.getLastName());
@@ -153,38 +153,62 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public void sendPasswordResetMail(String email) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findByEmail(email);
+        String message = messageService.getMessage("userNotFound");
+        User userFromRepository =
+                userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(message));
         String resetPasswordCode = UUID.randomUUID().toString().replace("-", "");
-        
-        userFromRepository.get().setResetPasswordCode(resetPasswordCode);
-        userFromRepository.get().setResetPasswordCodeAddDate(LocalDateTime.now());
-        mailService.sendPasswordResetMail(userFromRepository.get());
+    
+        userFromRepository.setResetPasswordCode(resetPasswordCode);
+        userFromRepository.setResetPasswordCodeAddDate(LocalDateTime.now());
+        mailService.sendPasswordResetMail(userFromRepository);
     }
     
     @Override
     public void resetPassword(String resetPasswordCode, String newPassword) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findByResetPasswordCode(resetPasswordCode);
-        LocalDateTime resetPasswordCodeAddDate = userFromRepository.get().getResetPasswordCodeAddDate();
-        String passwordHash = passwordEncoder.encode(newPassword);
+        String userMessage = messageService.getMessage("userNotFound");
+        User userFromRepository =
+                userRepository.findByResetPasswordCode(resetPasswordCode).orElseThrow(() -> new
+                        EntityNotFoundException(userMessage));
+        LocalDateTime resetPasswordCodeAddDate = userFromRepository.getResetPasswordCodeAddDate();
+        LocalDateTime resetPasswordCodeValidityDate = resetPasswordCodeAddDate.plusMinutes(15);
+//        TODO: invalid resetPasswordCode(up) exception
+    
+        if (LocalDateTime.now().isAfter(resetPasswordCodeValidityDate)) {
+            String resetPasswordCodeMessage = messageService.getMessage("incorrectPassword");
         
-        userFromRepository.get().setPassword(passwordHash);
-        userFromRepository.get().setResetPasswordCode(null);
-        userFromRepository.get().setResetPasswordCodeAddDate(null);
+            throw new ResetPasswordCodeExpiredException(resetPasswordCodeMessage);
+        }
+    
+        String passwordHash = passwordEncoder.encode(newPassword);
+    
+        userFromRepository.setPassword(passwordHash);
+        userFromRepository.setResetPasswordCode(null);
+        userFromRepository.setResetPasswordCodeAddDate(null);
     }
     
     @Override
     public void changePassword(Long userId, String newPassword, String oldPassword) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findById(userId);
+        String userMessage = messageService.getMessage("userNotFound");
+        User userFromRepository =
+                userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userMessage));
+    
+        if (!passwordEncoder.matches(oldPassword, userFromRepository.getPassword())) {
+            String passwordMessage = messageService.getMessage("incorrectPassword");
+            throw new IncorrectPasswordException(passwordMessage);
+        }
+    
         String passwordHash = passwordEncoder.encode(newPassword);
-        
-        userFromRepository.get().setPassword(passwordHash);
+    
+        userFromRepository.setPassword(passwordHash);
     }
     
     @Override
     public void changePassword(Long userId, String newPassword) throws ApplicationException {
-        Optional<User> userFromRepository = userRepository.findById(userId);
+        String message = messageService.getMessage("userNotFound");
+        User userFromRepository =
+                userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(message));
         String passwordHash = passwordEncoder.encode(newPassword);
-        
-        userFromRepository.get().setPassword(passwordHash);
+    
+        userFromRepository.setPassword(passwordHash);
     }
 }
