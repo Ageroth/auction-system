@@ -85,7 +85,7 @@ public interface UserService {
      * @param user obiekt z danymi użytkownika potrzebnymi do zresetowania hasła
      * @throws ApplicationException
      */
-    void resetPassword(String resetPasswordCode, String newPassword) throws ApplicationException;
+    void resetPassword(String passwordResetCode, String newPassword) throws ApplicationException;
     
     /**
      * Metoda umożliwiająca użytkownikowi zmianę własnego hasła.

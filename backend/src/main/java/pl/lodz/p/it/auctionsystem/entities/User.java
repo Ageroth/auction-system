@@ -45,13 +45,13 @@ public class User extends BaseEntity {
     @Setter
     private String activationCode;
     
-    @Column(name = "reset_password_code", unique = true, length = 64)
+    @Column(name = "password_reset_code", unique = true, length = 64)
     @Setter
-    private String resetPasswordCode;
+    private String passwordResetCode;
     
-    @Column(name = "reset_password_code_add_date")
+    @Column(name = "password_reset_code_add_date")
     @Setter
-    private LocalDateTime resetPasswordCodeAddDate;
+    private LocalDateTime passwordResetCodeAddDate;
     
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE}, mappedBy = "user")
     private Collection<UserAccessLevel> userAccessLevels = new ArrayList<>();

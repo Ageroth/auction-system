@@ -4,9 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
-import pl.lodz.p.it.auctionsystem.exceptions.IncorrectPasswordException;
-import pl.lodz.p.it.auctionsystem.exceptions.ResetPasswordCodeExpiredException;
+import pl.lodz.p.it.auctionsystem.exceptions.*;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
@@ -21,8 +19,18 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
-    @ExceptionHandler(value = ResetPasswordCodeExpiredException.class)
-    public ResponseEntity<?> handleResetPasswordCodeExpiredException(ResetPasswordCodeExpiredException ex) {
+    @ExceptionHandler(value = InvalidParameterException.class)
+    public ResponseEntity<?> handleInvalidParameterException(InvalidParameterException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(value = PasswordResetCodeExpiredException.class)
+    public ResponseEntity<?> handlePasswordResetCodeExpiredException(PasswordResetCodeExpiredException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(value = UserAccessLevelAlreadyExistsException.class)
+    public ResponseEntity<?> handleUserAccessLevelAlreadyExistsException(UserAccessLevelAlreadyExistsException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

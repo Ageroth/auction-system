@@ -83,10 +83,10 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
-    @PostMapping("/me/password-reset/{resetPasswordCode}")
-    public ResponseEntity<?> resetPassword(@PathVariable(value = "resetPasswordCode") String resetPasswordCode,
+    @PostMapping("/me/password-reset/{passwordResetCode}")
+    public ResponseEntity<?> resetPassword(@PathVariable(value = "passwordResetCode") String passwordResetCode,
                                            @Valid @RequestBody PasswordResetDto passwordResetDto) throws ApplicationException {
-        userService.resetPassword(resetPasswordCode, passwordResetDto.getNewPassword());
+        userService.resetPassword(passwordResetCode, passwordResetDto.getNewPassword());
         
         String message = messageService.getMessage("passwordReset");
         

@@ -7,9 +7,12 @@ import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
+import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
+import pl.lodz.p.it.auctionsystem.exceptions.UserAccessLevelAlreadyExistsException;
 import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserAccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
+import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 import java.util.List;
 
@@ -19,28 +22,39 @@ import java.util.List;
 public class UserAccessLevelServiceImpl implements UserAccessLevelService {
     
     private final UserAccessLevelRepository userAccessLevelRepository;
+    
     private final UserRepository userRepository;
+    
     private final AccessLevelRepository accessLevelRepository;
+    
+    private final MessageService messageService;
     
     @Autowired
     public UserAccessLevelServiceImpl(UserAccessLevelRepository userAccessLevelRepository,
-                                      UserRepository userRepository, AccessLevelRepository accessLevelRepository) {
+                                      UserRepository userRepository, AccessLevelRepository accessLevelRepository,
+                                      MessageService messageService) {
         this.userAccessLevelRepository = userAccessLevelRepository;
         this.userRepository = userRepository;
         this.accessLevelRepository = accessLevelRepository;
+        this.messageService = messageService;
     }
     
     @Override
     public void addUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException {
-        User user = userRepository.getOne(userId);
-        AccessLevel accessLevel = accessLevelRepository.getOne(accessLevelId);
-
-//        if (userAccessLevelRepository.existsByUserIdAndAccessLevelId(userId, accessLevel.getId())) {
-//            throw userAlreadyHasGivenAccessLevelException(userId, accessLevel.getId());
-//        }
+        String userNotFoundMessage = messageService.getMessage("userNotFound");
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+        String accessLevelNotFoundMessage = messageService.getMessage("accessLevelNotFound");
+        AccessLevel accessLevel =
+                accessLevelRepository.findById(accessLevelId).orElseThrow(() -> new EntityNotFoundException(accessLevelNotFoundMessage));
+    
+        if (userAccessLevelRepository.existsByUser_IdAndAccessLevel_Id(userId, accessLevelId)) {
+            String userAccessLevelAlreadyExistsMessage = messageService.getMessage("userAccessLevelAlreadyExists");
         
+            throw new UserAccessLevelAlreadyExistsException(userAccessLevelAlreadyExistsMessage);
+        }
+    
         UserAccessLevel userAccessLevel = new UserAccessLevel(user, accessLevel);
-        
+    
         userAccessLevelRepository.save(userAccessLevel);
     }
     

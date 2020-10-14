@@ -60,7 +60,7 @@ public class MailService {
     
     public void sendPasswordResetMail(User user) {
         final String subject = messageService.getMessage("passwordReset.subject");
-        final String url = baseUrl + "/reset-password/" + user.getResetPasswordCode();
+        final String url = baseUrl + "/reset-password/" + user.getPasswordResetCode();
         final String text = messageService.getMessage("passwordReset.text");
         final String to = user.getEmail();
         
