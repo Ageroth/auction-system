@@ -16,15 +16,13 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
     
-    //    TODO: change http status code
     @ExceptionHandler(value = IncorrectPasswordException.class)
     public ResponseEntity<?> handleIncorrectPasswordException(IncorrectPasswordException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
-    //    TODO: change http status code
     @ExceptionHandler(value = ResetPasswordCodeExpiredException.class)
     public ResponseEntity<?> handleResetPasswordCodeExpiredException(ResetPasswordCodeExpiredException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
