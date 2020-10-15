@@ -17,7 +17,7 @@ public class MailService {
     
     private MessageService messageService;
     
-    @Value("${base-url}")
+    @Value("${base.url}")
     private String baseUrl;
     
     @Value("${email}")

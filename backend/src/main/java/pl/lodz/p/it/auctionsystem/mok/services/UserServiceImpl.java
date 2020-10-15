@@ -42,10 +42,10 @@ public class UserServiceImpl implements UserService {
     
     private final MessageService messageService;
     
-    @Value("${CLIENT_ACCESS_LEVEL}")
+    @Value("${client.access.level}")
     private String CLIENT_ACCESS_LEVEL;
     
-    @Value("${passwordResetCodeValidTime}")
+    @Value("${password.reset.code.valid.time}")
     private Long passwordResetCodeValidTime;
     
     @Autowired

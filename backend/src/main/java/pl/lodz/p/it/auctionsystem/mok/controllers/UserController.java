@@ -38,7 +38,7 @@ public class UserController {
     
     private final MessageService messageService;
     
-    @Value("${pageSize}")
+    @Value("${page.size}")
     private int pageSize;
     
     @Autowired
