@@ -8,19 +8,58 @@ import pl.lodz.p.it.auctionsystem.entities.User;
 
 import java.util.Optional;
 
+/**
+ * Interfejs definiujący dozwolone operacje na encji {@link User}.
+ */
 @Repository
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
     
+    /**
+     * Sprawdza czy istnieje encja {@link User} o podanej nazwie użytkownika.
+     *
+     * @param username nazwa użytkownika
+     * @return true jeśli istnieje, w przeciwnym wypadku false
+     */
     boolean existsByUsername(String username);
     
+    /**
+     * Sprawdza czy istnieje encja {@link User} o podanym emailu.
+     *
+     * @param email email użytkownika
+     * @return true jeśli istnieje, w przeciwnym wypadku false
+     */
     boolean existsByEmail(String email);
     
+    /**
+     * Wyciąga z bazy danych encję {@link User} o podanej nazwie użytkownika.
+     *
+     * @param username nazwa użytkownika
+     * @return obiekt encji {@link User} opakowany w {@link Optional}
+     */
     Optional<User> findByUsername(String username);
     
+    /**
+     * Wyciąga z bazy danych encję {@link User} o podanym emailu.
+     *
+     * @param email email użytkownika
+     * @return obiekt encji {@link User} opakowany w {@link Optional}
+     */
     Optional<User> findByEmail(String email);
     
+    /**
+     * Wyciąga z bazy danych encję {@link User} o podanym kodzie aktywacyjnym.
+     *
+     * @param activationCode kod aktywacyjny użytkownika
+     * @return obiekt encji {@link User} opakowany w {@link Optional}
+     */
     Optional<User> findByActivationCode(String activationCode);
     
+    /**
+     * Wyciąga z bazy danych encję {@link User} o podanym kodzie resetującym hasło.
+     *
+     * @param passwordResetCode kod resetujący hasło użytkownika
+     * @return obiekt encji {@link User} opakowany w {@link Optional}
+     */
     Optional<User> findByPasswordResetCode(String passwordResetCode);
 }
