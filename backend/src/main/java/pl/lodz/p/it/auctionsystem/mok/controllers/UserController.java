@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Kontroler obsługujący operacje związane z użytkownikami.
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -48,6 +51,13 @@ public class UserController {
         this.messageService = messageService;
     }
     
+    /**
+     * Odpowiada za samodzielną rejestrację użytkownika.
+     *
+     * @param signupDto obiekt DTO z danymi rejestrującego się użytkownika
+     * @return HTTP Status 201 z informacją o powodzeniu operacji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PostMapping("/me")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignupDto signupDto) throws ApplicationException {
         User user = new User(signupDto.getUsername(), signupDto.getPassword(),
@@ -65,6 +75,13 @@ public class UserController {
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
     
+    /**
+     * Aktywuje konto użytkownika o przypisanym kodzie aktywacyjnym.
+     *
+     * @param activationCode kod aktywacyjny przypisany do konta użytkownika
+     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PostMapping("/me/activation/{activationCode}")
     public ResponseEntity<?> activateUser(@PathVariable(value = "activationCode") String activationCode) throws ApplicationException {
         userService.activateUser(activationCode);
@@ -74,6 +91,13 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
+    /**
+     * Wysyła użytkownikowi link umożliwiający mu przywrócenie konta w przypadku zapomnienia hasła.
+     *
+     * @param passwordResetEmailDto obiekt DTO z danymi
+     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PostMapping("/me/password-reset")
     public ResponseEntity<?> sendPasswordResetMail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
         userService.sendPasswordResetMail(passwordResetEmailDto.getEmail());
@@ -83,6 +107,14 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
+    /**
+     * Zmienia hasło do konta o podanym kodzie zmiany hasła.
+     *
+     * @param passwordResetCode kod zmiany hasła przypisany do użytkownika
+     * @param passwordResetDto  obiekt DTO z danymi reprezentującymi stare i nowe hasło
+     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PostMapping("/me/password-reset/{passwordResetCode}")
     public ResponseEntity<?> resetPassword(@PathVariable(value = "passwordResetCode") String passwordResetCode,
                                            @Valid @RequestBody PasswordResetDto passwordResetDto) throws ApplicationException {
@@ -93,6 +125,13 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
+    /**
+     * Umożliwia dodanie nowego użytkownika przez administratora.
+     *
+     * @param signupDto obiekt DTO z danymi użytkownika do dodania.
+     * @return HTTP Status 201 z informacją o powodzeniu operacji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PostMapping
     public ResponseEntity<?> addUser(@Valid @RequestBody SignupDto signupDto) throws ApplicationException {
         User user = new User(signupDto.getUsername(), signupDto.getPassword(),
@@ -110,6 +149,16 @@ public class UserController {
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
     
+    /**
+     * Pobiera listę użytkowników przez administratora.
+     *
+     * @param page   numer strony do zwrócenia
+     * @param order  porządek w jakim posortowani mają być użytkownicy
+     * @param query  fraza wykorzystywana do wyszukania
+     * @param status status aktywacji konta do filtrowania
+     * @return HTTP Status 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
+     * użytkowników oraz liczbą wszystkich stron
+     */
     @GetMapping
     public ResponseEntity<?> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
@@ -145,6 +194,7 @@ public class UserController {
         
         
         Map<String, Object> response = new HashMap<>();
+        
         response.put("users", userDtos);
         response.put("currentPage", usersPage.getNumber());
         response.put("totalItems", usersPage.getTotalElements());
@@ -153,14 +203,27 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
+    /**
+     * Zwraca szczegóły konta użytkownika o podanym id.
+     *
+     * @param userId id użytkownika
+     * @return HTTP Status 200 ze szczegółami dotyczącymi konta danego użytkownika
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserProfile(@PathVariable(value = "userId") Long userId) throws ApplicationException {
         User user = userService.getUserById(userId);
         UserSummaryDto userSummaryDto = modelMapper.map(user, UserSummaryDto.class);
-    
+        
         return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
     }
     
+    /**
+     * Zwraca szczegóły naszego konta.
+     *
+     * @return HTTP Status 200 ze szczegółami dotyczącymi naszego konta
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
         UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
@@ -179,6 +242,14 @@ public class UserController {
         return !userService.existsByEmail(email);
     }
     
+    /**
+     * Aktualizuje nasze dane personalne.
+     *
+     * @param userDetailsUpdateDto obiekt DTO z naszymi, zaktualizowanymi danymi personalnymi
+     * @param authentication       przechowuje informacje o aktualnie zalogowanym użytkowniku
+     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PutMapping("/me/details")
     public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
@@ -192,6 +263,14 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
+    /**
+     * Zmienia nasze hasło.
+     *
+     * @param ownPasswordChangeDto obiekt DTO z nowym oraz starym hasłem, potrzebnym do weryfikacji
+     * @param authentication       przechowuje informacje o aktualnie zalogowanym użytkowniku
+     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PatchMapping("/me/password")
     public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
                                                Authentication authentication) throws ApplicationException {
@@ -205,6 +284,14 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
+    /**
+     * Aktualizuje dane personalne użytkownika o podanym id.
+     *
+     * @param userId               id użytkownika
+     * @param userDetailsUpdateDto obiekt DTO z zaktualizowanymi danymi personalnymi użytkownika
+     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PutMapping("/{userId}/details")
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
                                                @Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto) throws ApplicationException {
@@ -217,6 +304,14 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
+    /**
+     * Zmienia hasło użytkownika o podanym id.
+     *
+     * @param userId                id użytkownika
+     * @param userPasswordChangeDto obiekt DTO z nowym hasłem
+     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PatchMapping("/{userId}/password")
     public ResponseEntity<?> changeUserPassword(@PathVariable(value = "userId") Long userId,
                                                 @Valid @RequestBody UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException {

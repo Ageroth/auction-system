@@ -14,7 +14,9 @@ import pl.lodz.p.it.auctionsystem.mok.services.AccessLevelService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/**
+ * Kontroler obsługujący poziomy dostępu.
+ */
 @RestController
 @RequestMapping("/api/access-levels")
 public class AccessLevelController {
@@ -29,6 +31,11 @@ public class AccessLevelController {
         this.modelMapper = modelMapper;
     }
     
+    /**
+     * Zwraca wszystkie poziomy dostępu.
+     *
+     * @return HTTP Status 200 z listą poziomów dostępu
+     */
     @GetMapping
     public ResponseEntity<?> getAllAccessLevels() {
         List<AccessLevel> accessLevels = accessLevelService.getAllAccessLevels();

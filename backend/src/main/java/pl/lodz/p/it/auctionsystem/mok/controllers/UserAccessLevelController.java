@@ -16,6 +16,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Kontroler obsługujący operacje związane z poziomi dostępu użytkowników.
+ */
 @RestController
 @RequestMapping("/api/user-access-levels")
 public class UserAccessLevelController {
@@ -34,6 +37,12 @@ public class UserAccessLevelController {
         this.messageService = messageService;
     }
     
+    /**
+     * Zwraca poziomy dostępu przypisane do użytkownika o podanym id.
+     *
+     * @param userId id użytkownika
+     * @return HTTP status 200 z listą poziomów dostępu użytkownika
+     */
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getUserAccessLevelsByUserId(@PathVariable Long userId) {
         List<UserAccessLevel> userAccessLevels = userAccessLevelService.getUserAccessLevelsByUserId(userId);
@@ -44,6 +53,13 @@ public class UserAccessLevelController {
         return new ResponseEntity<>(userAccessLevelDtos, HttpStatus.OK);
     }
     
+    /**
+     * Przydziela poziom dostępu danemu użytkownikowi.
+     *
+     * @param userAccessLevelDto obiekt DTO z informacjami komu i jaki poziom dostępu przypisać
+     * @return HTTP status 201 z informacją o powodzeniu operacji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PostMapping
     public ResponseEntity<?> addUserAccessLevel(@Valid @RequestBody UserAccessLevelDto userAccessLevelDto) throws ApplicationException {
         userAccessLevelService.addUserAccessLevel(userAccessLevelDto.getUserId(),
@@ -54,6 +70,12 @@ public class UserAccessLevelController {
         return new ResponseEntity<>(new ApiResponseDto(true, message), HttpStatus.CREATED);
     }
     
+    /**
+     * Odłącza poziom dostępu przypisany do konta użytkownika.
+     *
+     * @param userAccessLevelId id obiektu reprezentującego powiązanie użytkownika z poziomem dostępu
+     * @return HTTP status 204
+     */
     @DeleteMapping("{userAccessLevelId}")
     public ResponseEntity<?> deleteUserAccessLevel(@PathVariable("userAccessLevelId") Long userAccessLevelId) {
         userAccessLevelService.deleteUserAccessLevel(userAccessLevelId);

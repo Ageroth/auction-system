@@ -20,6 +20,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Kontroler służący do uwierzytelnienia użytkownika.
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -34,6 +37,12 @@ public class AuthController {
         this.jwtTokenUtils = jwtTokenUtils;
     }
     
+    /**
+     * Uwierzytelnia użytkownika na podstawie przesłanych danych i zwraca odpowiedź.
+     *
+     * @param loginDto obiekt DTO z danymi uwierzytelnianego użytkownika
+     * @return HTTP Status 200 z żetonem JWT, nazwą użytkownika oraz jego poziomami dostępu
+     */
     @PostMapping("/login")
     public ResponseEntity<?> logIn(@Valid @RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
