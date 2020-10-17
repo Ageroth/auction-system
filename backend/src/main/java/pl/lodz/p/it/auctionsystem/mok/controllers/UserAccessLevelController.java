@@ -41,7 +41,7 @@ public class UserAccessLevelController {
      * Zwraca poziomy dostępu przypisane do użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return HTTP status 200 z listą poziomów dostępu użytkownika
+     * @return HTTP status 200 z listą obiektów typu {@link UserAccessLevelDto}
      */
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getUserAccessLevelsByUserId(@PathVariable Long userId) {
@@ -56,8 +56,8 @@ public class UserAccessLevelController {
     /**
      * Przydziela poziom dostępu danemu użytkownikowi.
      *
-     * @param userAccessLevelDto obiekt DTO z informacjami komu i jaki poziom dostępu przypisać
-     * @return HTTP status 201 z informacją o powodzeniu operacji
+     * @param userAccessLevelDto obiekt typu {@link UserAccessLevelDto}
+     * @return HTTP status 201 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping

@@ -40,8 +40,8 @@ public class AuthController {
     /**
      * Uwierzytelnia użytkownika na podstawie przesłanych danych i zwraca odpowiedź.
      *
-     * @param loginDto obiekt DTO z danymi uwierzytelnianego użytkownika
-     * @return HTTP Status 200 z żetonem JWT, nazwą użytkownika oraz jego poziomami dostępu
+     * @param loginDto obiekt typu {@link LoginDto}
+     * @return HTTP Status 200 z obiektem typu {@link JwtTokenDto}
      */
     @PostMapping("/login")
     public ResponseEntity<?> logIn(@Valid @RequestBody LoginDto loginDto) {
