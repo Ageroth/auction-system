@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * DTO wykorzystywane przy resetowaniu hasła, zawierające nowe hasło.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * DTO reprezentujące odpowiedź api.
+ */
 @AllArgsConstructor
 @Getter
 @Setter

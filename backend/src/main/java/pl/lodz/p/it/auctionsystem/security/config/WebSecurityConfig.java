@@ -17,6 +17,9 @@ import pl.lodz.p.it.auctionsystem.security.jwt.JwtAuthEntryPoint;
 import pl.lodz.p.it.auctionsystem.security.jwt.JwtTokenAuthFilter;
 import pl.lodz.p.it.auctionsystem.security.services.UserDetailsServiceImpl;
 
+/**
+ * Klasa obsługująca konfigurację bezpieczeństwa aplikacji.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -63,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 //                .antMatchers("/api/auth/**").permitAll()
                 .anyRequest().permitAll();
-    
+        
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

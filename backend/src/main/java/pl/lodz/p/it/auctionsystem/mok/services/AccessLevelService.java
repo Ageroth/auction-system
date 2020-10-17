@@ -2,17 +2,20 @@ package pl.lodz.p.it.auctionsystem.mok.services;
 
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
+import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
 
 import java.util.List;
 
-@SuppressWarnings("ALL")
+/**
+ * Interfejs definiujący dozwolone operacje na obiektach typu {@link UserAccessLevel}
+ */
 @Service
 public interface AccessLevelService {
     
     /**
-     * Metoda która zwraca wszystkie poziomy dostępu.
+     * Zwraca wszystkie poziomy dostępu.
      *
-     * @return lista wszystkich poziomy dostępu
+     * @return lista wszystkich obiektów {@link AccessLevel}
      */
     List<AccessLevel> getAllAccessLevels();
 }

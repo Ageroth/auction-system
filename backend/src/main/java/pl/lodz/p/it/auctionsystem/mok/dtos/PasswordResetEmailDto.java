@@ -9,6 +9,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+/**
+ * DTO wykorzystywane przy wysyłaniu łącza do resetu hasła.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

@@ -9,6 +9,9 @@ import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+/**
+ * DTO zawierające informacje o poziomie dostępu.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

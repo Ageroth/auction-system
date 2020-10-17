@@ -13,6 +13,9 @@ import java.util.List;
 
 import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.isActive;
 
+/**
+ * Klasa służaca do harmonogramowania cyklicznego usuwania nieaktywnych użytkowników.
+ */
 @Component
 public class DeleteInactiveUserScheduler {
     
@@ -23,6 +26,10 @@ public class DeleteInactiveUserScheduler {
     @Autowired
     public DeleteInactiveUserScheduler(UserRepository userRepository) {this.userRepository = userRepository;}
     
+    /**
+     * Usuwa z bazy danych konta użytkowników. Konto jest usuwane jeżeli nie jest aktywne przez
+     * ponad dobę licząc od daty utworzenia. Metoda jest wywoływana codziennie o godzinie 00:00.
+     */
     @Scheduled(cron = "${cron.expression}")
     public void executeTask() {
         log.info("Checking database for inactive users");

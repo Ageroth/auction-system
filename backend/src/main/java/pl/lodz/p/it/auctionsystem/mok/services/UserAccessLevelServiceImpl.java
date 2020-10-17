@@ -16,7 +16,6 @@ import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 import java.util.List;
 
-@SuppressWarnings("ALL")
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
 public class UserAccessLevelServiceImpl implements UserAccessLevelService {
@@ -65,6 +64,7 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
     
     @Override
     public void deleteUserAccessLevel(Long userAccessLevelId) {
-        userAccessLevelRepository.deleteById(userAccessLevelId);
+        if (userAccessLevelRepository.existsById(userAccessLevelId))
+            userAccessLevelRepository.deleteById(userAccessLevelId);
     }
 }

@@ -11,6 +11,9 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 import java.util.Locale;
 
+/**
+ * Klasa obsługująca konfigurację aplikacji.
+ */
 @Configuration
 @EnableScheduling
 public class AppConfig implements WebMvcConfigurer {

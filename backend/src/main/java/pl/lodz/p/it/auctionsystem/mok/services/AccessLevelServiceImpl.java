@@ -9,7 +9,6 @@ import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 
 import java.util.List;
 
-@SuppressWarnings("ALL")
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
 public class AccessLevelServiceImpl implements AccessLevelService {

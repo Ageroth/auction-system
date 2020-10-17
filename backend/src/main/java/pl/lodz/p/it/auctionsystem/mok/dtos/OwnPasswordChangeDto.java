@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * DTO zawierające nowe oraz stare hasło potrzebne do weryfikacji.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

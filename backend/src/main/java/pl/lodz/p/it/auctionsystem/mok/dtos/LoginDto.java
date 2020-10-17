@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * DTO zawierające login i hasło podane przez użytkownika podczas logowania.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

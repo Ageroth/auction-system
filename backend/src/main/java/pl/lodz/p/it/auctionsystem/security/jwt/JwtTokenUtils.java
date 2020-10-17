@@ -10,6 +10,9 @@ import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import java.util.Date;
 
+/**
+ * Klasa zawierająca metody pomocnicze do obsługi żetonów JWT.
+ */
 @Component
 public class JwtTokenUtils {
     
@@ -21,6 +24,12 @@ public class JwtTokenUtils {
     @Value("${jwt.expiration.ms}")
     private int jwtExpirationMs;
     
+    /**
+     * Generuje żeton autoryzacyjny.
+     *
+     * @param authentication obiekt typu {@link Authentication}
+     * @return wygenerowany żeton
+     */
     public String generateToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
         
@@ -36,6 +45,12 @@ public class JwtTokenUtils {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
     
+    /**
+     * Waliduje żeton autoryzacyjny.
+     *
+     * @param authToken żeton wymagający walidacji
+     * @return true jeśli żeton jest ważny, w przeciwnym wypadku false
+     */
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
