@@ -1,3 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.utils;
 
-public enum AccessLevelEnum {CLIENT, MANAGER, ADMINISTRATOR, DUPA}
+/**
+ * Typ wyliczeniowy reprezentujący jeden z poziomów dostępu.
+ */
+public enum AccessLevelEnum {CLIENT, MANAGER, ADMINISTRATOR}

@@ -10,6 +10,9 @@ import pl.lodz.p.it.auctionsystem.entities.User;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * Klasa służaca do obsługi wysyłania emaili.
+ */
 @Component
 public class MailService {
     
@@ -33,6 +36,13 @@ public class MailService {
         this.messageService = messageService;
     }
     
+    /**
+     * Wysyła wiadomość o wskazanych parametrach.
+     *
+     * @param subject temat wiadomości
+     * @param text    ciało wiadomości
+     * @param to      odbiorca wiadomości
+     */
     private void sendMessage(String subject, String text, String to) {
         MimeMessage message = javaMailSender.createMimeMessage();
         
@@ -49,15 +59,25 @@ public class MailService {
         }
     }
     
-    public void sendAccountVerificationMail(User user) {
-        final String subject = messageService.getMessage("accountVerification.subject");
+    /**
+     * Wysyła email dotyczący aktywacji konta.
+     *
+     * @param user obiekt przechowujący dane
+     */
+    public void sendAccountActivationMail(User user) {
+        final String subject = messageService.getMessage("accountActivation.subject");
         final String url = baseUrl + "/verify_account/" + user.getActivationCode();
-        final String text = messageService.getMessage("accountVerification.text");
+        final String text = messageService.getMessage("accountActivation.text");
         final String to = user.getEmail();
         
         sendMessage(subject, text + "\n" + url, to);
     }
     
+    /**
+     * Wysyła email dotyczący resetu hasła.
+     *
+     * @param user obiekt przechowujący dane
+     */
     public void sendPasswordResetMail(User user) {
         final String subject = messageService.getMessage("passwordReset.subject");
         final String url = baseUrl + "/reset-password/" + user.getPasswordResetCode();

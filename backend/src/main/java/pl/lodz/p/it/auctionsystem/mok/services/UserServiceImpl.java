@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
         user.getUserAccessLevels().add(userAccessLevel);
     
-        mailService.sendAccountVerificationMail(user);
+        mailService.sendAccountActivationMail(user);
     
         return userRepository.save(user);
     }
