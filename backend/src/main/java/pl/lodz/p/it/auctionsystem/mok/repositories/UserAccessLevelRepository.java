@@ -28,9 +28,22 @@ public interface UserAccessLevelRepository extends JpaRepository<UserAccessLevel
      * Zwraca wszystkie powiązania pomiędzy użytkownikiem o podanym id z poziomami dostępu.
      *
      * @param userId id użytkownika
-     * @return lista obiektów typu {@link UserAccessLevel}, które wiążą użytkownika z poziomem dostępu
+     * @return lista encji typu {@link UserAccessLevel}, które wiążą użytkownika z poziomem dostępu
      */
     List<UserAccessLevel> findByUser_Id(Long userId);
     
+    /**
+     * Usuwa z bazy encję typu {@link UserAccessLevel} o podanym id.
+     *
+     * @param id id poziomu dostępu użytkownika
+     */
     void deleteById(Long id);
+    
+    /**
+     * Sprawdza czy w bazie istnieje encja {@link UserAccessLevel} o podanym id.
+     *
+     * @param id id poziomu dostępu użytkownika
+     * @return true jeśli istnieje, w przeciwnym wypadku false
+     */
+    boolean existsById(Long id);
 }

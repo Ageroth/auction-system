@@ -64,6 +64,7 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
     
     @Override
     public void deleteUserAccessLevel(Long userAccessLevelId) {
-        userAccessLevelRepository.deleteById(userAccessLevelId);
+        if (userAccessLevelRepository.existsById(userAccessLevelId))
+            userAccessLevelRepository.deleteById(userAccessLevelId);
     }
 }
