@@ -54,8 +54,8 @@ public class UserController {
     /**
      * Odpowiada za samodzielną rejestrację użytkownika.
      *
-     * @param signupDto obiekt DTO z danymi rejestrującego się użytkownika
-     * @return HTTP Status 201 z informacją o powodzeniu operacji
+     * @param signupDto obiekt typu {@link SignupDto}
+     * @return HTTP Status 201 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me")
@@ -79,7 +79,7 @@ public class UserController {
      * Aktywuje konto użytkownika o przypisanym kodzie aktywacyjnym.
      *
      * @param activationCode kod aktywacyjny przypisany do konta użytkownika
-     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/activation/{activationCode}")
@@ -94,8 +94,8 @@ public class UserController {
     /**
      * Wysyła użytkownikowi link umożliwiający mu przywrócenie konta w przypadku zapomnienia hasła.
      *
-     * @param passwordResetEmailDto obiekt DTO z danymi
-     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @param passwordResetEmailDto obiekt typu {@link PasswordResetEmailDto}
+     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/password-reset")
@@ -108,11 +108,11 @@ public class UserController {
     }
     
     /**
-     * Zmienia hasło do konta o podanym kodzie zmiany hasła.
+     * Zmienia hasło konta o podanym kodzie zmiany hasła.
      *
      * @param passwordResetCode kod zmiany hasła przypisany do użytkownika
-     * @param passwordResetDto  obiekt DTO z danymi reprezentującymi stare i nowe hasło
-     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @param passwordResetDto  obiekt typu {@link PasswordResetDto}
+     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/password-reset/{passwordResetCode}")
@@ -128,8 +128,8 @@ public class UserController {
     /**
      * Umożliwia dodanie nowego użytkownika przez administratora.
      *
-     * @param signupDto obiekt DTO z danymi użytkownika do dodania.
-     * @return HTTP Status 201 z informacją o powodzeniu operacji
+     * @param signupDto obiekt typu {@link SignupDto}
+     * @return HTTP Status 201 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping
@@ -207,7 +207,7 @@ public class UserController {
      * Zwraca szczegóły konta użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return HTTP Status 200 ze szczegółami dotyczącymi konta danego użytkownika
+     * @return HTTP Status 200 z obiektem typu {@link UserSummaryDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/{userId}")
@@ -221,8 +221,8 @@ public class UserController {
     /**
      * Zwraca szczegóły naszego konta.
      *
-     * @return HTTP Status 200 ze szczegółami dotyczącymi naszego konta
-     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     * @param authentication przechowuje informacje o aktualnie zalogowanym użytkowniku
+     * @return HTTP Status 200 z obiektem typu {@link UserSummaryDto}
      */
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
@@ -245,9 +245,9 @@ public class UserController {
     /**
      * Aktualizuje nasze dane personalne.
      *
-     * @param userDetailsUpdateDto obiekt DTO z naszymi, zaktualizowanymi danymi personalnymi
+     * @param userDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
      * @param authentication       przechowuje informacje o aktualnie zalogowanym użytkowniku
-     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PutMapping("/me/details")
@@ -266,9 +266,9 @@ public class UserController {
     /**
      * Zmienia nasze hasło.
      *
-     * @param ownPasswordChangeDto obiekt DTO z nowym oraz starym hasłem, potrzebnym do weryfikacji
+     * @param ownPasswordChangeDto obiekt typu {@link OwnPasswordChangeDto}
      * @param authentication       przechowuje informacje o aktualnie zalogowanym użytkowniku
-     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/me/password")
@@ -288,8 +288,8 @@ public class UserController {
      * Aktualizuje dane personalne użytkownika o podanym id.
      *
      * @param userId               id użytkownika
-     * @param userDetailsUpdateDto obiekt DTO z zaktualizowanymi danymi personalnymi użytkownika
-     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @param userDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
+     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PutMapping("/{userId}/details")
@@ -308,8 +308,8 @@ public class UserController {
      * Zmienia hasło użytkownika o podanym id.
      *
      * @param userId                id użytkownika
-     * @param userPasswordChangeDto obiekt DTO z nowym hasłem
-     * @return HTTP status 200 z informacją o powodzeniu operacji
+     * @param userPasswordChangeDto obiekt typu {@link UserPasswordChangeDto}
+     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/{userId}/password")
