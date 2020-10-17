@@ -173,7 +173,7 @@ public class UserController {
         Page<User> usersPage;
         
         if (query == null && status == null)
-            usersPage = userService.getAllUsers(paging);
+            usersPage = userService.getUsers(paging);
         else if (query != null && status == null)
             usersPage = userService.getFilteredUsers(query, paging);
         else if (query == null) {

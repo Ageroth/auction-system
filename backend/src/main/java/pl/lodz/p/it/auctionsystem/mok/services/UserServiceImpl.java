@@ -10,24 +10,19 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
-import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
-import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
-import pl.lodz.p.it.auctionsystem.exceptions.IncorrectPasswordException;
-import pl.lodz.p.it.auctionsystem.exceptions.PasswordResetCodeExpiredException;
+import pl.lodz.p.it.auctionsystem.exceptions.*;
 import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
 import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
-import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.containsTextInName;
 import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.isActive;
 
-@SuppressWarnings("ALL")
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
 public class UserServiceImpl implements UserService {
@@ -41,9 +36,6 @@ public class UserServiceImpl implements UserService {
     private final MailService mailService;
     
     private final MessageService messageService;
-    
-    @Value("${client.access.level}")
-    private String CLIENT_ACCESS_LEVEL;
     
     @Value("${password.reset.code.valid.time}")
     private Long passwordResetCodeValidTime;
@@ -89,7 +81,7 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public Page<User> getAllUsers(Pageable pageable) {
+    public Page<User> getUsers(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
     
@@ -172,7 +164,7 @@ public class UserServiceImpl implements UserService {
                 userRepository.findByPasswordResetCode(passwordResetCode).orElseThrow(() -> new
                         InvalidParameterException(passwordResetCodeInvalidMessage));
         LocalDateTime passwordResetCodeAddDate = userFromRepository.getPasswordResetCodeAddDate();
-        LocalDateTime passwordResetCodeValidityDate = passwordResetCodeAddDate.plusMinutes(15);
+        LocalDateTime passwordResetCodeValidityDate = passwordResetCodeAddDate.plusMinutes(passwordResetCodeValidTime);
         
         if (LocalDateTime.now().isAfter(passwordResetCodeValidityDate)) {
             String passwordResetCodeExpiredMessage = messageService.getMessage("passwordResetCodeExpired");

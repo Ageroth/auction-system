@@ -6,7 +6,9 @@ import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 
 import java.util.List;
 
-@SuppressWarnings("ALL")
+/**
+ * Interfejs definiujący dozwolone operacje na obiektach typu {@link UserAccessLevel}
+ */
 @Service
 public interface UserAccessLevelService {
     
@@ -15,7 +17,7 @@ public interface UserAccessLevelService {
      *
      * @param userId        id użytkownika, któremu ma zostać przypisany poziom dostępu
      * @param accessLevelId id poziomu dostępu do przypisania
-     * @throws ApplicationException wyjątek aplikacyjny, jeśli operacja nie zakończy się powodzeniem
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void addUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException;
     

@@ -16,7 +16,6 @@ import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 import java.util.List;
 
-@SuppressWarnings("ALL")
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
 public class UserAccessLevelServiceImpl implements UserAccessLevelService {
