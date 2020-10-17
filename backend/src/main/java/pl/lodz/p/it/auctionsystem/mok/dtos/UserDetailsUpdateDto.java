@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * DTO wykorzystywane przy aktualizacji danych personalnych użytkownika.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
