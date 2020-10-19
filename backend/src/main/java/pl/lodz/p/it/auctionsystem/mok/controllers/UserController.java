@@ -126,7 +126,7 @@ public class UserController {
     }
     
     /**
-     * Umożliwia dodanie nowego użytkownika przez administratora.
+     * Dodaje nowego użytkownika.
      *
      * @param signupDto obiekt typu {@link SignupDto}
      * @return HTTP Status 201 z obiektem typu {@link ApiResponseDto}
@@ -150,7 +150,7 @@ public class UserController {
     }
     
     /**
-     * Pobiera listę użytkowników przez administratora.
+     * Pobiera listę użytkowników.
      *
      * @param page   numer strony do zwrócenia
      * @param order  porządek w jakim posortowani mają być użytkownicy
@@ -204,59 +204,36 @@ public class UserController {
     }
     
     /**
-     * Zwraca szczegóły konta użytkownika o podanym id.
+     * Zwraca szczegóły naszego konta.
      *
-     * @param userId id użytkownika
+     * @param authentication obiekt typu {@link Authentication}
      * @return HTTP Status 200 z obiektem typu {@link UserSummaryDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserProfile(@PathVariable(value = "userId") Long userId) throws ApplicationException {
-        User user = userService.getUserById(userId);
+    @GetMapping("/me")
+    public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
+        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+        User user = userService.getUserByUsername(username);
         UserSummaryDto userSummaryDto = modelMapper.map(user, UserSummaryDto.class);
         
         return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
     }
     
     /**
-     * Zwraca szczegóły naszego konta.
-     *
-     * @param authentication przechowuje informacje o aktualnie zalogowanym użytkowniku
-     * @return HTTP Status 200 z obiektem typu {@link UserSummaryDto}
-     */
-    @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
-        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
-        UserSummaryDto userSummaryDto = modelMapper.map(currentUser, UserSummaryDto.class);
-        
-        return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
-    }
-    
-    @GetMapping("/username-availability")
-    public boolean checkUsernameAvailability(@RequestParam(value = "username") String username) {
-        return !userService.existsByUsername(username);
-    }
-    
-    @GetMapping("/email-availability")
-    public boolean checkEmailAvailability(@RequestParam(value = "email") String email) {
-        return !userService.existsByEmail(email);
-    }
-    
-    /**
      * Aktualizuje nasze dane personalne.
      *
      * @param userDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
-     * @param authentication       przechowuje informacje o aktualnie zalogowanym użytkowniku
+     * @param authentication       obiekt typu {@link Authentication}
      * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PutMapping("/me/details")
     public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
-        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
         User user = modelMapper.map(userDetailsUpdateDto, User.class);
-        
-        userService.updateUserDetails(currentUser.getId(), user);
+    
+        userService.updateUserDetailsByUsername(username, user);
         
         String message = messageService.getMessage("userDetailsUpdated");
         
@@ -267,21 +244,36 @@ public class UserController {
      * Zmienia nasze hasło.
      *
      * @param ownPasswordChangeDto obiekt typu {@link OwnPasswordChangeDto}
-     * @param authentication       przechowuje informacje o aktualnie zalogowanym użytkowniku
+     * @param authentication       obiekt typu {@link Authentication}
      * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/me/password")
     public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
                                                Authentication authentication) throws ApplicationException {
-        UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
-        
-        userService.changePassword(currentUser.getId(), ownPasswordChangeDto.getNewPassword(),
+        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+    
+        userService.changePassword(username, ownPasswordChangeDto.getNewPassword(),
                 ownPasswordChangeDto.getOldPassword());
-        
+    
         String message = messageService.getMessage("userPasswordChanged");
-        
+    
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+    }
+    
+    /**
+     * Zwraca szczegóły konta użytkownika o podanym id.
+     *
+     * @param userId id użytkownika
+     * @return HTTP Status 200 z obiektem typu {@link UserSummaryDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserDetails(@PathVariable(value = "userId") Long userId) throws ApplicationException {
+        User user = userService.getUserById(userId);
+        UserSummaryDto userSummaryDto = modelMapper.map(user, UserSummaryDto.class);
+        
+        return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
     }
     
     /**
@@ -297,7 +289,7 @@ public class UserController {
                                                @Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto) throws ApplicationException {
         User user = modelMapper.map(userDetailsUpdateDto, User.class);
         
-        userService.updateUserDetails(userId, user);
+        userService.updateUserDetailsByUserId(userId, user);
         
         String message = messageService.getMessage("userDetailsUpdated");
         

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,91 +52,91 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public User createUser(User user) throws ApplicationException {
         String clientAccessLevelNotFoundMessage = messageService.getMessage("accessLevelNotFound");
         AccessLevel clientAccessLevel =
                 accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException(clientAccessLevelNotFoundMessage));
         UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
-    
+        
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActivated(true);
         user.getUserAccessLevels().add(userAccessLevel);
-    
+        
         return userRepository.save(user);
     }
     
     @Override
+    @PreAuthorize("permitAll()")
     public User registerUser(User user) throws ApplicationException {
         String clientAccessLevelNotFoundMessage = messageService.getMessage("accessLevelNotFound");
         AccessLevel clientAccessLevel =
                 accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException(clientAccessLevelNotFoundMessage));
         UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
-    
+        
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
         user.getUserAccessLevels().add(userAccessLevel);
-    
+        
         mailService.sendAccountActivationMail(user);
-    
+        
         return userRepository.save(user);
     }
     
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public Page<User> getUsers(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
     
+    @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public Page<User> getFilteredUsers(String query, boolean status, Pageable pageable) {
         return userRepository.findAll(containsTextInName(query).and(isActive(status)), pageable);
     }
     
+    @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public Page<User> getFilteredUsers(String query, Pageable pageable) {
         return userRepository.findAll(containsTextInName(query), pageable);
     }
     
+    @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public Page<User> getFilteredUsers(boolean status, Pageable pageable) {
         return userRepository.findAll(isActive(status), pageable);
     }
     
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public User getUserById(Long userId) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("userNotFound");
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
-    
-        return user;
+        
+        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
     }
     
     @Override
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
     public User getUserByUsername(String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("userNotFound");
-        User user =
-                userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
-    
-        return user;
+        
+        return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
     }
     
     @Override
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-    
-    @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-    
-    @Override
+    @PreAuthorize("permitAll()")
     public void activateUser(String activationCode) throws ApplicationException {
         String activationCodeInvalidMessage = messageService.getMessage("activationCodeInvalid");
         User user =
                 userRepository.findByActivationCode(activationCode).orElseThrow(() -> new InvalidParameterException(activationCodeInvalidMessage));
-    
+        
         user.setActivated(true);
         user.setActivationCode(null);
     }
     
     @Override
-    public void updateUserDetails(Long userId, User user) throws ApplicationException {
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    public void updateUserDetailsByUserId(Long userId, User user) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("userNotFound");
         User userFromRepository =
                 userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
@@ -146,18 +147,32 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
+    public void updateUserDetailsByUsername(String username, User user) throws ApplicationException {
+        String userNotFoundMessage = messageService.getMessage("userNotFound");
+        User userFromRepository =
+                userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+        
+        userFromRepository.setFirstName(user.getFirstName());
+        userFromRepository.setLastName(user.getLastName());
+        userFromRepository.setPhoneNumber(user.getPhoneNumber());
+    }
+    
+    @Override
+    @PreAuthorize("permitAll()")
     public void sendPasswordResetMail(String email) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("userNotFound");
         User userFromRepository =
                 userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordResetCode = UUID.randomUUID().toString().replace("-", "");
-    
+        
         userFromRepository.setPasswordResetCode(passwordResetCode);
         userFromRepository.setPasswordResetCodeAddDate(LocalDateTime.now());
         mailService.sendPasswordResetMail(userFromRepository);
     }
     
     @Override
+    @PreAuthorize("permitAll()")
     public void resetPassword(String passwordResetCode, String newPassword) throws ApplicationException {
         String passwordResetCodeInvalidMessage = messageService.getMessage("passwordResetCodeInvalid");
         User userFromRepository =
@@ -180,29 +195,31 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void changePassword(Long userId, String newPassword, String oldPassword) throws ApplicationException {
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
+    public void changePassword(String username, String newPassword, String oldPassword) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("userNotFound");
         User userFromRepository =
-                userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
-    
+                userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+        
         if (!passwordEncoder.matches(oldPassword, userFromRepository.getPassword())) {
             String passwordIncorrectMessage = messageService.getMessage("passwordIncorrect");
-        
+            
             throw new IncorrectPasswordException(passwordIncorrectMessage);
         }
-    
+        
         String passwordHash = passwordEncoder.encode(newPassword);
-    
+        
         userFromRepository.setPassword(passwordHash);
     }
     
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void changePassword(Long userId, String newPassword) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("userNotFound");
         User userFromRepository =
                 userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordHash = passwordEncoder.encode(newPassword);
-    
+        
         userFromRepository.setPassword(passwordHash);
     }
 }

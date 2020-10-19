@@ -83,22 +83,6 @@ public interface UserService {
     User getUserByUsername(String username) throws ApplicationException;
     
     /**
-     * Sprawdza czy istnieje użytkownik o podanej nazwie użytkownika.
-     *
-     * @param username nazwa użytkownika
-     * @return true jeśli istnieje, w przeciwnym wypadku false
-     */
-    boolean existsByUsername(String username);
-    
-    /**
-     * Sprawdza czy istnieje użytkownik o podanej nazwie użytkownika.
-     *
-     * @param email adres email użytkownika
-     * @return true jeśli istnieje, w przeciwnym wypadku false
-     */
-    boolean existsByEmail(String email);
-    
-    /**
      * Aktywuje konto użytkownika o przypisanym kodzie aktywacyjnym.
      *
      * @param activationCode kod aktywacyjny przypisany do konta użytkownika
@@ -107,13 +91,22 @@ public interface UserService {
     void activateUser(String activationCode) throws ApplicationException;
     
     /**
-     * Umożliwia aktualizację danych personalnych użytkownika.
+     * Umożliwia aktualizację danych personalnych użytkownika o podanym id.
      *
      * @param userId id użytkownika
      * @param user   obiekt przechowujący nowe dane personalne
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateUserDetails(Long userId, User user) throws ApplicationException;
+    void updateUserDetailsByUserId(Long userId, User user) throws ApplicationException;
+    
+    /**
+     * Umożliwia aktualizację danych personalnych użytkownika o podanej nazwie użytkownika.
+     *
+     * @param username nazwa użytkownika
+     * @param user     obiekt przechowujący nowe dane personalne
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void updateUserDetailsByUsername(String username, User user) throws ApplicationException;
     
     /**
      * Wysyła na podany email wiadomość z odnośnikiem, pod którym można zresetować zapomniane hasło.
@@ -133,17 +126,17 @@ public interface UserService {
     void resetPassword(String passwordResetCode, String newPassword) throws ApplicationException;
     
     /**
-     * Umożliwia użytkownikowi zmianę własnego hasła.
+     * Zmienia hasło użytkownika o podanej nazwie użytkownika
      *
-     * @param userId      id użytkownika
+     * @param username    nazwa użytkownika
      * @param newPassword nowe hasło
      * @param oldPassword stare hasło
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void changePassword(Long userId, String newPassword, String oldPassword) throws ApplicationException;
+    void changePassword(String username, String newPassword, String oldPassword) throws ApplicationException;
     
     /**
-     * Umożliwia administratorowi zmianę hasła innego użytkownika.
+     * Zmienia hasło użytkownika o podanym id.
      *
      * @param userId      id użytkownika
      * @param newPassword nowe hasło
