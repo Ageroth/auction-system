@@ -22,7 +22,7 @@ import pl.lodz.p.it.auctionsystem.security.services.UserDetailsServiceImpl;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     private final UserDetailsServiceImpl userDetailsService;

@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 public class UserDetailsImpl implements UserDetails {
     
+    private static final String ROLE_PREFIX = "ROLE_";
+    
     private final Long id;
     
     private final String username;
@@ -52,7 +54,7 @@ public class UserDetailsImpl implements UserDetails {
     
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getUserAccessLevels().stream()
-                .map(userAccessLevel -> new SimpleGrantedAuthority(userAccessLevel.getAccessLevel().getName().name()))
+                .map(userAccessLevel -> new SimpleGrantedAuthority(ROLE_PREFIX + userAccessLevel.getAccessLevel().getName().name()))
                 .collect(Collectors.toList());
         
         return new UserDetailsImpl(
