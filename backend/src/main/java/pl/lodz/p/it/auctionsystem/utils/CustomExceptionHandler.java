@@ -66,4 +66,15 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> handleUserAccessLevelAlreadyExistsException(UserAccessLevelAlreadyExistsException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+    
+    /**
+     * Obsługuje wyjątek {@link ValueNotUniqueException}.
+     *
+     * @param ex obiekt wyjątku
+     * @return HTTP status 422
+     */
+    @ExceptionHandler(value = ValueNotUniqueException.class)
+    public ResponseEntity<?> handleValueNotUniqueException(ValueNotUniqueException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

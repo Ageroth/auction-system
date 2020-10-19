@@ -1,6 +1,7 @@
 package pl.lodz.p.it.auctionsystem.mok.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
@@ -39,6 +40,7 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
     }
     
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void addUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("userNotFound");
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
@@ -58,11 +60,13 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
     }
     
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public List<UserAccessLevel> getUserAccessLevelsByUserId(Long userId) {
         return userAccessLevelRepository.findByUser_Id(userId);
     }
     
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void deleteUserAccessLevel(Long userAccessLevelId) {
         if (userAccessLevelRepository.existsById(userAccessLevelId))
             userAccessLevelRepository.deleteById(userAccessLevelId);
