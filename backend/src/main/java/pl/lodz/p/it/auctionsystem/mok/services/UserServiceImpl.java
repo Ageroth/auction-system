@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
 import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
+import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -129,7 +131,8 @@ public class UserServiceImpl implements UserService {
     
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public User getUserByUsername(String username) throws ApplicationException {
+    public User getCurrentUser(Authentication authentication) throws ApplicationException {
+        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
         String userNotFoundMessage = messageService.getMessage("userNotFound");
         
         return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
@@ -160,7 +163,8 @@ public class UserServiceImpl implements UserService {
     
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public void updateUserDetailsByUsername(String username, User user) throws ApplicationException {
+    public void updateCurrentUserDetails(User user, Authentication authentication) throws ApplicationException {
+        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
         String userNotFoundMessage = messageService.getMessage("userNotFound");
         User userFromRepository =
                 userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
@@ -208,7 +212,8 @@ public class UserServiceImpl implements UserService {
     
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public void changePassword(String username, String newPassword, String oldPassword) throws ApplicationException {
+    public void changePassword(String newPassword, String oldPassword, Authentication authentication) throws ApplicationException {
+        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
         String userNotFoundMessage = messageService.getMessage("userNotFound");
         User userFromRepository =
                 userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
