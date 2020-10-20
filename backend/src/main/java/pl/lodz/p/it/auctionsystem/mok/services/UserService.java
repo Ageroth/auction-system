@@ -2,6 +2,7 @@ package pl.lodz.p.it.auctionsystem.mok.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
@@ -74,13 +75,13 @@ public interface UserService {
     User getUserById(Long userId) throws ApplicationException;
     
     /**
-     * Zwraca użytkownika o podanej nazwie użytkownika.
+     * Zwraca aktualnie zalogowanego użytkownika.
      *
-     * @param username nazwa użytkownika
-     * @return użytkownik o podanej nazwie użytkownika
+     * @param authentication obiekt typu {@link Authentication}
+     * @return aktualnie zalogowany użytkownik
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    User getUserByUsername(String username) throws ApplicationException;
+    User getCurrentUser(Authentication authentication) throws ApplicationException;
     
     /**
      * Aktywuje konto użytkownika o przypisanym kodzie aktywacyjnym.
@@ -100,13 +101,13 @@ public interface UserService {
     void updateUserDetailsByUserId(Long userId, User user) throws ApplicationException;
     
     /**
-     * Umożliwia aktualizację danych personalnych użytkownika o podanej nazwie użytkownika.
+     * Umożliwia aktualizację danych personalnych aktualnie zalogowanego użytkownika.
      *
-     * @param username nazwa użytkownika
-     * @param user     obiekt przechowujący nowe dane personalne
+     * @param user           obiekt przechowujący nowe dane personalne
+     * @param authentication obiekt typu {@link Authentication}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateUserDetailsByUsername(String username, User user) throws ApplicationException;
+    void updateCurrentUserDetails(User user, Authentication authentication) throws ApplicationException;
     
     /**
      * Wysyła na podany email wiadomość z odnośnikiem, pod którym można zresetować zapomniane hasło.
@@ -126,14 +127,14 @@ public interface UserService {
     void resetPassword(String passwordResetCode, String newPassword) throws ApplicationException;
     
     /**
-     * Zmienia hasło użytkownika o podanej nazwie użytkownika
+     * Zmienia hasło aktualnie zalogowanego użytkownika.
      *
-     * @param username    nazwa użytkownika
-     * @param newPassword nowe hasło
-     * @param oldPassword stare hasło
+     * @param newPassword    nowe hasło
+     * @param oldPassword    stare hasło
+     * @param authentication obiekt typu {@link Authentication}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void changePassword(String username, String newPassword, String oldPassword) throws ApplicationException;
+    void changePassword(String newPassword, String oldPassword, Authentication authentication) throws ApplicationException;
     
     /**
      * Zmienia hasło użytkownika o podanym id.

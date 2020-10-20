@@ -19,7 +19,6 @@ import pl.lodz.p.it.auctionsystem.mok.dtos.*;
 import pl.lodz.p.it.auctionsystem.mok.services.UserService;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
-import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -212,8 +211,7 @@ public class UserController {
      */
     @GetMapping("/me")
     public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
-        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
-        User user = userService.getUserByUsername(username);
+        User user = userService.getCurrentUser(authentication);
         UserSummaryDto userSummaryDto = modelMapper.map(user, UserSummaryDto.class);
         
         return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
@@ -230,13 +228,12 @@ public class UserController {
     @PutMapping("/me/details")
     public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
-        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
         User user = modelMapper.map(userDetailsUpdateDto, User.class);
     
-        userService.updateUserDetailsByUsername(username, user);
-        
+        userService.updateCurrentUserDetails(user, authentication);
+    
         String message = messageService.getMessage("userDetailsUpdated");
-        
+    
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
     
@@ -251,10 +248,8 @@ public class UserController {
     @PatchMapping("/me/password")
     public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
                                                Authentication authentication) throws ApplicationException {
-        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
-    
-        userService.changePassword(username, ownPasswordChangeDto.getNewPassword(),
-                ownPasswordChangeDto.getOldPassword());
+        userService.changePassword(ownPasswordChangeDto.getNewPassword(),
+                ownPasswordChangeDto.getOldPassword(), authentication);
     
         String message = messageService.getMessage("userPasswordChanged");
     
