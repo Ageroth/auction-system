@@ -54,33 +54,45 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public User createUser(User user) throws ApplicationException {
-        String clientAccessLevelNotFoundMessage = messageService.getMessage("accessLevelNotFound");
-        AccessLevel clientAccessLevel =
-                accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException(clientAccessLevelNotFoundMessage));
-        UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
-        
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setActivated(true);
-        user.getUserAccessLevels().add(userAccessLevel);
-        
-        return userRepository.save(user);
+        User addedUser = addUser(user);
+        addedUser.setActivated(true);
+    
+        return userRepository.save(addedUser);
     }
     
     @Override
     @PreAuthorize("permitAll()")
     public User registerUser(User user) throws ApplicationException {
+        User addedUser = addUser(user);
+        addedUser.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
+        
+        mailService.sendAccountActivationMail(addedUser);
+        
+        return userRepository.save(addedUser);
+    }
+    
+    private User addUser(User user) throws ApplicationException {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            String usernameNotUniqueMessage = messageService.getMessage("exception.usernameNotUnique");
+            
+            throw new ValueNotUniqueException(usernameNotUniqueMessage);
+        }
+        
+        if (userRepository.existsByEmail(user.getEmail())) {
+            String emailNotUnique = messageService.getMessage("exception.emailNotUnique");
+            
+            throw new ValueNotUniqueException(emailNotUnique);
+        }
+        
         String clientAccessLevelNotFoundMessage = messageService.getMessage("accessLevelNotFound");
         AccessLevel clientAccessLevel =
                 accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException(clientAccessLevelNotFoundMessage));
         UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
         
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
         user.getUserAccessLevels().add(userAccessLevel);
         
-        mailService.sendAccountActivationMail(user);
-        
-        return userRepository.save(user);
+        return user;
     }
     
     @Override
