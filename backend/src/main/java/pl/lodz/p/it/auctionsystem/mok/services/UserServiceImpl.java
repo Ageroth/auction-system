@@ -54,15 +54,27 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public User createUser(User user) throws ApplicationException {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            String usernameNotUniqueMessage = messageService.getMessage("exception.usernameNotUnique");
+        
+            throw new ValueNotUniqueException(usernameNotUniqueMessage);
+        }
+    
+        if (userRepository.existsByEmail(user.getEmail())) {
+            String emailNotUnique = messageService.getMessage("exception.emailNotUnique");
+        
+            throw new ValueNotUniqueException(emailNotUnique);
+        }
+    
         String clientAccessLevelNotFoundMessage = messageService.getMessage("accessLevelNotFound");
         AccessLevel clientAccessLevel =
                 accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException(clientAccessLevelNotFoundMessage));
         UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
-        
+    
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActivated(true);
         user.getUserAccessLevels().add(userAccessLevel);
-        
+    
         return userRepository.save(user);
     }
     
