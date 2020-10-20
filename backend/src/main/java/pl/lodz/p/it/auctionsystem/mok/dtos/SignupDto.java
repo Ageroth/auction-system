@@ -1,5 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.dtos;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,8 @@ import javax.validation.constraints.Size;
 @Setter
 public class SignupDto {
     
-    @NotBlank
+    @NotNull
+    @Size(min = 1, max = 32)
     private String username;
     
     @NotBlank

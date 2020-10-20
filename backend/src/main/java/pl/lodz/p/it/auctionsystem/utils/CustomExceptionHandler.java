@@ -1,10 +1,17 @@
 package pl.lodz.p.it.auctionsystem.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.lodz.p.it.auctionsystem.exceptions.*;
+import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Klasa obsługująca wyjątki aplikacyjne.
@@ -12,14 +19,19 @@ import pl.lodz.p.it.auctionsystem.exceptions.*;
 @ControllerAdvice
 public class CustomExceptionHandler {
     
+    private final MessageService messageService;
+    
+    @Autowired
+    public CustomExceptionHandler(MessageService messageService) {this.messageService = messageService;}
+    
     /**
      * Obsługuje wyjątek {@link EntityNotFoundException}.
      *
      * @param ex obiekt wyjątku
      * @return HTTP status 404
      */
-    @ExceptionHandler(value = EntityNotFoundException.class)
-    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex) {
+    @ExceptionHandler({EntityNotFoundException.class})
+    public ResponseEntity<?> handleEntityNotFound(EntityNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
     
@@ -29,8 +41,8 @@ public class CustomExceptionHandler {
      * @param ex obiekt wyjątku
      * @return HTTP status 400
      */
-    @ExceptionHandler(value = IncorrectPasswordException.class)
-    public ResponseEntity<?> handleIncorrectPasswordException(IncorrectPasswordException ex) {
+    @ExceptionHandler({IncorrectPasswordException.class})
+    public ResponseEntity<?> handleIncorrectPassword(IncorrectPasswordException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
@@ -40,8 +52,8 @@ public class CustomExceptionHandler {
      * @param ex obiekt wyjątku
      * @return HTTP status 400
      */
-    @ExceptionHandler(value = InvalidParameterException.class)
-    public ResponseEntity<?> handleInvalidParameterException(InvalidParameterException ex) {
+    @ExceptionHandler({InvalidParameterException.class})
+    public ResponseEntity<?> handleInvalidParameter(InvalidParameterException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
@@ -51,8 +63,8 @@ public class CustomExceptionHandler {
      * @param ex obiekt wyjątku
      * @return HTTP status 400
      */
-    @ExceptionHandler(value = PasswordResetCodeExpiredException.class)
-    public ResponseEntity<?> handlePasswordResetCodeExpiredException(PasswordResetCodeExpiredException ex) {
+    @ExceptionHandler({PasswordResetCodeExpiredException.class})
+    public ResponseEntity<?> handlePasswordResetCodeExpired(PasswordResetCodeExpiredException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
@@ -62,8 +74,8 @@ public class CustomExceptionHandler {
      * @param ex obiekt wyjątku
      * @return HTTP status 400
      */
-    @ExceptionHandler(value = UserAccessLevelAlreadyExistsException.class)
-    public ResponseEntity<?> handleUserAccessLevelAlreadyExistsException(UserAccessLevelAlreadyExistsException ex) {
+    @ExceptionHandler({UserAccessLevelAlreadyExistsException.class})
+    public ResponseEntity<?> handleUserAccessLevelAlreadyExists(UserAccessLevelAlreadyExistsException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
@@ -73,8 +85,21 @@ public class CustomExceptionHandler {
      * @param ex obiekt wyjątku
      * @return HTTP status 422
      */
-    @ExceptionHandler(value = ValueNotUniqueException.class)
-    public ResponseEntity<?> handleValueNotUniqueException(ValueNotUniqueException ex) {
+    @ExceptionHandler({ValueNotUniqueException.class})
+    public ResponseEntity<?> handleValueNotUnique(ValueNotUniqueException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }
