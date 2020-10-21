@@ -42,14 +42,15 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void addUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException {
-        String userNotFoundMessage = messageService.getMessage("userNotFound");
+        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
-        String accessLevelNotFoundMessage = messageService.getMessage("accessLevelNotFound");
+        String accessLevelNotFoundMessage = messageService.getMessage("exception.accessLevelNotFound");
         AccessLevel accessLevel =
                 accessLevelRepository.findById(accessLevelId).orElseThrow(() -> new EntityNotFoundException(accessLevelNotFoundMessage));
     
         if (userAccessLevelRepository.existsByUser_IdAndAccessLevel_Id(userId, accessLevelId)) {
-            String userAccessLevelAlreadyExistsMessage = messageService.getMessage("userAccessLevelAlreadyExists");
+            String userAccessLevelAlreadyExistsMessage = messageService.getMessage("exception" +
+                    ".userAccessLevelAlreadyExists");
         
             throw new UserAccessLevelAlreadyExistsException(userAccessLevelAlreadyExistsMessage);
         }

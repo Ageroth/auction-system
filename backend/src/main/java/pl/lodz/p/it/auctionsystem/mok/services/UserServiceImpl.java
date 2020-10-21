@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     
     private final MessageService messageService;
     
-    @Value("${password.reset.code.valid.time}")
+    @Value("${password_reset_code.valid_time}")
     private Long passwordResetCodeValidTime;
     
     @Autowired
@@ -85,8 +85,8 @@ public class UserServiceImpl implements UserService {
             
             throw new ValueNotUniqueException(emailNotUnique);
         }
-        
-        String clientAccessLevelNotFoundMessage = messageService.getMessage("accessLevelNotFound");
+    
+        String clientAccessLevelNotFoundMessage = messageService.getMessage("exception.accessLevelNotFound");
         AccessLevel clientAccessLevel =
                 accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException(clientAccessLevelNotFoundMessage));
         UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public User getUserById(Long userId) throws ApplicationException {
-        String userNotFoundMessage = messageService.getMessage("userNotFound");
+        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         
         return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
     }
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
     public User getCurrentUser(Authentication authentication) throws ApplicationException {
         String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
-        String userNotFoundMessage = messageService.getMessage("userNotFound");
+        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         
         return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
     }
@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("permitAll()")
     public void activateUser(String activationCode) throws ApplicationException {
-        String activationCodeInvalidMessage = messageService.getMessage("activationCodeInvalid");
+        String activationCodeInvalidMessage = messageService.getMessage("exception.activationCodeInvalid");
         User user =
                 userRepository.findByActivationCode(activationCode).orElseThrow(() -> new InvalidParameterException(activationCodeInvalidMessage));
         
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void updateUserDetailsByUserId(Long userId, User user) throws ApplicationException {
-        String userNotFoundMessage = messageService.getMessage("userNotFound");
+        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User userFromRepository =
                 userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
     public void updateCurrentUserDetails(User user, Authentication authentication) throws ApplicationException {
         String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
-        String userNotFoundMessage = messageService.getMessage("userNotFound");
+        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User userFromRepository =
                 userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         
@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("permitAll()")
     public void sendPasswordResetMail(String email) throws ApplicationException {
-        String userNotFoundMessage = messageService.getMessage("userNotFound");
+        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User userFromRepository =
                 userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordResetCode = UUID.randomUUID().toString().replace("-", "");
@@ -190,7 +190,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("permitAll()")
     public void resetPassword(String passwordResetCode, String newPassword) throws ApplicationException {
-        String passwordResetCodeInvalidMessage = messageService.getMessage("passwordResetCodeInvalid");
+        String passwordResetCodeInvalidMessage = messageService.getMessage("exception.passwordResetCodeInvalid");
         User userFromRepository =
                 userRepository.findByPasswordResetCode(passwordResetCode).orElseThrow(() -> new
                         InvalidParameterException(passwordResetCodeInvalidMessage));
@@ -198,7 +198,7 @@ public class UserServiceImpl implements UserService {
         LocalDateTime passwordResetCodeValidityDate = passwordResetCodeAddDate.plusMinutes(passwordResetCodeValidTime);
         
         if (LocalDateTime.now().isAfter(passwordResetCodeValidityDate)) {
-            String passwordResetCodeExpiredMessage = messageService.getMessage("passwordResetCodeExpired");
+            String passwordResetCodeExpiredMessage = messageService.getMessage("exception.passwordResetCodeExpired");
             
             throw new PasswordResetCodeExpiredException(passwordResetCodeExpiredMessage);
         }
@@ -214,12 +214,12 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
     public void changePassword(String newPassword, String oldPassword, Authentication authentication) throws ApplicationException {
         String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
-        String userNotFoundMessage = messageService.getMessage("userNotFound");
+        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User userFromRepository =
                 userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         
         if (!passwordEncoder.matches(oldPassword, userFromRepository.getPassword())) {
-            String passwordIncorrectMessage = messageService.getMessage("passwordIncorrect");
+            String passwordIncorrectMessage = messageService.getMessage("exception.passwordIncorrect");
             
             throw new IncorrectPasswordException(passwordIncorrectMessage);
         }
@@ -232,7 +232,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void changePassword(Long userId, String newPassword) throws ApplicationException {
-        String userNotFoundMessage = messageService.getMessage("userNotFound");
+        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User userFromRepository =
                 userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordHash = passwordEncoder.encode(newPassword);

@@ -18,7 +18,27 @@
     {
       "name": "jwt.expiration.ms",
       "type": "java.lang.Integer",
-      "description": "Time that JWT token is valid for."
+      "description": "Time JWT token is valid for."
+    },
+    {
+      "name": "client.access_level",
+      "type": "java.lang.String",
+      "description": "Client access level."
+    },
+    {
+      "name": "password_reset_code.valid_time",
+      "type": "java.lang.Integer",
+      "description": "Time password reset code is valid for."
+    },
+    {
+      "name": "page.size",
+      "type": "java.lang.Integer",
+      "description": "Number of items per page."
+    },
+    {
+      "name": "cron.expression",
+      "type": "java.lang.String",
+      "description": "Cron expression."
     }
   ]
 }

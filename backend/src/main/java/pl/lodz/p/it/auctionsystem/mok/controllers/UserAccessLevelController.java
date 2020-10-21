@@ -65,7 +65,7 @@ public class UserAccessLevelController {
         userAccessLevelService.addUserAccessLevel(userAccessLevelDto.getUserId(),
                 userAccessLevelDto.getAccessLevelId());
         
-        String message = messageService.getMessage("userAccessLevel");
+        String message = messageService.getMessage("info.userAccessLevel");
         
         return new ResponseEntity<>(new ApiResponseDto(true, message), HttpStatus.CREATED);
     }

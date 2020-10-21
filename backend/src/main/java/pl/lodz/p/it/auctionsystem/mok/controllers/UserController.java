@@ -69,7 +69,7 @@ public class UserController {
                 .fromCurrentContextPath().path("/users/{userId}")
                 .buildAndExpand(result.getId()).toUri();
         
-        String message = messageService.getMessage("userRegistered");
+        String message = messageService.getMessage("info.userRegistered");
         
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
@@ -84,8 +84,8 @@ public class UserController {
     @PostMapping("/me/activation/{activationCode}")
     public ResponseEntity<?> activateUser(@PathVariable(value = "activationCode") String activationCode) throws ApplicationException {
         userService.activateUser(activationCode);
-        
-        String message = messageService.getMessage("userActivated");
+    
+        String message = messageService.getMessage("info.userActivated");
         
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
@@ -100,8 +100,8 @@ public class UserController {
     @PostMapping("/me/password-reset")
     public ResponseEntity<?> sendPasswordResetMail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
         userService.sendPasswordResetMail(passwordResetEmailDto.getEmail());
-        
-        String message = messageService.getMessage("passwordResetLinkSent");
+    
+        String message = messageService.getMessage("info.passwordResetLinkSent");
         
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
@@ -118,8 +118,8 @@ public class UserController {
     public ResponseEntity<?> resetPassword(@PathVariable(value = "passwordResetCode") String passwordResetCode,
                                            @Valid @RequestBody PasswordResetDto passwordResetDto) throws ApplicationException {
         userService.resetPassword(passwordResetCode, passwordResetDto.getNewPassword());
-        
-        String message = messageService.getMessage("passwordReset");
+    
+        String message = messageService.getMessage("info.passwordReset");
         
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
@@ -142,8 +142,8 @@ public class UserController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{userId}")
                 .buildAndExpand(result.getId()).toUri();
-        
-        String message = messageService.getMessage("userAdded");
+    
+        String message = messageService.getMessage("info.userAdded");
         
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
@@ -232,7 +232,7 @@ public class UserController {
     
         userService.updateCurrentUserDetails(user, authentication);
     
-        String message = messageService.getMessage("userDetailsUpdated");
+        String message = messageService.getMessage("info.userDetailsUpdated");
     
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
@@ -251,7 +251,7 @@ public class UserController {
         userService.changePassword(ownPasswordChangeDto.getNewPassword(),
                 ownPasswordChangeDto.getOldPassword(), authentication);
     
-        String message = messageService.getMessage("userPasswordChanged");
+        String message = messageService.getMessage("info.userPasswordChanged");
     
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
@@ -285,8 +285,8 @@ public class UserController {
         User user = modelMapper.map(userDetailsUpdateDto, User.class);
         
         userService.updateUserDetailsByUserId(userId, user);
-        
-        String message = messageService.getMessage("userDetailsUpdated");
+    
+        String message = messageService.getMessage("info.userDetailsUpdated");
         
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
@@ -303,8 +303,8 @@ public class UserController {
     public ResponseEntity<?> changeUserPassword(@PathVariable(value = "userId") Long userId,
                                                 @Valid @RequestBody UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException {
         userService.changePassword(userId, userPasswordChangeDto.getNewPassword());
-        
-        String message = messageService.getMessage("userPasswordChanged");
+    
+        String message = messageService.getMessage("info.userPasswordChanged");
         
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
