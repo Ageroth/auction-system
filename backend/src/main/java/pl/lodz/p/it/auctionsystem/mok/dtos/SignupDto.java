@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
 /**
  * DTO wykorzystywane przy rejestracji użytkownika.
@@ -19,25 +16,17 @@ import javax.validation.constraints.Size;
 @Setter
 public class SignupDto {
     
-    @NotNull
-    @Size(min = 1, max = 32)
     private String username;
     
-    @NotBlank
-    @Size(min = 8)
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(){}:\";'<>?,./+=])(?=\\S+$).{8,}$", message =
+            "{validation.password}")
     private String password;
     
-    @NotBlank
-    @Size(max = 40)
-    @Email
     private String email;
     
-    @NotBlank
     private String firstName;
     
-    @NotBlank
     private String lastName;
     
-    @NotBlank
     private String phoneNumber;
 }

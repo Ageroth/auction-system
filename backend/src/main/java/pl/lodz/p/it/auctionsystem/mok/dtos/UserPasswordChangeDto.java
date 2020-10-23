@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Pattern;
+
 /**
  * DTO z nowym hasłem użytkownika.
  */
@@ -14,5 +16,7 @@ import lombok.Setter;
 @Setter
 public class UserPasswordChangeDto {
     
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(){}:\";'<>?,./+=])(?=\\S+$).{8,}$", message =
+            "{validation.password}")
     private String newPassword;
 }
