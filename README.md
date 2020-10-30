@@ -1,2 +1,2 @@
 # auction-system
-Bachelor thesis project
+Bachelor thesis project created with Spring Boot, React.js and PostgreSQL 
