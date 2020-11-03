@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "email": "Email",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "phoneNumber": "Numer telefonu"
+  },
+  "validation": {
+    "required": "To pole jest wymagane",
+    "passwordRegex": "Musi zawierać conajmniej 8 znaków, w tym jedną małą literę, jedną dużą literę, jedną cyfrę i jeden znak specjalny"
+  }
+}

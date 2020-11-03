@@ -2,8 +2,10 @@ import React from 'react';
 import {Form, Formik} from 'formik';
 import * as Yup from 'yup';
 import LoginInput from "./LoginInput.js";
+import {useTranslation} from 'react-i18next';
 
 const LoginPage = props => {
+    const {t} = useTranslation();
     const {text} = props;
     return (
         <>
@@ -15,11 +17,11 @@ const LoginPage = props => {
                 }}
                 validationSchema={Yup.object({
                     username: Yup.string()
-                        .max(20, 'Must be 15 characters or less')
-                        .required('Required'),
+                        .min(4, 'Must be 4 characters or more')
+                        .required(t('validation.required')),
                     password: Yup.string()
-                        .max(20, 'Must be 20 characters or less')
-                        .required('Required'),
+                        .required(t('validation.required'))
+                        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/, t('validation.passwordRegex'))
                 })}
                 onSubmit={(values, {setSubmitting}) => {
                     setTimeout(() => {
@@ -30,7 +32,7 @@ const LoginPage = props => {
             >
                 <Form>
                     <LoginInput
-                        label="Username"
+                        label={t('username')}
                         name="username"
                         type="text"
                         // placeholder="Jane"
