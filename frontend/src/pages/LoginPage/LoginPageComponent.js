@@ -6,10 +6,9 @@ import {useTranslation} from 'react-i18next';
 
 const LoginPage = props => {
     const {t} = useTranslation();
-    const {text} = props;
+    const {onSubmit} = props;
     return (
         <>
-            <h1>{text}</h1>
             <Formik
                 initialValues={{
                     username: '',
@@ -23,12 +22,7 @@ const LoginPage = props => {
                         .required(t('validation.required'))
                         .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/, t('validation.passwordRegex'))
                 })}
-                onSubmit={(values, {setSubmitting}) => {
-                    setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
-                        setSubmitting(false);
-                    }, 400);
-                }}
+                onSubmit={onSubmit}
             >
                 <Form>
                     <LoginInput
