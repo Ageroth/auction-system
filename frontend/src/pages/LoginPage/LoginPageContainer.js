@@ -10,8 +10,7 @@ class LoginPageContainer extends Component {
     };
 
     render() {
-        const {isLogged} = this.props.isLogged
-        if (isLogged)
+        if (this.props.isLogged)
             return (<h1> Zalogowany </h1>);
         else {
         return (
