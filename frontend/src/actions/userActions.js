@@ -1,18 +1,26 @@
-import axios from 'axios'
+import {logInRequest} from '../utils/api'
+import {LOGIN_USER, LOGOUT_USER} from "./types";
 
-export const ACTIONS = {
-    LOGIN_USER: 'USER_LOGIN_USER',
-    LOGOUT_USER: 'USER_LOGOUT_USER',
-};
+const logIn = (payload) => async dispatch => {
+    try {
+        const response = await logInRequest(payload)
+        dispatch({
+            type: LOGIN_USER,
+            payload: response.data
+        })
+    } catch (e) {
+        console.log(e.response.status)
+        console.log(e.response.data.message)
+    }
+}
 
-const loginUser = (loginRequest) => async dispatch => {
-    const response = await axios.post(`/auth/login`, JSON.stringify(loginRequest))
+const logOut = () => async dispatch => {
     dispatch({
-        type: ACTIONS.LOGIN_USER,
-        payload: response.data
-    })
+        type: LOGOUT_USER
+    });
 }
 
 export {
-    loginUser
+    logIn,
+    logOut
 };

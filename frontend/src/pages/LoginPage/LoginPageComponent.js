@@ -24,22 +24,24 @@ const LoginPage = props => {
                 })}
                 onSubmit={onSubmit}
             >
-                <Form>
-                    <LoginInput
-                        label={t('username')}
-                        name="username"
-                        type="text"
-                        // placeholder="Jane"
-                    />
-                    <LoginInput
-                        label="Password"
-                        name="password"
-                        type="text"
-                        // placeholder="Doe"
-                    />
+                {formik => (
+                    <Form>
+                        <LoginInput
+                            label={t('labels.username')}
+                            name="username"
+                            type="text"
+                            // placeholder="Jane"
+                        />
+                        <LoginInput
+                            label={t('labels.password')}
+                            name="password"
+                            type="text"
+                            // placeholder="Doe"
+                        />
 
-                    <button type="submit">Submit</button>
-                </Form>
+                        <button type="submit" disabled={formik.isSubmitting}>Submit</button>
+                    </Form>
+                )}
             </Formik>
         </>
     );
