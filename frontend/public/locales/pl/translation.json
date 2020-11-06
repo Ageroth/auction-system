@@ -1,5 +1,5 @@
 {
-  "labels": {
+  "user-labels": {
     "username": "Nazwa użytkownika",
     "password": "Hasło",
     "email": "Email",
@@ -10,5 +10,11 @@
   "validation": {
     "required": "To pole jest wymagane",
     "passwordRegex": "Musi zawierać conajmniej 8 znaków, w tym jedną małą literę, jedną dużą literę, jedną cyfrę i jeden znak specjalny"
+  },
+  "text": {
+    "logIn": "Zaloguj",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "register": "Zarejestruj się",
+    "noAccount": "Nie masz konta?"
   }
 }

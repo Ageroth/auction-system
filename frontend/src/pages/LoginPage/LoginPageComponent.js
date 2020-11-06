@@ -1,49 +1,57 @@
 import React from 'react';
-import {Form, Formik} from 'formik';
-import * as Yup from 'yup';
-import LoginInput from "./LoginInput.js";
+import {Button, Form, Input} from 'antd';
+import 'antd/dist/antd.css';
+import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {useTranslation} from 'react-i18next';
+import './LoginPage.css'
 
 const LoginPage = props => {
     const {t} = useTranslation();
-    const {onSubmit} = props;
-    return (
-        <>
-            <Formik
-                initialValues={{
-                    username: '',
-                    password: '',
-                }}
-                validationSchema={Yup.object({
-                    username: Yup.string()
-                        .min(4, 'Must be 4 characters or more')
-                        .required(t('validation.required')),
-                    password: Yup.string()
-                        .required(t('validation.required'))
-                        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/, t('validation.passwordRegex'))
-                })}
-                onSubmit={onSubmit}
-            >
-                {formik => (
-                    <Form>
-                        <LoginInput
-                            label={t('labels.username')}
-                            name="username"
-                            type="text"
-                            // placeholder="Jane"
-                        />
-                        <LoginInput
-                            label={t('labels.password')}
-                            name="password"
-                            type="text"
-                            // placeholder="Doe"
-                        />
+    const onFinish = values => {
+        props.onSubmit(values);
+    }
 
-                        <button type="submit" disabled={formik.isSubmitting}>Submit</button>
-                    </Form>
-                )}
-            </Formik>
-        </>
+    return (
+        <Form
+            layout={'vertical'}
+            name="login_form"
+            className="login-form"
+            onFinish={onFinish}>
+
+            <Form.Item
+                label={t('user-labels.username')}
+                name="username"
+                rules={[
+                    {
+                        required: true,
+                        message: (t('validation.required'))
+                    }
+                ]}
+            >
+                <Input prefix={<UserOutlined className="site-form-item-icon"/>}/>
+            </Form.Item>
+
+            <Form.Item
+                label={t('user-labels.password')}
+                name="password"
+                rules={[
+                    {
+                        required: true,
+                        message: (t('validation.required'))
+                    }
+                ]}
+            >
+                <Input.Password prefix={<LockOutlined className="site-form-item-icon"/>} />
+            </Form.Item>
+
+            <Form.Item>
+                <Button type="primary" htmlType="submit" className="login-form-button">
+                         {t('text.logIn')}
+                </Button>
+                {t('text.noAccount')} <a href="../registration">{t('text.register')}</a>
+                <div><a href="../registration">{t('text.forgotPassword')}</a></div>
+            </Form.Item>
+        </Form>
     );
 };
 
