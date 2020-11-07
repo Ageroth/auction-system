@@ -12,7 +12,7 @@ import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
  */
 @Service
 public interface UserService {
-    
+
     /**
      * Dodanie nowego użytkownika przez administratora.
      *
@@ -20,7 +20,7 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     User createUser(User user) throws ApplicationException;
-    
+
     /**
      * Samodzielna rejestracja przez użytkownika.
      *
@@ -28,7 +28,7 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     User registerUser(User user) throws ApplicationException;
-    
+
     /**
      * Zwraca użytkowników.
      *
@@ -36,7 +36,7 @@ public interface UserService {
      * @return obiekt typu {@link Page} z użytkownikami
      */
     Page<User> getUsers(Pageable pageable);
-    
+
     /**
      * Zwraca przefiltrowanych użytkowników.
      *
@@ -46,7 +46,7 @@ public interface UserService {
      * @return obiekt typu {@link Page} z użytkownikami
      */
     Page<User> getFilteredUsers(String query, boolean status, Pageable pageable);
-    
+
     /**
      * Zwraca przefiltrowanych użytkowników.
      *
@@ -55,7 +55,7 @@ public interface UserService {
      * @return obiekt typu {@link Page} z użytkownikami
      */
     Page<User> getFilteredUsers(String query, Pageable pageable);
-    
+
     /**
      * Zwraca przefiltrowanych użytkowników.
      *
@@ -64,7 +64,7 @@ public interface UserService {
      * @return obiekt typu {@link Page} z użytkownikami
      */
     Page<User> getFilteredUsers(boolean status, Pageable pageable);
-    
+
     /**
      * Zwraca użytkownika o podanym id.
      *
@@ -73,7 +73,7 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     User getUserById(Long userId) throws ApplicationException;
-    
+
     /**
      * Zwraca aktualnie zalogowanego użytkownika.
      *
@@ -82,7 +82,23 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     User getCurrentUser(Authentication authentication) throws ApplicationException;
-    
+
+    /**
+     * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie użytkownika.
+     *
+     * @param username nazwa użytkownika
+     * @return true/false w zależności od istnienia użytkownika w bazie
+     */
+    Boolean existsByUsername(String username);
+
+    /**
+     * Sprawdza czy w bazie istnieje użytkownik o podanym adresie email.
+     *
+     * @param email adres email
+     * @return true/false w zależności od istnienia użytkownika w bazie
+     */
+    Boolean existsByEmail(String email);
+
     /**
      * Aktywuje konto użytkownika o przypisanym kodzie aktywacyjnym.
      *
@@ -90,7 +106,7 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void activateUser(String activationCode) throws ApplicationException;
-    
+
     /**
      * Umożliwia aktualizację danych personalnych użytkownika o podanym id.
      *
@@ -99,7 +115,7 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void updateUserDetailsByUserId(Long userId, User user) throws ApplicationException;
-    
+
     /**
      * Umożliwia aktualizację danych personalnych aktualnie zalogowanego użytkownika.
      *
@@ -108,7 +124,7 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void updateCurrentUserDetails(User user, Authentication authentication) throws ApplicationException;
-    
+
     /**
      * Wysyła na podany email wiadomość z odnośnikiem, pod którym można zresetować zapomniane hasło.
      *
@@ -116,7 +132,7 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void sendPasswordResetMail(String email) throws ApplicationException;
-    
+
     /**
      * Umożliwia zmianę zapomnianego hasła.
      *
@@ -125,7 +141,7 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void resetPassword(String passwordResetCode, String newPassword) throws ApplicationException;
-    
+
     /**
      * Zmienia hasło aktualnie zalogowanego użytkownika.
      *
@@ -135,7 +151,7 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void changePassword(String newPassword, String oldPassword, Authentication authentication) throws ApplicationException;
-    
+
     /**
      * Zmienia hasło użytkownika o podanym id.
      *

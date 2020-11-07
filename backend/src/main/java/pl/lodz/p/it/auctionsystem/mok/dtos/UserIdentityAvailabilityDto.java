@@ -6,17 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * DTO wykorzystywane przy aktualizacji danych personalnych użytkownika.
+ * DTO z informacją o dostępności.
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDetailsUpdateDto {
-    
-    private String firstName;
-    
-    private String lastName;
-    
-    private String phoneNumber;
+public class UserIdentityAvailabilityDto {
+
+    private Boolean available;
 }

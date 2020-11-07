@@ -137,6 +137,18 @@ public class UserServiceImpl implements UserService {
         
         return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
     }
+
+    @Override
+    @PreAuthorize("permitAll()")
+    public Boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    @PreAuthorize("permitAll()")
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
     
     @Override
     @PreAuthorize("permitAll()")
