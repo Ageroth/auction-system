@@ -1,5 +1,6 @@
 import {logInRequest} from '../utils/api'
 import {LOGIN_USER, LOGOUT_USER} from "./types";
+import {toast} from 'react-toastify';
 
 const logIn = (payload) => async dispatch => {
     try {
@@ -9,8 +10,11 @@ const logIn = (payload) => async dispatch => {
             payload: response.data
         })
     } catch (e) {
-        console.log(e.response.status)
-        console.log(e.response.data.message)
+        toast.error(e.response.data.message, {
+            position: "bottom-right",
+            autoClose: false,
+            closeOnClick: true
+            });
     }
 }
 

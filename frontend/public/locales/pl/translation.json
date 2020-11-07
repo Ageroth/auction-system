@@ -2,6 +2,7 @@
   "user-labels": {
     "username": "Nazwa użytkownika",
     "password": "Hasło",
+    "passwordConfirmation": "Potwierdź hasło",
     "email": "Email",
     "firstName": "Imię",
     "lastName": "Nazwisko",
@@ -9,12 +10,16 @@
   },
   "validation": {
     "required": "To pole jest wymagane",
-    "passwordRegex": "Musi zawierać conajmniej 8 znaków, w tym jedną małą literę, jedną dużą literę, jedną cyfrę i jeden znak specjalny"
+    "passwordRegex": "Musi zawierać conajmniej 8 znaków, w tym jedną małą literę, jedną dużą literę, jedną cyfrę i jeden znak specjalny",
+    "usernameTaken": "Nazwa użytkownika zajęta",
+    "emailTaken": "Email zajęty",
+    "passwordMistmatch": "Hasło nie jest takie same"
   },
   "text": {
     "logIn": "Zaloguj",
     "forgotPassword": "Zapomniałeś hasła?",
-    "register": "Zarejestruj się",
-    "noAccount": "Nie masz konta?"
+    "signUp": "Zarejestruj się",
+    "noAccount": "Nie masz jeszcze konta?",
+    "alreadyHaveAnAccount": "Masz już konto?"
   }
 }

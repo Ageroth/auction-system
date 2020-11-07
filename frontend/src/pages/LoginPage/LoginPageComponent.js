@@ -1,14 +1,15 @@
 import React from 'react';
 import {Button, Form, Input} from 'antd';
-import 'antd/dist/antd.css';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {useTranslation} from 'react-i18next';
+import 'antd/dist/antd.css'
 import './LoginPage.css'
 
 const LoginPage = props => {
     const {t} = useTranslation();
     const onFinish = values => {
-        props.onSubmit(values);
+        const payload = Object.assign({}, values);
+        props.onSubmit(payload);
     }
 
     return (
@@ -28,7 +29,7 @@ const LoginPage = props => {
                     }
                 ]}
             >
-                <Input prefix={<UserOutlined className="site-form-item-icon"/>}/>
+                <Input prefix={<UserOutlined  className="site-form-item-icon"/>} />
             </Form.Item>
 
             <Form.Item
@@ -46,13 +47,13 @@ const LoginPage = props => {
 
             <Form.Item>
                 <Button type="primary" htmlType="submit" className="login-form-button">
-                         {t('text.logIn')}
+                    {t('text.logIn')}
                 </Button>
-                {t('text.noAccount')} <a href="../registration">{t('text.register')}</a>
-                <div><a href="../registration">{t('text.forgotPassword')}</a></div>
+                <p> {t('text.noAccount')} <a href="/signup">{t('text.signUp')} </a></p>
+                <p><a href="../registration"> {t('text.forgotPassword')} </a></p>
             </Form.Item>
         </Form>
     );
-};
+}
 
 export default LoginPage;

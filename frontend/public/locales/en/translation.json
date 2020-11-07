@@ -2,6 +2,7 @@
   "user-labels": {
     "username": "Username",
     "password": "Password",
+    "passwordConfirmation": "Confirm password",
     "email": "Email",
     "firstName": "First name",
     "lastName": "Last name",
@@ -9,12 +10,16 @@
   },
   "validation": {
     "required": "This field is required",
-    "passwordRegex": "Must contain at least 8 characters including one uppercase, one lowercase, one number and one special case character"
+    "passwordRegex": "Must contain at least 8 characters including one uppercase, one lowercase, one number and one special case character",
+    "usernameTaken": "Username is already taken",
+    "emailTaken": "Email is already taken",
+    "passwordMistmatch": "Password mismatch"
   },
   "text": {
     "logIn": "Log in",
     "forgotPassword": "Forgot password?",
-    "register": "Register",
-    "noAccount": "Don't have an account?"
+    "signUp": "Sign up",
+    "noAccount": "Don't have an account yet?",
+    "alreadyHaveAnAccount": "Already have an account?"
   }
 }
