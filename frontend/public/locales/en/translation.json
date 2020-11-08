@@ -10,7 +10,15 @@
   },
   "validation": {
     "required": "This field is required",
-    "passwordRegex": "Must contain at least 8 characters including one uppercase, one lowercase, one number and one special case character",
+    "regex": {
+      "password": "Must contain at least 8 characters including one uppercase, one lowercase, one number and one special case character",
+      "username": "May only contain letters and numbers",
+      "name": "May only contain letters",
+      "phoneNumber": "Invalid phone number",
+      "email": "Invalid email"
+    },
+    "max32chars": "Maximum 32 characters",
+    "max64chars": "Maximum 64 characters",
     "usernameTaken": "Username is already taken",
     "emailTaken": "Email is already taken",
     "passwordMistmatch": "Password mismatch"

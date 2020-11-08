@@ -61,6 +61,14 @@ const SignupPage = (props) => {
                         message: t('validation.required')
                     },
                     {
+                        pattern: new RegExp("^[a-zA-Z0-9]*$"),
+                        message: t('validation.regex.username')
+                    },
+                    {
+                        max: 32,
+                        message: t('validation.max32chars')
+                    },
+                    {
                         validator: validateUsernameAvailability
                     }
                 ]}
@@ -75,6 +83,14 @@ const SignupPage = (props) => {
                     {
                         required: true,
                         message: t('validation.required')
+                    },
+                    {
+                        pattern: new RegExp("^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżŻ]*$"),
+                        message: t('validation.regex.name')
+                    },
+                    {
+                        max: 32,
+                        message: t('validation.max32chars')
                     }
                 ]}
             >
@@ -88,6 +104,14 @@ const SignupPage = (props) => {
                     {
                         required: true,
                         message: t('validation.required')
+                    },
+                    {
+                        pattern: new RegExp("^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżŻ]*$"),
+                        message: t('validation.regex.name')
+                    },
+                    {
+                        max: 32,
+                        message: t('validation.max32chars')
                     }
                 ]}
             >
@@ -101,8 +125,12 @@ const SignupPage = (props) => {
                     {
                         required: true,
                         message: t('validation.required')
+                    },
+                    {
+                        pattern: new RegExp("^[0-9]{9,10}$"),
+                        message: t('validation.regex.phoneNumber')
                     }
-                ]}
+                ]} 
             >
                 <Input/>
             </Form.Item>
@@ -114,6 +142,14 @@ const SignupPage = (props) => {
                     {
                         required: true,
                         message: t('validation.required')
+                    },
+                    {
+                        type: "email",
+                        message: t('validation.regex.email')
+                    },
+                    {
+                        max: 32,
+                        message: t('validation.max32chars')
                     },
                     {
                         validator: validateEmailAvailability
@@ -131,6 +167,14 @@ const SignupPage = (props) => {
                     {
                         required: true,
                         message: t('validation.required')
+                    },
+                    {
+                        pattern: new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,}$"),
+                        message: t('validation.regex.password')
+                    },
+                    {
+                        max: 64,
+                        message: t('validation.max64chars')
                     }
                 ]}
             >

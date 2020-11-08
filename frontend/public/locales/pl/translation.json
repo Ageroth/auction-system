@@ -10,10 +10,18 @@
   },
   "validation": {
     "required": "To pole jest wymagane",
-    "passwordRegex": "Musi zawierać conajmniej 8 znaków, w tym jedną małą literę, jedną dużą literę, jedną cyfrę i jeden znak specjalny",
+    "regex": {
+      "password": "Musi zawierać conajmniej 8 znaków, w tym jedną małą literę, jedną dużą literę, jedną cyfrę i jeden znak specjalny",
+      "username": "Może jedynie zawierać litery i cyfry",
+      "name": "Może jedynie zawierać litery",
+      "phoneNumber": "Nieprawidłowy numer telefonu",
+      "email": "Nieprawidłowy email"
+    },
+    "max32chars": "Kaksymalnie 32 znaki",
+    "max64chars": "Kaksymalnie 64 znaki",
     "usernameTaken": "Nazwa użytkownika zajęta",
     "emailTaken": "Email zajęty",
-    "passwordMistmatch": "Hasło nie jest takie same"
+    "passwordMistmatch": "Hasło nie pasuje"
   },
   "text": {
     "logIn": "Zaloguj",
