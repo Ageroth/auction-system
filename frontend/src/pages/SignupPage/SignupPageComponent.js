@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {Button, Form, Input} from 'antd'
 import {checkUsernameAvailabilityRequest,checkEmailAvailabilityRequest} from '../../utils/api'
 import {useTranslation} from 'react-i18next';
@@ -8,13 +8,6 @@ import './SignupPage.css'
 
 const SignupPage = (props) => {
     const [form] = Form.useForm();
-    const [usernameValidationStatus, setUsernameValidationStatus] = useState('');
-    const [usernameErrorMsg, setUsernameErrorMsg] = useState(null);
-    const [emailValidationStatus, setEmailValidationStatus] = useState('');
-    const [emailErrorMsg, setEmailErrorMsg] = useState(null);
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const {getFieldError} = form;
     const {t} = useTranslation();
 
     const onFinish = values => {
@@ -28,36 +21,28 @@ const SignupPage = (props) => {
         })
     }
 
-    const validateUsernameAvailability = () => {
-        if (getFieldError('username').length === 0 && username.length > 0) {
-            checkUsernameAvailabilityRequest(username)
-                .then(response => {
-                    if (response.data.available) {
-                        setUsernameValidationStatus('success');
-                        setUsernameErrorMsg('')
-                    } else {
-                        setUsernameValidationStatus('error');
-                        setUsernameErrorMsg(t('validation.usernameTaken'));
-                    }
-                })
-        }
+    const validateUsernameAvailability = async (rule, value) => {
+            if(value) {
+                const result = await checkUsernameAvailabilityRequest(value);
+                if(result.data.available)  {
+                    return Promise.resolve('');
+                  } else {
+                    return Promise.reject(t('validation.usernameTaken'));
+                  }
+            }
     }
 
-    const validateEmailAvailability = () => {
-        if (getFieldError('email').length === 0 && email.length > 0) {
-            checkEmailAvailabilityRequest(email)
-                .then(response => {
-                    if (response.data.available) {
-                        setEmailValidationStatus('success')
-                        setEmailErrorMsg('')
-                    } else {
-                        setEmailValidationStatus('error')
-                        setEmailErrorMsg(t('validation.emailTaken'))
-                    }
-                })
+    const validateEmailAvailability = async (rule, value) => {
+        if(value) {
+            const result = await checkEmailAvailabilityRequest(value);
+            if(result.data.available)  {
+                return Promise.resolve('');
+              } else {
+                return Promise.reject(t('validation.emailTaken'));
+              }
         }
     }
-
+           
     return (
         <Form
             form={form}
@@ -69,33 +54,18 @@ const SignupPage = (props) => {
         >
             <Form.Item
                 label={t('user-labels.username')}
-                validateStatus={usernameValidationStatus}
-                help={usernameErrorMsg}
                 name="username"
                 rules={[
                     {
-                        required: true
+                        required: true,
+                        message: t('validation.required')
                     },
                     {
-                        validator: (rule, value) => {
-                            if (value) {
-                                setUsernameValidationStatus('success')
-                                setUsernameErrorMsg('')
-                                return Promise.resolve()
-                            } else {
-                                setUsernameValidationStatus('error')
-                                setUsernameErrorMsg(t('validation.required'))
-                                return Promise.reject('')
-                            }
-                        }
+                        validator: validateUsernameAvailability
                     }
                 ]}
             >
-                <Input
-                    value={username}
-                    onChange={event => setUsername(event.target.value)}
-                    onBlur={validateUsernameAvailability}
-                />
+                <Input/>
             </Form.Item>
 
             <Form.Item
@@ -139,32 +109,18 @@ const SignupPage = (props) => {
 
             <Form.Item
                 label={t('user-labels.email')}
-                validateStatus={emailValidationStatus}
-                help={emailErrorMsg}
                 name="email"
                 rules={[
                     {
                         required: true,
+                        message: t('validation.required')
                     },
                     {
-                        validator: (rule, value) => {
-                            if (value) {
-                                setEmailValidationStatus("success")
-                                setEmailErrorMsg('')
-                                return Promise.resolve()
-                            } else {
-                                setEmailValidationStatus("error")
-                                setEmailErrorMsg(t('validation.required'))
-                                return Promise.reject('')
-                            }
-                        }
+                        validator: validateEmailAvailability
                     }
                 ]}
             >
-                <Input
-                    value={email}
-                    onChange={event => setEmail(event.target.value)}
-                    onBlur={validateEmailAvailability}/>
+                <Input/>
             </Form.Item>
 
             <Form.Item
