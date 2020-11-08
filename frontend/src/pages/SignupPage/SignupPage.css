@@ -1,19 +1,21 @@
-.registration-form {
-    max-width: 500px;
+.signup-form {
+    width: 450px;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    padding: 20px;
+    border-top: 1px solid #eaecef;
+    border-radius: 5px;
+    background-color: #f6f8fa;
+    border: 1px solid #eaecef;
 }
 
-.ant-form-item-label {
-    display: inline-block;
-    width: 140px;
-    text-align: right;
+.signup-form-button {
+    width: 100%;
 }
 
-
-.login-link{
-    padding: 10px;
+.log-in {
+    margin-top: 5%;
+    margin-bottom: -10%;
 }
-

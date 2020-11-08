@@ -47,8 +47,8 @@ const SignupPage = (props) => {
         <Form
             form={form}
             layout="vertical"
-            name="registration_form"
-            className="registration-form"
+            name="signup-form"
+            className="signup-form"
             onFinish={onFinish}
             scrollToFirstError
         >
@@ -204,10 +204,10 @@ const SignupPage = (props) => {
             </Form.Item>
 
             <Form.Item>
-                <Button type="primary" htmlType="submit" className="registration-form-button">
+                <Button type="primary" htmlType="submit" className="signup-form-button">
                     {t('text.signUp')}
                 </Button>
-                <p className="login-link"> {t('text.alreadyHaveAnAccount')} <a href="/login"> {t('text.logIn')} </a></p> 
+                <p className="log-in"> {t('text.alreadyHaveAnAccount')} <a href="/login"> {t('text.logIn')} </a></p> 
             </Form.Item>
         </Form>
     )
