@@ -16,9 +16,10 @@ const SignupPage = (props) => {
         props.onSubmit(payload)
             .then(() => {
                 console.log('Success');
-            }).catch(error => {
+            })
+            .catch(error => {
                 console.log(error);
-        })
+            })
     }
 
     const validateUsernameAvailability = async (rule, value) => {

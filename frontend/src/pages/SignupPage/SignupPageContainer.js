@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import SignupPage from './SignupPageComponent';
-import {signUpRequest} from '../../utils/api'
+import {signUpRequest} from '../../utils/api';
 
 
 class SignupPageContainer extends Component {

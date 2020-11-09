@@ -23,6 +23,16 @@
     "emailTaken": "Email zajęty",
     "passwordMistmatch": "Hasło nie pasuje"
   },
+  "message": {
+    "title": {
+      "activationFailed": "Nieprawidłowy link aktywacyjny",
+      "activationSucceded": "Twoje konto zostało pomyślnie aktywowane."
+    },
+    "content": {
+      "activationFailed": "Użyty link aktywacyjny jest albo nieprawidłowy, albo nieważny.",
+      "activationSucceded": "Możesz się teraz zalogować."
+    }
+  },
   "text": {
     "logIn": "Zaloguj",
     "forgotPassword": "Zapomniałeś hasła?",

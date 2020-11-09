@@ -18,7 +18,7 @@ export function checkUsernameAvailabilityRequest(value) {
         params: {
         username : value
       }
-    })
+    });
 }
 
 export function checkEmailAvailabilityRequest(value) {
@@ -26,5 +26,9 @@ export function checkEmailAvailabilityRequest(value) {
         params: {
         email : value
       }
-    })
+    });
+}
+
+export function activateUserRequest(value) {
+    return axios.post('/users/me/activation/' + value);
 }

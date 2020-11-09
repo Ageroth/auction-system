@@ -23,6 +23,16 @@
     "emailTaken": "Email is already taken",
     "passwordMistmatch": "Password mismatch"
   },
+  "message": {
+    "title": {
+      "activationFailed": "Invalid activation link",
+      "activationSucceded": "Your account has been activated successfully"
+    },
+    "content": {
+      "activationFailed": "Provided activation link is either invalid or expired.",
+      "activationSucceded": "You may now log in."
+    }
+  },
   "text": {
     "logIn": "Log in",
     "forgotPassword": "Forgot password?",
