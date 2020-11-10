@@ -131,7 +131,7 @@ public interface UserService {
      * @param email adres email użytkownika powiązany z kontem
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void sendPasswordResetMail(String email) throws ApplicationException;
+    void sendPasswordResetEmail(String email) throws ApplicationException;
 
     /**
      * Umożliwia zmianę zapomnianego hasła.

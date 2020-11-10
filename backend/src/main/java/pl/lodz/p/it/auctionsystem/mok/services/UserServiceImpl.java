@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
     
     @Override
     @PreAuthorize("permitAll()")
-    public void sendPasswordResetMail(String email) throws ApplicationException {
+    public void sendPasswordResetEmail(String email) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User userFromRepository =
                 userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
@@ -196,7 +196,7 @@ public class UserServiceImpl implements UserService {
         
         userFromRepository.setPasswordResetCode(passwordResetCode);
         userFromRepository.setPasswordResetCodeAddDate(LocalDateTime.now());
-        mailService.sendPasswordResetMail(userFromRepository);
+        mailService.sendPasswordResetEmail(userFromRepository);
     }
     
     @Override

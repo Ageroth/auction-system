@@ -98,8 +98,8 @@ public class UserController {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/password-reset")
-    public ResponseEntity<?> sendPasswordResetMail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
-        userService.sendPasswordResetMail(passwordResetEmailDto.getEmail());
+    public ResponseEntity<?> sendPasswordResetEmail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
+        userService.sendPasswordResetEmail(passwordResetEmailDto.getEmail());
 
         String message = messageService.getMessage("info.passwordResetLinkSent");
 

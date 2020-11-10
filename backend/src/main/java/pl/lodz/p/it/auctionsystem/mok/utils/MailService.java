@@ -78,7 +78,7 @@ public class MailService {
      *
      * @param user obiekt przechowujący dane
      */
-    public void sendPasswordResetMail(User user) {
+    public void sendPasswordResetEmail(User user) {
         final String subject = messageService.getMessage("email.subject.passwordReset");
         final String url = baseUrl + "/reset-password/" + user.getPasswordResetCode();
         final String text = messageService.getMessage("email.text.passwordReset");
