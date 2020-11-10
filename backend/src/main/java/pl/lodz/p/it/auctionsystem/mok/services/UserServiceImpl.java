@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("permitAll()")
     public void sendPasswordResetEmail(String email) throws ApplicationException {
-        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
+        String userNotFoundMessage = messageService.getMessage("exception.emailInvalid");
         User userFromRepository =
                 userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordResetCode = UUID.randomUUID().toString().replace("-", "");
