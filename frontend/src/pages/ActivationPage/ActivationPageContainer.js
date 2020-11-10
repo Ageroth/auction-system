@@ -7,7 +7,7 @@ class ActivationPageContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activationCode: this.props.match.params.id,
+            activationCode: this.props.match.params.activationCode,
             error: null
         };  
     }
@@ -34,7 +34,7 @@ class ActivationPageContainer extends Component {
 
     render() {
         return (
-           <ActivationPage error={this.state.error}/>
+            <ActivationPage error={this.state.error}/>
         );
       }
 }

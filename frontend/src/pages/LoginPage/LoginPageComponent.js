@@ -20,7 +20,7 @@ const LoginPage = props => {
             onFinish={onFinish}>
 
             <Form.Item
-                label={t('user-labels.username')}
+                label={t('userLabels.username')}
                 name="username"
                 rules={[
                     {
@@ -33,7 +33,7 @@ const LoginPage = props => {
             </Form.Item>
 
             <Form.Item
-                label={t('user-labels.password')}
+                label={t('userLabels.password')}
                 name="password"
                 rules={[
                     {
@@ -50,7 +50,7 @@ const LoginPage = props => {
                     {t('text.logIn')}
                 </Button>
                 <p className="sign-up"> {t('text.noAccount')} <a href="/signup">{t('text.signUp')} </a></p>
-                <p className="forgot-password"><a href="../registration"> {t('text.forgotPassword')} </a></p>
+                <p className="forgot-password"><a href="/password_reset"> {t('text.forgotPassword')} </a></p>
             </Form.Item>
         </Form>
     );

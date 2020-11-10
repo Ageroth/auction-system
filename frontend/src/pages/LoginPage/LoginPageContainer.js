@@ -4,7 +4,7 @@ import LoginPage from './LoginPageComponent';
 import {logIn} from '../../actions/userActions';
 
 class LoginPageContainer extends Component {
-    handleSubmit = payload => {
+    handleLogin = payload => {
         return this.props.logIn(payload);
     }
 
@@ -13,7 +13,7 @@ class LoginPageContainer extends Component {
         //     return (<h1> Zalogowany </h1>);
         // else {
         return (
-                <LoginPage onSubmit={this.handleSubmit}/>
+            <LoginPage onSubmit={this.handleLogin}/>
         );
     }
 }

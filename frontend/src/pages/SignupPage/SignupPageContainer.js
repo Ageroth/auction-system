@@ -4,7 +4,7 @@ import {signUpRequest} from '../../utils/api';
 
 
 class SignupPageContainer extends Component {
-    handleSubmit = payload => {
+    handleSignup = payload => {
         return signUpRequest(payload);
     }
 
@@ -13,7 +13,7 @@ class SignupPageContainer extends Component {
         //     return (<h1> Zalogowany </h1>);
         // else {
         return (
-                <SignupPage onSubmit={this.handleSubmit}/>
+            <SignupPage onSubmit={this.handleSignup}/>
         );
     }
 }
