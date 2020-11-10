@@ -137,6 +137,18 @@ public class UserServiceImpl implements UserService {
         
         return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
     }
+
+    @Override
+    @PreAuthorize("permitAll()")
+    public Boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    @PreAuthorize("permitAll()")
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
     
     @Override
     @PreAuthorize("permitAll()")
@@ -176,15 +188,15 @@ public class UserServiceImpl implements UserService {
     
     @Override
     @PreAuthorize("permitAll()")
-    public void sendPasswordResetMail(String email) throws ApplicationException {
-        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
+    public void sendPasswordResetEmail(String email) throws ApplicationException {
+        String userNotFoundMessage = messageService.getMessage("exception.emailInvalid");
         User userFromRepository =
                 userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordResetCode = UUID.randomUUID().toString().replace("-", "");
         
         userFromRepository.setPasswordResetCode(passwordResetCode);
         userFromRepository.setPasswordResetCodeAddDate(LocalDateTime.now());
-        mailService.sendPasswordResetMail(userFromRepository);
+        mailService.sendPasswordResetEmail(userFromRepository);
     }
     
     @Override

@@ -33,28 +33,28 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    
+
     private final UserService userService;
-    
+
     private final ModelMapper modelMapper;
-    
+
     private final MessageService messageService;
-    
+
     @Value("${page.size}")
     private int pageSize;
-    
+
     @Autowired
     public UserController(UserService userService, ModelMapper modelMapper, MessageService messageService) {
         this.userService = userService;
         this.modelMapper = modelMapper;
         this.messageService = messageService;
     }
-    
+
     /**
      * Odpowiada za samodzielną rejestrację użytkownika.
      *
      * @param signupDto obiekt typu {@link SignupDto}
-     * @return HTTP Status 201 z obiektem typu {@link ApiResponseDto}
+     * @return HTTP status 201 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me")
@@ -62,18 +62,18 @@ public class UserController {
         User user = new User(signupDto.getUsername(), signupDto.getPassword(),
                 signupDto.getEmail(), signupDto.getFirstName(), signupDto.getLastName(),
                 signupDto.getPhoneNumber());
-        
+
         User result = userService.registerUser(user);
-        
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{userId}")
                 .buildAndExpand(result.getId()).toUri();
-        
+
         String message = messageService.getMessage("info.userRegistered");
-        
+
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
-    
+
     /**
      * Aktywuje konto użytkownika o przypisanym kodzie aktywacyjnym.
      *
@@ -84,12 +84,12 @@ public class UserController {
     @PostMapping("/me/activation/{activationCode}")
     public ResponseEntity<?> activateUser(@PathVariable(value = "activationCode") String activationCode) throws ApplicationException {
         userService.activateUser(activationCode);
-    
+
         String message = messageService.getMessage("info.userActivated");
-        
+
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
-    
+
     /**
      * Wysyła użytkownikowi link umożliwiający mu przywrócenie konta w przypadku zapomnienia hasła.
      *
@@ -98,14 +98,14 @@ public class UserController {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/password-reset")
-    public ResponseEntity<?> sendPasswordResetMail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
-        userService.sendPasswordResetMail(passwordResetEmailDto.getEmail());
-    
+    public ResponseEntity<?> sendPasswordResetEmail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
+        userService.sendPasswordResetEmail(passwordResetEmailDto.getEmail());
+
         String message = messageService.getMessage("info.passwordResetLinkSent");
-        
+
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
-    
+
     /**
      * Zmienia hasło konta o podanym kodzie zmiany hasła.
      *
@@ -118,17 +118,17 @@ public class UserController {
     public ResponseEntity<?> resetPassword(@PathVariable(value = "passwordResetCode") String passwordResetCode,
                                            @Valid @RequestBody PasswordResetDto passwordResetDto) throws ApplicationException {
         userService.resetPassword(passwordResetCode, passwordResetDto.getNewPassword());
-    
+
         String message = messageService.getMessage("info.passwordReset");
-        
+
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
-    
+
     /**
      * Dodaje nowego użytkownika.
      *
      * @param signupDto obiekt typu {@link SignupDto}
-     * @return HTTP Status 201 z obiektem typu {@link ApiResponseDto}
+     * @return HTTP status 201 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping
@@ -136,18 +136,18 @@ public class UserController {
         User user = new User(signupDto.getUsername(), signupDto.getPassword(),
                 signupDto.getEmail(), signupDto.getFirstName(), signupDto.getLastName(),
                 signupDto.getPhoneNumber());
-        
+
         User result = userService.createUser(user);
-        
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{userId}")
                 .buildAndExpand(result.getId()).toUri();
-    
+
         String message = messageService.getMessage("info.userAdded");
-        
+
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
-    
+
     /**
      * Pobiera listę użytkowników.
      *
@@ -155,7 +155,7 @@ public class UserController {
      * @param order  porządek w jakim posortowani mają być użytkownicy
      * @param query  fraza wykorzystywana do wyszukania
      * @param status status aktywacji konta do filtrowania
-     * @return HTTP Status 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
+     * @return HTTP status 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
      * użytkowników oraz liczbą wszystkich stron
      */
     @GetMapping
@@ -164,13 +164,13 @@ public class UserController {
             @RequestParam(defaultValue = "desc") String order,
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Boolean status) {
-        
+
         Direction direction = SortDirection.getSortDirection(order);
         List<User> users;
         List<UserDto> userDtos;
         Pageable paging = PageRequest.of(page, pageSize, Sort.by(direction, "createdAt"));
         Page<User> usersPage;
-        
+
         if (query == null && status == null)
             usersPage = userService.getUsers(paging);
         else if (query != null && status == null)
@@ -179,44 +179,66 @@ public class UserController {
             usersPage = userService.getFilteredUsers(status, paging);
         } else
             usersPage = userService.getFilteredUsers(query, status, paging);
-        
-        
+
+
         users = usersPage.getContent();
-        
+
         if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        
+
         userDtos = users.stream()
                 .map(user -> modelMapper.map(user, UserDto.class))
                 .collect(Collectors.toList());
-        
-        
+
+
         Map<String, Object> response = new HashMap<>();
-        
+
         response.put("users", userDtos);
         response.put("currentPage", usersPage.getNumber());
         response.put("totalItems", usersPage.getTotalElements());
         response.put("totalPages", usersPage.getTotalPages());
-        
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
+
     /**
      * Zwraca szczegóły naszego konta.
      *
      * @param authentication obiekt typu {@link Authentication}
-     * @return HTTP Status 200 z obiektem typu {@link UserSummaryDto}
+     * @return HTTP status 200 z obiektem typu {@link UserSummaryDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/me")
     public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
         User user = userService.getCurrentUser(authentication);
         UserSummaryDto userSummaryDto = modelMapper.map(user, UserSummaryDto.class);
-        
+
         return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
     }
-    
+
+    /**
+     * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie użytkownika.
+     *
+     * @param username nazwa użytkownika
+     * @return HTTP status 200 z obiektem typu {@link UserIdentityAvailabilityDto}
+     */
+    @GetMapping("/username-availability")
+    public ResponseEntity<?> checkUsernameAvailability(@RequestParam(value = "username") String username) {
+        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByUsername(username)), HttpStatus.OK);
+    }
+
+    /**
+     * Sprawdza czy w bazie istnieje użytkownik o podanym adresie email.
+     *
+     * @param email adres email
+     * @return HTTP status 200 z obiektem typu {@link UserIdentityAvailabilityDto}
+     */
+    @GetMapping("/email-availability")
+    public ResponseEntity<?> checkEmailAvailability(@RequestParam(value = "email") String email) {
+        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByEmail(email)), HttpStatus.OK);
+    }
+
     /**
      * Aktualizuje nasze dane personalne.
      *
@@ -229,14 +251,14 @@ public class UserController {
     public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
         User user = modelMapper.map(userDetailsUpdateDto, User.class);
-    
+
         userService.updateCurrentUserDetails(user, authentication);
-    
+
         String message = messageService.getMessage("info.userDetailsUpdated");
-    
+
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
-    
+
     /**
      * Zmienia nasze hasło.
      *
@@ -250,27 +272,27 @@ public class UserController {
                                                Authentication authentication) throws ApplicationException {
         userService.changePassword(ownPasswordChangeDto.getNewPassword(),
                 ownPasswordChangeDto.getOldPassword(), authentication);
-    
+
         String message = messageService.getMessage("info.userPasswordChanged");
-    
+
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
-    
+
     /**
      * Zwraca szczegóły konta użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return HTTP Status 200 z obiektem typu {@link UserSummaryDto}
+     * @return HTTP status 200 z obiektem typu {@link UserSummaryDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserDetails(@PathVariable(value = "userId") Long userId) throws ApplicationException {
         User user = userService.getUserById(userId);
         UserSummaryDto userSummaryDto = modelMapper.map(user, UserSummaryDto.class);
-        
+
         return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
     }
-    
+
     /**
      * Aktualizuje dane personalne użytkownika o podanym id.
      *
@@ -283,14 +305,14 @@ public class UserController {
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
                                                @Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto) throws ApplicationException {
         User user = modelMapper.map(userDetailsUpdateDto, User.class);
-        
+
         userService.updateUserDetailsByUserId(userId, user);
-    
+
         String message = messageService.getMessage("info.userDetailsUpdated");
-        
+
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
-    
+
     /**
      * Zmienia hasło użytkownika o podanym id.
      *
@@ -303,9 +325,9 @@ public class UserController {
     public ResponseEntity<?> changeUserPassword(@PathVariable(value = "userId") Long userId,
                                                 @Valid @RequestBody UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException {
         userService.changePassword(userId, userPasswordChangeDto.getNewPassword());
-    
+
         String message = messageService.getMessage("info.userPasswordChanged");
-        
+
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
 }

@@ -1,54 +1,59 @@
 import React from 'react';
-import {Form, Formik} from 'formik';
-import * as Yup from 'yup';
-import LoginInput from "./LoginInput.js";
+import {Button, Form, Input} from 'antd';
+import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {useTranslation} from 'react-i18next';
+import 'antd/dist/antd.css'
+import './LoginPage.css'
 
 const LoginPage = props => {
     const {t} = useTranslation();
-    const {text} = props;
-    return (
-        <>
-            <h1>{text}</h1>
-            <Formik
-                initialValues={{
-                    username: '',
-                    password: '',
-                }}
-                validationSchema={Yup.object({
-                    username: Yup.string()
-                        .min(4, 'Must be 4 characters or more')
-                        .required(t('validation.required')),
-                    password: Yup.string()
-                        .required(t('validation.required'))
-                        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/, t('validation.passwordRegex'))
-                })}
-                onSubmit={(values, {setSubmitting}) => {
-                    setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
-                        setSubmitting(false);
-                    }, 400);
-                }}
-            >
-                <Form>
-                    <LoginInput
-                        label={t('username')}
-                        name="username"
-                        type="text"
-                        // placeholder="Jane"
-                    />
-                    <LoginInput
-                        label="Password"
-                        name="password"
-                        type="text"
-                        // placeholder="Doe"
-                    />
+    const onFinish = values => {
+        const payload = Object.assign({}, values);
+        props.onSubmit(payload);
+    }
 
-                    <button type="submit">Submit</button>
-                </Form>
-            </Formik>
-        </>
+    return (
+        <Form
+            layout={'vertical'}
+            name="login_form"
+            className="login-form"
+            onFinish={onFinish}>
+
+            <Form.Item
+                label={t('userLabels.username')}
+                name="username"
+                rules={[
+                    {
+                        required: true,
+                        message: (t('validation.required'))
+                    }
+                ]}
+            >
+                <Input prefix={<UserOutlined  className="site-form-item-icon"/>} />
+            </Form.Item>
+
+            <Form.Item
+                label={t('userLabels.password')}
+                name="password"
+                rules={[
+                    {
+                        required: true,
+                        message: (t('validation.required'))
+                    }
+                ]}
+            >
+                <Input.Password prefix={<LockOutlined className="site-form-item-icon"/>} />
+            </Form.Item>
+
+            <Form.Item>
+                <Button type="primary" htmlType="submit" className="login-form-button">
+                    {t('text.logIn')}
+                </Button>
+                <p className="sign-up"> {t('text.noAccount')} <a href="/signup">{t('text.signUp')} </a></p>
+                <p className="forgot-password"><a href="/password_reset"> {t('text.forgotPassword')} </a></p>
+            </Form.Item>
+        </Form>
     );
-};
+}
 
 export default LoginPage;

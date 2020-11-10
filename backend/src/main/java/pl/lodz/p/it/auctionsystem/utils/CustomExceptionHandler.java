@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.lodz.p.it.auctionsystem.exceptions.*;
+import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> handleEntityNotFound(EntityNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -43,7 +44,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(IncorrectPasswordException.class)
     public ResponseEntity<?> handleIncorrectPassword(IncorrectPasswordException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -54,7 +55,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(InvalidParameterException.class)
     public ResponseEntity<?> handleInvalidParameter(InvalidParameterException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -65,7 +66,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(PasswordResetCodeExpiredException.class)
     public ResponseEntity<?> handlePasswordResetCodeExpired(PasswordResetCodeExpiredException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -76,7 +77,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(UserAccessLevelAlreadyExistsException.class)
     public ResponseEntity<?> handleUserAccessLevelAlreadyExists(UserAccessLevelAlreadyExistsException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -87,7 +88,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(ValueNotUniqueException.class)
     public ResponseEntity<?> handleValueNotUnique(ValueNotUniqueException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     /**
@@ -119,7 +120,7 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> handleInsufficientAuthentication() {
         String insufficientAuthenticationMessage = messageService.getMessage("exception.insufficientAuthentication");
 
-        return new ResponseEntity<>(insufficientAuthenticationMessage, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ApiResponseDto(false, insufficientAuthenticationMessage), HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -131,6 +132,6 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> handleBadCredentials() {
         String badCredentialsMessage = messageService.getMessage("exception.BadCredentials");
 
-        return new ResponseEntity<>(badCredentialsMessage, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ApiResponseDto(false, badCredentialsMessage), HttpStatus.UNAUTHORIZED);
     }
 }

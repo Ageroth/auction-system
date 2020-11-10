@@ -1,7 +1,10 @@
 {
-  "labels": {
+  "user-labels": {
     "username": "Nazwa użytkownika",
     "password": "Hasło",
+    "passwordConfirmation": "Potwierdź hasło",
+    "newPassword": "Nowe hasło",
+    "newPasswordConfirmation": "Potwierdź nowe hasło",
     "email": "Email",
     "firstName": "Imię",
     "lastName": "Nazwisko",
@@ -9,6 +12,38 @@
   },
   "validation": {
     "required": "To pole jest wymagane",
-    "passwordRegex": "Musi zawierać conajmniej 8 znaków, w tym jedną małą literę, jedną dużą literę, jedną cyfrę i jeden znak specjalny"
+    "regex": {
+      "password": "Musi zawierać conajmniej 8 znaków, w tym jedną małą literę, jedną dużą literę, jedną cyfrę i jeden znak specjalny",
+      "username": "Może jedynie zawierać litery i cyfry",
+      "name": "Może jedynie zawierać litery",
+      "phoneNumber": "Nieprawidłowy numer telefonu",
+      "email": "Nieprawidłowy format email"
+    },
+    "max32chars": "Kaksymalnie 32 znaki",
+    "max64chars": "Kaksymalnie 64 znaki",
+    "usernameTaken": "Nazwa użytkownika zajęta",
+    "emailTaken": "Email zajęty",
+    "passwordMistmatch": "Hasło nie pasuje"
+  },
+  "message": {
+    "title": {
+      "activationFailed": "Nieprawidłowy link aktywacyjny",
+      "activationSucceded": "Twoje konto zostało pomyślnie aktywowane",
+      "passwordResetEmailSent": "Email został wysłany"
+    },
+    "content": {
+      "activationFailed": "Użyty link aktywacyjny jest albo nieprawidłowy, albo nieważny.",
+      "activationSucceded": "Możesz się teraz zalogować.",
+      "passwordResetEmailSent": "Na podany adres email został wysłany link do resetu hasła. Link jest ważny przez 15 minut."
+    }
+  },
+  "text": {
+    "logIn": "Zaloguj",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "signUp": "Zarejestruj się",
+    "noAccount": "Nie masz jeszcze konta?",
+    "alreadyHaveAnAccount": "Masz już konto?",
+    "sendPasswordResetEmail": "Wyślij email do resetu hasła",
+    "changePassword": "Zmień hasło"
   }
 }
