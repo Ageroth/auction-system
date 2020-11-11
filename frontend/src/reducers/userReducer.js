@@ -5,7 +5,8 @@ const initialState = {
     isLogged: false,
     username: null,
     token: null,
-    roles: null
+    roles: null,
+    currentRole: null
 };
 
 export default function userReducer(state = initialState, action) {
@@ -20,7 +21,8 @@ export default function userReducer(state = initialState, action) {
                 isLogged: true,
                 username: action.payload.username,
                 token: action.payload.token,
-                roles: userRoles
+                roles: userRoles,
+                currentRole: userRoles[userRoles.length - 1]
             }
         case LOGOUT_USER:
             return initialState;

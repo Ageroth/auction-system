@@ -16,7 +16,6 @@ class LoginPageContainer extends Component {
         this.setState({
             isSubmitting: true
         });
-        
         return this.props.logIn(payload)
         .then(() => {
             this.setState({
@@ -39,11 +38,11 @@ class LoginPageContainer extends Component {
     render() {
         return (
             <>
-                {this.props.isLogged
+                {this.props.isLogged 
                     ? this.props.history.push("/")
-                    : <LoginPage onSubmit={this.handleLogin} isSubmitting={this.state.isSubmitting} />
+                    : <LoginPage onSubmit={this.handleLogin} isSubmitting={this.state.isSubmitting} />     
                 }
-            </>
+            </> 
         );
     }
 }
