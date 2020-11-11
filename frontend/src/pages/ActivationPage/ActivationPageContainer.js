@@ -34,7 +34,7 @@ class ActivationPageContainer extends Component {
 
     render() {
         return (
-            <ActivationPage error={this.state.error}/>
+            <ActivationPage error={this.state.error} />
         );
       }
 }

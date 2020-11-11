@@ -1,6 +1,7 @@
 import React from 'react'
 import {Button, Form, Input} from 'antd'
 import {checkUsernameAvailabilityRequest, checkEmailAvailabilityRequest} from '../../utils/api'
+import {toast} from 'react-toastify';
 import {useTranslation} from 'react-i18next';
 import 'antd/dist/antd.css'
 import './SignupPage.css'
@@ -9,17 +10,27 @@ import './SignupPage.css'
 const SignupPage = (props) => {
     const [form] = Form.useForm();
     const {t} = useTranslation();
+    const isSubmitting = props.isSubmitting;
     const onFinish = values => {
         const payload = Object.assign({}, values);
         delete payload.confirmPassword;
+        
         props.onSubmit(payload)
             .then(() => {
-                console.log('Success');
+                toast.success(t('message.content.activationEmailSent'), {
+                    position: "bottom-right",
+                    autoClose: false,
+                    closeOnClick: true
+                    });
             })
-            .catch(error => {
-                console.log(error);
+            .catch(e => {
+                toast.error(e.response.data.message, {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    closeOnClick: true
+                    });
             })
-    }
+    };
 
     const validateUsernameAvailability = async (rule, value) => {
             if(value) {
@@ -204,7 +215,7 @@ const SignupPage = (props) => {
             </Form.Item>
 
             <Form.Item>
-                <Button type="primary" htmlType="submit" className="signup-form-button">
+                <Button type="primary" htmlType="submit" className="signup-form-button" disabled={isSubmitting}>
                     {t('text.signUp')}
                 </Button>
                 <p className="log-in"> {t('text.alreadyHaveAnAccount')} <a href="/login"> {t('text.logIn')} </a></p> 

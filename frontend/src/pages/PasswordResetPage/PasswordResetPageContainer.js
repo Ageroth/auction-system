@@ -17,6 +17,7 @@ class PasswordResetPageContainer extends Component {
         this.setState({
             isSubmitting: true
         });
+
         return sendPasswordResetEmailRequest(payload)
             .then(() => {
                 this.setState({
@@ -59,9 +60,9 @@ class PasswordResetPageContainer extends Component {
         return (
             <>
                 {this.state.passwordResetCode
-                    ? <PasswordResetPage onSubmit={this.handlePasswordReset} passwordResetCode={this.state.passwordResetCode} isSubmitting={this.state.isSubmitting}/>
+                    ? <PasswordResetPage onSubmit={this.handlePasswordReset} passwordResetCode={this.state.passwordResetCode} isSubmitting={this.state.isSubmitting} />
                     : <PasswordResetPage onSubmit={this.handlePasswordResetEmailSending} emailSent={this.state.emailSent}
-                        passwordResetCode={this.state.passwordResetCode} isSubmitting={this.state.isSubmitting}/>
+                        passwordResetCode={this.state.passwordResetCode} isSubmitting={this.state.isSubmitting} />
                 }
             </>
         );

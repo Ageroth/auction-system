@@ -7,10 +7,11 @@ import './LoginPage.css'
 
 const LoginPage = props => {
     const {t} = useTranslation();
+    const isSubmitting = props.isSubmitting;
     const onFinish = values => {
         const payload = Object.assign({}, values);
         props.onSubmit(payload);
-    }
+    };
 
     return (
         <Form
@@ -46,7 +47,7 @@ const LoginPage = props => {
             </Form.Item>
 
             <Form.Item>
-                <Button type="primary" htmlType="submit" className="login-form-button">
+                <Button type="primary" htmlType="submit" className="login-form-button" disabled={isSubmitting}>
                     {t('text.logIn')}
                 </Button>
                 <p className="sign-up"> {t('text.noAccount')} <a href="/signup">{t('text.signUp')} </a></p>

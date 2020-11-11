@@ -8,11 +8,12 @@ const PasswordResetPage = props => {
     const [form] = Form.useForm();
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
+    
     const onFinish = values => {
         const payload = Object.assign({}, values);
         delete payload.confirmNewPassword;
         props.onSubmit(payload);
-    } 
+    };
 
     return (
         <>
@@ -62,8 +63,8 @@ const PasswordResetPage = props => {
                                     ({getFieldValue}) => ({
                                         validator(rule, value) {
                                             if (!value || getFieldValue('newPassword') === value) {
-                                                return Promise.resolve()
-                                            } else return Promise.reject(t('validation.passwordMistmatch'))
+                                                return Promise.resolve();
+                                            } else return Promise.reject(t('validation.passwordMistmatch'));
                                         }
                                     })
                                 ]}
