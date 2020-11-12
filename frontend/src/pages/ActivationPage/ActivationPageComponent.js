@@ -8,22 +8,17 @@ const ActivationPage = props => {
 
     return (
         <>
-            {error 
-            ? 
-                (
-                    <div className="activation-box"> 
-                        <h3> {t('message.title.activationFailed')} </h3>
-                        <p> {t('message.content.activationFailed')} </p>
-                    </div>
-                )
-            : 
-                (
-                    <div className="activation-box"> 
-                        <h3> {t('message.title.activationSucceded')} </h3>
-                        <p> {t('message.content.activationSucceded')} </p>
-                    </div>
-                )
-            }
+            {error ? (
+                <div className="activation-box"> 
+                    <h3> {t('message.title.activationFailed')} </h3>
+                    <p> {t('message.content.activationFailed')} </p>
+                </div>
+            ) : (
+                <div className="activation-box"> 
+                    <h3> {t('message.title.activationSucceded')} </h3>
+                    <p> {t('message.content.activationSucceded')} </p>
+                </div>
+            )}
         </>
     );
 }
