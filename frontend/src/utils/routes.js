@@ -15,7 +15,7 @@ const routes = [
   { path: '/activation/:activationCode', component: ActivationPage, public: true },
   { path: '/password_reset', component: PasswordResetPage, public: true },
   { path: '/password_reset/:passwordResetCode', component: PasswordResetPage, public: true },
-  { path: '/dashboard', component: DashboardPage, canAccess: [CLIENT] }
+  { path: '/dashboard', component: DashboardPage, canAccess: [CLIENT, MODERATOR] }
 ];
 
 export default routes;

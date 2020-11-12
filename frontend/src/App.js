@@ -1,15 +1,21 @@
-import React, {Fragment} from 'react';
+import React from 'react';
+import {Router, Switch} from 'react-router-dom';
+import {history} from './utils/history'
 import {ToastContainer} from 'react-toastify';
-import MyRouter from './hocs/MyRouter/MyRouter';
+import {mappedRoutes} from './utils/mappedRoutes';
 import 'react-toastify/dist/ReactToastify.css';
 
 
 const App = () => {
     return (
-        <Fragment>
-            <MyRouter/>
-            <ToastContainer />
-        </Fragment>
+        <>
+            <Router history={history} >
+                <Switch>
+                    {mappedRoutes}
+                </Switch>
+            </Router>
+            <ToastContainer/>
+        </>
     );
 }
 
