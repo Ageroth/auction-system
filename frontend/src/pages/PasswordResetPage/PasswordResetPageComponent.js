@@ -1,6 +1,7 @@
 import React from 'react';
-import {Button, Form, Input} from 'antd'
-import {useTranslation} from 'react-i18next';
+import { Button, Form, Input } from 'antd'
+import { useTranslation } from 'react-i18next';
+import AppLayout from '../../components/AppLayout'
 import 'antd/dist/antd.css'
 import './PasswordResetPage.css'
 
@@ -16,7 +17,7 @@ const PasswordResetPage = props => {
     };
 
     return (
-        <>
+        <AppLayout>
             {props.passwordResetCode ? (
                 <Form
                     form={form}
@@ -121,7 +122,7 @@ const PasswordResetPage = props => {
                     )}
                 </>
             )}
-        </>
+        </AppLayout>
     );
 }
 

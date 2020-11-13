@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ActivationPage from './ActivationPageComponent';
-import {activateUserRequest} from '../../utils/api';
+import { activateUserRequest } from '../../utils/api';
 
 
 class ActivationPageContainer extends Component {

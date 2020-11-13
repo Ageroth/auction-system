@@ -1,5 +1,6 @@
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import AppLayout from '../../components/AppLayout'
 import './ActivationPage.css'
 
 const ActivationPage = props => {
@@ -7,7 +8,7 @@ const ActivationPage = props => {
     const error = props.error;
 
     return (
-        <>
+        <AppLayout>
             {error ? (
                 <div className="activation-box"> 
                     <h3> {t('message.title.activationFailed')} </h3>
@@ -19,7 +20,7 @@ const ActivationPage = props => {
                     <p> {t('message.content.activationSucceded')} </p>
                 </div>
             )}
-        </>
+        </AppLayout>
     );
 }
 

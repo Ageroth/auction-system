@@ -42,15 +42,15 @@ const AppHeader = () => {
     }
 
     return (
-        <Header style={{ padding: '0 0' }}>
+        <Header className="app-header" style={{ padding: '0 0' }}>
             {isLoggedIn ? (
                <Menu className="header-menu" theme="dark" mode="horizontal">
                     <Menu.Item className="menu-left-item" key="home">
-                        <Link to={`/`}> <HomeOutlined/> </Link>
+                        <Link className="menu-link" to={`/`}> <HomeOutlined/> </Link>
                     </Menu.Item>
                     <Menu.Item className="menu-right-item" key="dropdown">
                         <Dropdown overlay={dropdownMenu}>
-                            <a> {username} </a>
+                            <a style={{ color: "white" }}> {username} </a>
                         </Dropdown>
                     </Menu.Item>
                     <Menu.Item className="menu-right-item" key="select" disabled="true">
@@ -64,13 +64,13 @@ const AppHeader = () => {
             ) : (
                 <Menu className="header-menu" theme="dark" mode="horizontal">
                     <Menu.Item className="menu-left-item" key="home">
-                        <Link to={`/`}> <HomeOutlined/> </Link>
+                        <Link className="menu-link" to={`/`}> <HomeOutlined/> </Link>
                     </Menu.Item>
                     <Menu.Item className="menu-right-item" key="login">
-                        <Link to={`/login`}> {t('text.logIn')} </Link>
+                        <Link className="menu-link" to={`/login`}> {t('text.logIn')} </Link>
                     </Menu.Item>
                     <Menu.Item className="menu-right-item" key="signup">
-                        <Link to={`/signup`}> {t('text.signUp')} </Link>
+                        <Link className="menu-link" to={`/signup`}> {t('text.signUp')} </Link>
                     </Menu.Item>
                </Menu>
             )}

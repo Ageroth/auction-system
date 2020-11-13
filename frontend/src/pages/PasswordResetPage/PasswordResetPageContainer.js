@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PasswordResetPage from './PasswordResetPageComponent';
-import {sendPasswordResetEmailRequest, resetPasswordRequest} from '../../utils/api';
-import {toast} from 'react-toastify';
+import { sendPasswordResetEmailRequest, resetPasswordRequest } from '../../utils/api';
+import { toast } from 'react-toastify';
 
 class PasswordResetPageContainer extends Component {
     constructor(props) {
@@ -31,7 +31,7 @@ class PasswordResetPageContainer extends Component {
                 });
                 toast.error(e.response.data.message, {
                     position: "bottom-right",
-                    autoClose: false,
+                    autoClose: 3000,
                     closeOnClick: true
                     });
             });
@@ -50,7 +50,7 @@ class PasswordResetPageContainer extends Component {
             .catch((e) => {
                 toast.error(e.response.data.message, {
                     position: "bottom-right",
-                    autoClose: false,
+                    autoClose: 3000,
                     closeOnClick: true
                     });
             });

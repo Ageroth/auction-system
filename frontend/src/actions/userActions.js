@@ -1,5 +1,5 @@
-import {logInRequest} from '../utils/api'
-import {LOGIN_USER, LOGOUT_USER, CHANGE_CURRENT_ROLE} from "./types";
+import { logInRequest } from '../utils/api'
+import { LOGIN_USER, LOGOUT_USER, CHANGE_CURRENT_ROLE } from "./types";
 
 
 export const logIn = (payload) => async dispatch => {

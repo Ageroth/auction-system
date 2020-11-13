@@ -1,9 +1,9 @@
 import React from 'react'
-import {Button, Form, Input} from 'antd'
-import {checkUsernameAvailabilityRequest, checkEmailAvailabilityRequest} from '../../utils/api'
-import {toast} from 'react-toastify';
-import {useTranslation} from 'react-i18next';
-import AppLayout from '../../components/AppLayout/AppLayout'
+import { Button, Form, Input } from 'antd'
+import { checkUsernameAvailabilityRequest, checkEmailAvailabilityRequest } from '../../utils/api'
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+import AppLayout from '../../components/AppLayout'
 import 'antd/dist/antd.css'
 import './SignupPage.css'
 

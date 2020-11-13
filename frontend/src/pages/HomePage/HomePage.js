@@ -5,7 +5,6 @@ const HomePage = () => {
     return (
         <AppLayout>
             <div> WELCOME TO SAN FRANCISCO!! </div>
-            <div> MY NIGGAS </div>
         </AppLayout>
     )
 }

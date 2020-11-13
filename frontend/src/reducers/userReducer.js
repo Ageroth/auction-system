@@ -1,4 +1,4 @@
-import {LOGIN_USER, LOGOUT_USER,CHANGE_CURRENT_ROLE} from "../actions/types";
+import { LOGIN_USER, LOGOUT_USER, CHANGE_CURRENT_ROLE } from "../actions/types";
 import ALLROLES from '../utils/allroles'
 
 const initialState = {

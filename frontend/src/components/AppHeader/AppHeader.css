@@ -1,3 +1,7 @@
+.app-header {
+    width: 100%;
+}
+
 .anticon {
     font-size: 20px !important;
     margin-right: 0px !important;
@@ -10,4 +14,8 @@
 .menu-right-item {
     font-size: 16px;
     float: right;
+}
+
+.menu-link {
+    color: white !important;
 }

@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {toast} from 'react-toastify';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { toast } from 'react-toastify';
 import LoginPage from './LoginPageComponent';
-import {logIn} from '../../actions/userActions';
+import { logIn } from '../../actions/userActions';
 
 class LoginPageContainer extends Component {
     constructor(props) {
