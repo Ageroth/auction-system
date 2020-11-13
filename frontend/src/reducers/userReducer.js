@@ -1,8 +1,8 @@
-import {LOGIN_USER, LOGOUT_USER} from "../actions/types";
+import {LOGIN_USER, LOGOUT_USER,CHANGE_CURRENT_ROLE} from "../actions/types";
 import ALLROLES from '../utils/allroles'
 
 const initialState = {
-    isLogged: false,
+    isLoggedIn: false,
     username: null,
     token: null,
     roles: null,
@@ -18,15 +18,20 @@ export default function userReducer(state = initialState, action) {
             );
             return {
                 ...state,
-                isLogged: true,
+                isLoggedIn: true,
                 username: action.payload.username,
                 token: action.payload.token,
                 roles: userRoles,
                 currentRole: userRoles[userRoles.length - 1]
-            }
+            };
         case LOGOUT_USER:
             return initialState;
+        case CHANGE_CURRENT_ROLE:
+            return {
+                ...state,
+                currentRole: action.payload
+            }
         default:
-            return state
+            return state;
     }
 };

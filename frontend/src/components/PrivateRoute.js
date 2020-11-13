@@ -3,7 +3,7 @@ import {Redirect, Route} from 'react-router-dom';
 import {useSelector} from 'react-redux'
 
 export const PrivateRoute = ({component: Component, canAccess, ...rest}) => {
-  const isLogged = useSelector(state => state.user.isLogged);
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
   const currentRole = useSelector(state => state.user.currentRole);
 
   const haveAccessToRoute = () => {
@@ -18,7 +18,7 @@ export const PrivateRoute = ({component: Component, canAccess, ...rest}) => {
 
     return (
       <Route {...rest} render={props => (
-        isLogged ? (
+        isLoggedIn ? (
           haveAccessToRoute() ? <Component {...props} /> : <Redirect to="/" />
         ) : <Redirect to="/login" />
       )} />

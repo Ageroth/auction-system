@@ -46,5 +46,10 @@
     "alreadyHaveAnAccount": "Masz już konto?",
     "sendPasswordResetEmail": "Wyślij email do resetu hasła",
     "changePassword": "Zmień hasło"
+  },
+  "role": {
+    "admin": "Administrator",
+    "mod": "Moderator",
+    "client": "Klient"
   }
 }

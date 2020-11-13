@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {Layout,Menu,Dropdown} from 'antd';
+import {Layout,Menu,Dropdown,Select} from 'antd';
 import {useSelector,useDispatch} from 'react-redux'
-import {LOGOUT_USER} from "../../actions/types";
+import {logOut,changeCurrentRole} from "../../actions/userActions";
 import {useTranslation} from 'react-i18next';
 import {HomeOutlined} from "@ant-design/icons";
 import 'antd/dist/antd.css';
@@ -11,21 +11,21 @@ import './AppHeader.css'
 const Header = Layout.Header;
 
 const AppHeader = () => {
-    const isLogged = useSelector(state => state.user.isLogged);
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
     const username = useSelector(state => state.user.username);
     const roles = useSelector(state => state.user.roles);
     const currentRole = useSelector(state => state.user.currentRole);
     const {t} = useTranslation();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
-    const handleMenuClick = ({key}) => {
+    const handleDropdownMenuClick = ({key}) => {
         if (key === "logout") {
-            dispatch({ type: LOGOUT_USER })
+            dispatch(logOut());
         }
     }
 
     const dropdownMenu = (
-        <Menu onClick={handleMenuClick}>
+        <Menu onClick={handleDropdownMenuClick}>
             <Menu.Item className="dropdown-item" key="profile" >
                 {/* <Link to={`/my-profile`}>Twoje konto</Link> */}
                 Twoje konto
@@ -36,19 +36,29 @@ const AppHeader = () => {
             </Menu.Item>
         </Menu>
       );
-      
+
+    const handleRoleChange = (newRole) => {
+        dispatch(changeCurrentRole(newRole));
+    }
 
     return (
         <Header style={{ padding: '0 0' }}>
-            {isLogged ? (
+            {isLoggedIn ? (
                <Menu className="header-menu" theme="dark" mode="horizontal">
                     <Menu.Item className="menu-left-item" key="home">
                         <Link to={`/`}> <HomeOutlined/> </Link>
                     </Menu.Item>
-                    <Menu.Item className="menu-right-item">
-                    <Dropdown overlay={dropdownMenu}>
-                        <a> {username} </a>
-                    </Dropdown>
+                    <Menu.Item className="menu-right-item" key="dropdown">
+                        <Dropdown overlay={dropdownMenu}>
+                            <a> {username} </a>
+                        </Dropdown>
+                    </Menu.Item>
+                    <Menu.Item className="menu-right-item" key="select" disabled="true">
+                        <Select defaultValue={currentRole} style={{ width: 140 }} onChange={handleRoleChange}>
+                            <Select.Option value="ADMINISTRATOR" disabled={!roles.includes("ADMINISTRATOR")}> {t('role.admin')} </Select.Option>
+                            <Select.Option value="MODERATOR" disabled={!roles.includes("MODERATOR")}> {t('role.mod')} </Select.Option>
+                            <Select.Option value="CLIENT"disabled={!roles.includes("CLIENT")}> {t('role.client')} </Select.Option>
+                        </Select>
                     </Menu.Item>
                 </Menu>
             ) : (

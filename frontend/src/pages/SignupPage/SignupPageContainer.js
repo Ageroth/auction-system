@@ -32,7 +32,7 @@ class SignupPageContainer extends Component {
     render() {
         return (
             <>
-                {this.props.isLogged
+                {this.props.isLoggedIn
                     ? this.props.history.push("/")
                     : <SignupPage onSubmit={this.handleSignup} isSubmitting={this.state.isSubmitting} />
                 }
@@ -43,7 +43,7 @@ class SignupPageContainer extends Component {
 
 const mapStateToProps = state => {
     return {
-        isLogged: state.user.isLogged
+        isLoggedIn: state.user.isLoggedIn
     }
 }
 

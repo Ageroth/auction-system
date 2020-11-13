@@ -1,8 +1,8 @@
 import {logInRequest} from '../utils/api'
-import {LOGIN_USER, LOGOUT_USER} from "./types";
+import {LOGIN_USER, LOGOUT_USER, CHANGE_CURRENT_ROLE} from "./types";
 
 
-const logIn = (payload) => async dispatch => {
+export const logIn = (payload) => async dispatch => {
         const response = await logInRequest(payload)
         dispatch({
             type: LOGIN_USER,
@@ -10,13 +10,15 @@ const logIn = (payload) => async dispatch => {
         })
 }
 
-const logOut = () => dispatch => {
-    dispatch({
+export const logOut = () => {
+    return {
         type: LOGOUT_USER
-    });
+    };
 }
 
-export {
-    logIn,
-    logOut
-};
+export const changeCurrentRole = (role) => {
+    return {
+        type: CHANGE_CURRENT_ROLE,
+        payload: role
+    };
+}
