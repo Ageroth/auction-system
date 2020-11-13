@@ -50,7 +50,7 @@ const LoginPage = props => {
                 <Button type="primary" htmlType="submit" className="login-form-button" disabled={isSubmitting}>
                     {t('text.logIn')}
                 </Button>
-                <p className="sign-up"> {t('text.noAccount')} <a href="/signup">{t('text.signUp')} </a></p>
+                <p className="sign-up"> {t('text.noAccount')} <a href="/signup"> {t('text.signUp')} </a></p>
                 <p className="forgot-password"><a href="/password_reset"> {t('text.forgotPassword')} </a></p>
             </Form.Item>
         </Form>

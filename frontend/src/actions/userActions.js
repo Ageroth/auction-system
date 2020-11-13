@@ -10,7 +10,7 @@ const logIn = (payload) => async dispatch => {
         })
 }
 
-const logOut = () => async dispatch => {
+const logOut = () => dispatch => {
     dispatch({
         type: LOGOUT_USER
     });
