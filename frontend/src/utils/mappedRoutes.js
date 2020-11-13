@@ -1,6 +1,6 @@
 import React from 'react';
-import {Route} from 'react-router-dom';
-import routes from './routes';
+import { Route } from 'react-router-dom';
+import { routes } from './routes';
 import {PrivateRoute} from '../components/PrivateRoute';
 
 export const mappedRoutes = routes.map(route => route.public 

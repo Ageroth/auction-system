@@ -1,12 +1,12 @@
 import React from 'react';
-import AppHeader from '../../components/AppHeader/AppHeader'
+import AppLayout from '../../components/AppLayout/AppLayout'
 
 const HomePage = () => {
     return (
-        <>
-        <AppHeader/>
-        <div> WELCOME TO SAN FRANCISCO!! </div>
-        </>
+        <AppLayout>
+            <div> WELCOME TO SAN FRANCISCO!! </div>
+            <div> MY NIGGAS </div>
+        </AppLayout>
     )
 }
 

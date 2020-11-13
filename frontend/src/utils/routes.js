@@ -8,7 +8,7 @@ import DashboardPage from '../pages/DashboardPage'
 
 const { ADMINISTRATOR, MODERATOR, CLIENT } = ALLROLES;
 
-const routes = [
+export const routes = [
   { path: '/', component: HomePage, public: true },
   { path: '/login', component: LoginPage, public: true },
   { path: '/signup', component: SignupPage, public: true },
@@ -18,4 +18,3 @@ const routes = [
   { path: '/dashboard', component: DashboardPage, canAccess: [CLIENT, MODERATOR] }
 ];
 
-export default routes;
