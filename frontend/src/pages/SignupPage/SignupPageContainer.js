@@ -12,21 +12,14 @@ class SignupPageContainer extends Component {
     }
 
     handleSignup = payload => {
-        this.setState({
-            isSubmitting: true
-        });
-        return signUpRequest(payload)
-        .then(() => {
-            this.setState({
-                isSubmitting: false,
-            });
+        this.setState({ isSubmitting: true });
+
+        signUpRequest(payload).then(() => {
+            this.setState({ isSubmitting: false });
             this.props.history.push("/login");
-        })
-        .catch(() => {
-            this.setState({
-                isSubmitting: false,
-            });
-        })
+        }).catch(() => {
+            this.setState({ isSubmitting: false });
+        });
     }
 
     render() {
@@ -44,7 +37,7 @@ class SignupPageContainer extends Component {
 const mapStateToProps = state => {
     return {
         isLoggedIn: state.user.isLoggedIn
-    }
+    };
 }
 
-export default connect(mapStateToProps,null)(SignupPageContainer);
+export default connect(mapStateToProps, null)(SignupPageContainer);

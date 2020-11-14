@@ -16,7 +16,7 @@ export function signUpRequest(payload) {
 export function checkUsernameAvailabilityRequest(value) {
     return axios.get('/users/username-availability', {
         params: {
-        username : value
+        username: value
       }
     });
 }
@@ -24,13 +24,13 @@ export function checkUsernameAvailabilityRequest(value) {
 export function checkEmailAvailabilityRequest(value) {
     return axios.get('/users/email-availability', {
         params: {
-        email : value
+        email: value
       }
     });
 }
 
 export function activateUserRequest(value) {
-    return axios.post('/users/me/activation/' + value);
+    return axios.post('/users/me/activation' + value);
 }
 
 export function sendPasswordResetEmailRequest(payload) {
@@ -38,5 +38,17 @@ export function sendPasswordResetEmailRequest(payload) {
 }
 
 export function resetPasswordRequest(value, payload) {
-    return axios.post('/users/me/password-reset/' + value, JSON.stringify(payload));
+    return axios.post('/users/me/password-reset' + value, JSON.stringify(payload));
+}
+
+export function getUsersRequest(values) {
+    return axios.get('/users', {
+        headers: {
+          Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZ2Vyb3RoIiwiaWF0IjoxNjA1MzgxNDAxLCJleHAiOjE2MDUzODIzMDF9.lBtU9UTePXPXU0dCnCC-y8ujqFH3gRUTTpwPJxQ6IRQDGmVwDgyoRVMCcbVg2VGE68JN0907Er_IVCew8okAwA'
+        }
+       }, {
+           params: {
+               page: values.current - 1
+           }
+       });
 }

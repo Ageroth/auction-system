@@ -12,46 +12,39 @@ const SignupPage = (props) => {
     const [form] = Form.useForm();
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
+
     const onFinish = values => {
         const payload = Object.assign({}, values);
         delete payload.confirmPassword;
         
-        props.onSubmit(payload)
-            .then(() => {
-                toast.success(t('message.content.activationEmailSent'), {
-                    position: "bottom-right",
-                    autoClose: false,
-                    closeOnClick: true
-                    });
-            })
-            .catch(e => {
-                toast.error(e.response.data.message, {
-                    position: "bottom-right",
-                    autoClose: 3000,
-                    closeOnClick: true
-                    });
-            })
-    };
+        props.onSubmit(payload).then(() => {
+            toast.success(t('message.content.activationEmailSent'), {
+                position: "bottom-right",
+                autoClose: false,
+                closeOnClick: true
+            });
+        }).catch(e => {
+            toast.error(e.response.data.message, {
+                position: "bottom-right",
+                autoClose: 3000,
+                closeOnClick: true
+            });
+        });
+    }
 
     const validateUsernameAvailability = async (rule, value) => {
-            if(value) {
-                const result = await checkUsernameAvailabilityRequest(value);
-                if(result.data.available)  {
-                    return Promise.resolve('');
-                  } else {
-                    return Promise.reject(t('validation.usernameTaken'));
-                  }
-            }
+        if(value) {
+            const result = await checkUsernameAvailabilityRequest(value);
+            if(result.data.available) return Promise.resolve('');
+            else return Promise.reject(t('validation.usernameTaken'));
+        }
     }
 
     const validateEmailAvailability = async (rule, value) => {
         if(value) {
             const result = await checkEmailAvailabilityRequest(value);
-            if(result.data.available)  {
-                return Promise.resolve('');
-              } else {
-                return Promise.reject(t('validation.emailTaken'));
-              }
+            if(result.data.available) return Promise.resolve('');
+            else return Promise.reject(t('validation.emailTaken'));
         }
     }
            
@@ -224,7 +217,7 @@ const SignupPage = (props) => {
                 </Form.Item>
             </Form>
         </AppLayout>
-    )
+    );
 }
 
 export default SignupPage;

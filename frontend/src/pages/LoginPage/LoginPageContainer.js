@@ -13,25 +13,17 @@ class LoginPageContainer extends Component {
     }
 
     handleLogin = payload => {
-        this.setState({
-            isSubmitting: true
-        });
-        return this.props.logIn(payload)
-        .then(() => {
-            this.setState({
-                isSubmitting: false,
-            });
+        this.setState({ isSubmitting: true });
+        this.props.logIn(payload).then(() => {
+            this.setState({ isSubmitting: false });
             this.props.history.push("/");
-        })
-        .catch((e) => {
-            this.setState({
-                isSubmitting: false,
-            });
+        }).catch((e) => {
+            this.setState({ isSubmitting: false });
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
                 closeOnClick: true
-                });
+            });
         })
     }
 
@@ -45,7 +37,7 @@ class LoginPageContainer extends Component {
 const mapStateToProps = state => {
     return {
         isLoggedIn: state.user.isLoggedIn
-    }
+    };
 }
 
 const mapDispatchToProps = {

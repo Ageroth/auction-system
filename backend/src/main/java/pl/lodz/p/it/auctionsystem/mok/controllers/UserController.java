@@ -159,7 +159,7 @@ public class UserController {
      * użytkowników oraz liczbą wszystkich stron
      */
     @GetMapping
-    public ResponseEntity<?> getAllUsers(
+    public ResponseEntity<?> getUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "desc") String order,
             @RequestParam(required = false) String query,
@@ -180,7 +180,6 @@ public class UserController {
         } else
             usersPage = userService.getFilteredUsers(query, status, paging);
 
-
         users = usersPage.getContent();
 
         if (users.isEmpty()) {
@@ -190,7 +189,6 @@ public class UserController {
         userDtos = users.stream()
                 .map(user -> modelMapper.map(user, UserDto.class))
                 .collect(Collectors.toList());
-
 
         Map<String, Object> response = new HashMap<>();
 

@@ -21,8 +21,7 @@ public class UserSpecs {
         String finalText = text;
         return (root, query, builder) -> builder.or(
                 builder.like(root.get("firstName"), finalText),
-                builder.like(root.get("lastName"), finalText),
-                builder.like(root.get("username"), finalText)
+                builder.like(root.get("lastName"), finalText)
         );
     }
     

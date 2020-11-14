@@ -6,7 +6,6 @@ const DashboardPage = () => {
         <AppLayout>
             <div> PRIVATE STUFF </div>
         </AppLayout>
-        
     )
 }
 
