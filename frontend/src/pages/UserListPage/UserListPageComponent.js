@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Table, Input, Button, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
-import Highlighter from 'react-highlight-words';
 import AppLayout from '../../components/AppLayout'
 import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css'
@@ -52,24 +51,28 @@ const UserListPage = (props) => {
         }
     ];
 
-    const handleTableChange = (pagination, filters, sorter) => {
+    const handleTableChange = (pagination, filters, sorter, searchText) => {
         props.handleTableChange({
             sortField: sorter.field,
             order: sorter.order,
+            query: searchText,
             pagination,
             ...filters
         })
       };
     
     return (
-        <Table
-            columns={columns}
-            rowKey={record => record.id}
-            dataSource={props.data}
-            pagination={props.pagination}
-            loading={props.isLoading}
-            onChange={handleTableChange}
-        />
+        <AppLayout>
+            <Table
+                className="user-table"
+                columns={columns}
+                rowKey={record => record.id}
+                dataSource={props.data}
+                pagination={props.pagination}
+                loading={props.isLoading}
+                onChange={handleTableChange}
+            />
+        </AppLayout>
     );
 }
 

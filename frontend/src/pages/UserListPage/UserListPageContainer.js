@@ -21,8 +21,6 @@ export default class UserListPageContainer extends Component {
       this.setState({ isLoading: true });
 
       getUsersRequest(params).then(response => {
-        console.log("here");
-        console.log(response.data.totalPages)
         this.setState({
           isLoading: false,
           data: response.data.users,

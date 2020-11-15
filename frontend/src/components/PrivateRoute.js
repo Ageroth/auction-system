@@ -8,7 +8,7 @@ export const PrivateRoute = ({component: Component, canAccess, ...rest}) => {
 
   const haveAccessToRoute = () => {
     let result = false;
-    console.log("tutaj:" + canAccess);
+    
     if (canAccess) {
         if (canAccess.includes(currentRole)) result = true;
     } else  result = true;

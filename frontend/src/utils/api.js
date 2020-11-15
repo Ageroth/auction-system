@@ -4,7 +4,7 @@ axios.defaults.baseURL = 'http://localhost:8080/api';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.patch['Content-Type'] = 'application/json';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
-axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbWMiLCJpYXQiOjE2MDU0NjUzMzEsImV4cCI6MTYwNTQ3NDMzMX0.2RTkgNwFT4dmpF3Ok6tIffsXhWN0_Zzr-GVzu9F6_tYCrahPtJ09YIumy-vQ9DpizTTSSx7O3bNye4v3FsGiEg';
+axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbWMiLCJpYXQiOjE2MDU0NzQ1MjYsImV4cCI6MTYwNTQ4MzUyNn0.FAaaOt-O6rLQ1Ne8W0MPW6e_KLvWdJ2x3ZOB8q5iQjr4fJPsFneZyU92MMixtJ8PzIaOUlZCa_IUQ1ht-U2BQw';
 
 export function logInRequest(payload) {
     return axios.post(`/auth/login`, JSON.stringify(payload));
@@ -43,8 +43,6 @@ export function resetPasswordRequest(value, payload) {
 }
 
 export function getUsersRequest(values) {
-    console.log(values)
-
     let activationStatus;
     values.activated ?  activationStatus = values.activated[0] : activationStatus = null;
 
