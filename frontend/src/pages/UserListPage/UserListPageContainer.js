@@ -17,36 +17,27 @@ export default class UserListPageContainer extends Component {
       this.getUsers({ pagination });
     }
 
-    getUsers = (params) => {
+    getUsers = (params = {}) => {
       this.setState({ isLoading: true });
 
       getUsersRequest(params).then(response => {
-        const users = response.data.users.map(row => ({
-          key: row.id,
-          id: row.id,
-          username: row.username,
-          email: row.email,
-          activated: row.activated,
-          firstName: row.firstName,
-          lastName: row.lastName
-        }));
-
         this.setState({
           isLoading: false,
-          data: users,
+          data: response.data.users,
           pagination: {
             ...params.pagination,
             total: response.data.totalPages,
           }
         });
       }).catch((e) => {
+        this.setState({ isLoading: false })
         console.log(e);
       });
     }
     
     render() {
       return (
-        <UserListPage data={this.state.data} pagination={this.state.pagination} isLoading={this.state.isLoading} />
+        <UserListPage data={this.state.data} pagination={this.state.pagination} isLoading={this.state.isLoading} handleTableChange={this.getUsers} />
       );
     }
 }

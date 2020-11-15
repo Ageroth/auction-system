@@ -4,6 +4,7 @@ axios.defaults.baseURL = 'http://localhost:8080/api';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.patch['Content-Type'] = 'application/json';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
+axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbWMiLCJpYXQiOjE2MDU0NjUzMzEsImV4cCI6MTYwNTQ3NDMzMX0.2RTkgNwFT4dmpF3Ok6tIffsXhWN0_Zzr-GVzu9F6_tYCrahPtJ09YIumy-vQ9DpizTTSSx7O3bNye4v3FsGiEg';
 
 export function logInRequest(payload) {
     return axios.post(`/auth/login`, JSON.stringify(payload));
@@ -16,16 +17,16 @@ export function signUpRequest(payload) {
 export function checkUsernameAvailabilityRequest(value) {
     return axios.get('/users/username-availability', {
         params: {
-        username: value
-      }
+            username: value
+        }
     });
 }
 
 export function checkEmailAvailabilityRequest(value) {
     return axios.get('/users/email-availability', {
         params: {
-        email: value
-      }
+            email: value
+        }
     });
 }
 
@@ -42,13 +43,15 @@ export function resetPasswordRequest(value, payload) {
 }
 
 export function getUsersRequest(values) {
+    let activationStatus;
+    values.activated ?  activationStatus = values.activated[0] : activationStatus = null;
+
     return axios.get('/users', {
-        headers: {
-          Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZ2Vyb3RoIiwiaWF0IjoxNjA1MzgxNDAxLCJleHAiOjE2MDUzODIzMDF9.lBtU9UTePXPXU0dCnCC-y8ujqFH3gRUTTpwPJxQ6IRQDGmVwDgyoRVMCcbVg2VGE68JN0907Er_IVCew8okAwA'
+        params: {
+            page: values.pagination.current - 1,
+            status: activationStatus,
+            sortField: values.sortField,
+            order: values.order
         }
-       }, {
-           params: {
-               page: values.current - 1
-           }
-       });
+    });
 }

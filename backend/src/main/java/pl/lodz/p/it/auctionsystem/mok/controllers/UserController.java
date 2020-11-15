@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -161,15 +160,19 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getUsers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "desc") String order,
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false) String order,
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Boolean status) {
-
-        Direction direction = SortDirection.getSortDirection(order);
         List<User> users;
         List<UserDto> userDtos;
-        Pageable paging = PageRequest.of(page, pageSize, Sort.by(direction, "createdAt"));
+        Pageable paging;
         Page<User> usersPage;
+
+        if (sortField != null && order != null)
+            paging = PageRequest.of(page, pageSize, Sort.by(SortDirection.getSortDirection(order), sortField));
+        else
+            paging = PageRequest.of(page, pageSize);
 
         if (query == null && status == null)
             usersPage = userService.getUsers(paging);
@@ -194,7 +197,6 @@ public class UserController {
 
         response.put("users", userDtos);
         response.put("currentPage", usersPage.getNumber());
-        response.put("totalItems", usersPage.getTotalElements());
         response.put("totalPages", usersPage.getTotalPages());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
