@@ -21,6 +21,7 @@ import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,7 +166,7 @@ public class UserController {
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Boolean status) {
         List<User> users;
-        List<UserDto> userDtos;
+        List<UserDto> userDtos = new ArrayList<>();
         Pageable paging;
         Page<User> usersPage;
 
@@ -189,9 +190,15 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        userDtos = users.stream()
-                .map(user -> modelMapper.map(user, UserDto.class))
-                .collect(Collectors.toList());
+        for (User user : users) {
+            UserDto userDto = modelMapper.map(user, UserDto.class);
+
+            userDto.setUserAccessLevelsName(user.getUserAccessLevels().stream()
+                    .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
+                    .collect(Collectors.toList()));
+
+            userDtos.add(userDto);
+        }
 
         Map<String, Object> response = new HashMap<>();
 

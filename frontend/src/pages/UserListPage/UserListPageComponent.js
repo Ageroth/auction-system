@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Input, Button, Space } from 'antd';
+import { Table, Input, Button, Space, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
 import { SearchOutlined } from '@ant-design/icons';
@@ -15,7 +15,7 @@ const UserListPage = (props) => {
 
     const columns = [
         {
-            title: 'Name',
+            title: t('userLabels.name'),
             dataIndex: 'lastName',
             key: 'lastName',
             sorter: true,
@@ -37,6 +37,38 @@ const UserListPage = (props) => {
             key: 'createdAt',
             sorter: true,
             render: createdAt => `${formatDate(createdAt)}`
+        },
+        {
+            title: t('userLabels.roles'),
+            key: 'userAccessLevelsName',
+            dataIndex: 'userAccessLevelsName',
+            render: userAccessLevelsName => (
+                <>
+                    {userAccessLevelsName.map(userAccessLevelName => {
+                        let color;
+                        let value;
+
+                        if (userAccessLevelName === "ADMINISTRATOR") {
+                            color = 'volcano';
+                            value = t('role.admin');
+                        }
+                        else if (userAccessLevelName === "MODERATOR") {
+                            color = 'green';
+                            value = t('role.mod');
+                        }
+                        else {
+                            color = 'geekblue';
+                            value =  t('role.client');
+                        }
+
+                        return (
+                            <Tag color={color} key={userAccessLevelName}>
+                                {value.toUpperCase()}
+                            </Tag>
+                        );
+                    })}
+                </>
+            ),
         },
         {
             title: t('userLabels.activated'),

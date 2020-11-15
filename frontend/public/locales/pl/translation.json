@@ -11,7 +11,8 @@
     "phoneNumber": "Numer telefonu",
     "created": "Utworzony",
     "activated": "Aktywowany",
-    "name": "Imię i nazwisko"
+    "name": "Imię i nazwisko",
+    "roles": "Role"
   },
   "validation": {
     "required": "To pole jest wymagane",

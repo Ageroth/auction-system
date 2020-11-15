@@ -11,7 +11,8 @@
     "phoneNumber": "Phone number",
     "created": "Created",
     "activated": "Activated",
-    "name": "Name"
+    "name": "Name",
+    "roles": "Roles"
   },
   "validation": {
     "required": "This field is required",
