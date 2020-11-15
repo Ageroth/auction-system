@@ -8,7 +8,11 @@
     "email": "Email",
     "firstName": "First name",
     "lastName": "Last name",
-    "phoneNumber": "Phone number"
+    "phoneNumber": "Phone number",
+    "created": "Created",
+    "activated": "Activated",
+    "name": "Name",
+    "roles": "Roles"
   },
   "validation": {
     "required": "This field is required",
@@ -34,7 +38,8 @@
     "content": {
       "activationFailed": "Provided activation link is either invalid or expired.",
       "activationSucceded": "You may now log in.",
-      "passwordResetEmailSent": "Check provided email for a link to reset your password. The link is valid for 15 minutes."
+      "passwordResetEmailSent": "Check your email for a link to reset your password. The link is valid for 15 minutes.",
+      "activationEmailSent": "Check your email for a link to activate your account. This link is valid for 24 hours."
     }
   },
   "text": {
@@ -44,6 +49,13 @@
     "noAccount": "Don't have an account yet?",
     "alreadyHaveAnAccount": "Already have an account?",
     "sendPasswordResetEmail": "Send password reset email",
-    "changePassword": "Change password"
+    "changePassword": "Change password",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "role": {
+    "admin": "Administrator",
+    "mod": "Moderator",
+    "client": "Client"
   }
 }

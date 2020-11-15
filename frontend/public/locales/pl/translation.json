@@ -1,5 +1,5 @@
 {
-  "user-labels": {
+  "userLabels": {
     "username": "Nazwa użytkownika",
     "password": "Hasło",
     "passwordConfirmation": "Potwierdź hasło",
@@ -8,7 +8,11 @@
     "email": "Email",
     "firstName": "Imię",
     "lastName": "Nazwisko",
-    "phoneNumber": "Numer telefonu"
+    "phoneNumber": "Numer telefonu",
+    "created": "Utworzony",
+    "activated": "Aktywowany",
+    "name": "Imię i nazwisko",
+    "roles": "Role"
   },
   "validation": {
     "required": "To pole jest wymagane",
@@ -34,7 +38,8 @@
     "content": {
       "activationFailed": "Użyty link aktywacyjny jest albo nieprawidłowy, albo nieważny.",
       "activationSucceded": "Możesz się teraz zalogować.",
-      "passwordResetEmailSent": "Na podany adres email został wysłany link do resetu hasła. Link jest ważny przez 15 minut."
+      "passwordResetEmailSent": "Na podany adres email został wysłany link do resetu hasła. Link jest ważny przez 15 minut.",
+      "activationEmailSent": "Na podany adres email został wysłany link do aktywacji konta. Link jest ważny przez 24 godziny."
     }
   },
   "text": {
@@ -44,6 +49,13 @@
     "noAccount": "Nie masz jeszcze konta?",
     "alreadyHaveAnAccount": "Masz już konto?",
     "sendPasswordResetEmail": "Wyślij email do resetu hasła",
-    "changePassword": "Zmień hasło"
+    "changePassword": "Zmień hasło",
+    "yes": "Tak",
+    "no": "Nie"
+  },
+  "role": {
+    "admin": "Administrator",
+    "mod": "Moderator",
+    "client": "Klient"
   }
 }

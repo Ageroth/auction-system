@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,6 +21,7 @@ import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,17 +159,21 @@ public class UserController {
      * użytkowników oraz liczbą wszystkich stron
      */
     @GetMapping
-    public ResponseEntity<?> getAllUsers(
+    public ResponseEntity<?> getUsers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "desc") String order,
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false) String order,
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Boolean status) {
-
-        Direction direction = SortDirection.getSortDirection(order);
         List<User> users;
-        List<UserDto> userDtos;
-        Pageable paging = PageRequest.of(page, pageSize, Sort.by(direction, "createdAt"));
+        List<UserDto> userDtos = new ArrayList<>();
+        Pageable paging;
         Page<User> usersPage;
+
+        if (sortField != null && order != null)
+            paging = PageRequest.of(page, pageSize, Sort.by(SortDirection.getSortDirection(order), sortField));
+        else
+            paging = PageRequest.of(page, pageSize);
 
         if (query == null && status == null)
             usersPage = userService.getUsers(paging);
@@ -180,24 +184,27 @@ public class UserController {
         } else
             usersPage = userService.getFilteredUsers(query, status, paging);
 
-
         users = usersPage.getContent();
 
         if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        userDtos = users.stream()
-                .map(user -> modelMapper.map(user, UserDto.class))
-                .collect(Collectors.toList());
+        for (User user : users) {
+            UserDto userDto = modelMapper.map(user, UserDto.class);
 
+            userDto.setUserAccessLevelsName(user.getUserAccessLevels().stream()
+                    .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
+                    .collect(Collectors.toList()));
+
+            userDtos.add(userDto);
+        }
 
         Map<String, Object> response = new HashMap<>();
 
         response.put("users", userDtos);
         response.put("currentPage", usersPage.getNumber());
         response.put("totalItems", usersPage.getTotalElements());
-        response.put("totalPages", usersPage.getTotalPages());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
