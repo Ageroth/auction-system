@@ -9,6 +9,7 @@ import './UserListPage.css'
 
 const UserListPage = (props) => {
     const {t} = useTranslation();
+
     const formatDate = (string) => {
         return new Date(string).toLocaleString([]);
     }

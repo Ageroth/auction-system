@@ -197,7 +197,7 @@ public class UserController {
 
         response.put("users", userDtos);
         response.put("currentPage", usersPage.getNumber());
-        response.put("totalPages", usersPage.getTotalPages());
+        response.put("totalItems", usersPage.getTotalElements());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

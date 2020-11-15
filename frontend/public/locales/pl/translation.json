@@ -1,5 +1,5 @@
 {
-  "user-labels": {
+  "userLabels": {
     "username": "Nazwa użytkownika",
     "password": "Hasło",
     "passwordConfirmation": "Potwierdź hasło",
@@ -8,7 +8,10 @@
     "email": "Email",
     "firstName": "Imię",
     "lastName": "Nazwisko",
-    "phoneNumber": "Numer telefonu"
+    "phoneNumber": "Numer telefonu",
+    "created": "Utworzony",
+    "activated": "Aktywowany",
+    "name": "Imię i nazwisko"
   },
   "validation": {
     "required": "To pole jest wymagane",
@@ -45,7 +48,9 @@
     "noAccount": "Nie masz jeszcze konta?",
     "alreadyHaveAnAccount": "Masz już konto?",
     "sendPasswordResetEmail": "Wyślij email do resetu hasła",
-    "changePassword": "Zmień hasło"
+    "changePassword": "Zmień hasło",
+    "yes": "Tak",
+    "no": "Nie"
   },
   "role": {
     "admin": "Administrator",

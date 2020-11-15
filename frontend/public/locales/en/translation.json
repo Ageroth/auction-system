@@ -8,7 +8,10 @@
     "email": "Email",
     "firstName": "First name",
     "lastName": "Last name",
-    "phoneNumber": "Phone number"
+    "phoneNumber": "Phone number",
+    "created": "Created",
+    "activated": "Activated",
+    "name": "Name"
   },
   "validation": {
     "required": "This field is required",
@@ -45,7 +48,9 @@
     "noAccount": "Don't have an account yet?",
     "alreadyHaveAnAccount": "Already have an account?",
     "sendPasswordResetEmail": "Send password reset email",
-    "changePassword": "Change password"
+    "changePassword": "Change password",
+    "yes": "Yes",
+    "no": "No"
   },
   "role": {
     "admin": "Administrator",

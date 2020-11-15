@@ -43,6 +43,8 @@ export function resetPasswordRequest(value, payload) {
 }
 
 export function getUsersRequest(values) {
+    console.log(values)
+
     let activationStatus;
     values.activated ?  activationStatus = values.activated[0] : activationStatus = null;
 

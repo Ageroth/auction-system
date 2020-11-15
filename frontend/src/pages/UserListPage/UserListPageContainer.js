@@ -7,7 +7,7 @@ export default class UserListPageContainer extends Component {
     state = {
       data: [],
       pagination: {
-        current: 1
+        current: 1,
       },
       isLoading: false
     };
@@ -21,12 +21,14 @@ export default class UserListPageContainer extends Component {
       this.setState({ isLoading: true });
 
       getUsersRequest(params).then(response => {
+        console.log("here");
+        console.log(response.data.totalPages)
         this.setState({
           isLoading: false,
           data: response.data.users,
           pagination: {
             ...params.pagination,
-            total: response.data.totalPages,
+            total: response.data.totalItems,
           }
         });
       }).catch((e) => {
