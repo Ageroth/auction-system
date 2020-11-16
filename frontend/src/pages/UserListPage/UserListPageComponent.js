@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
-import { Table, Input, Button, Space, Tag } from 'antd';
+import React from 'react'
+import { Table, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
-import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css'
 import './UserListPage.css'
 

@@ -51,7 +51,9 @@
     "sendPasswordResetEmail": "Send password reset email",
     "changePassword": "Change password",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "home": "Home page",
+    "404": "The page you are looking for doesn't exist (error 404)"
   },
   "role": {
     "admin": "Administrator",

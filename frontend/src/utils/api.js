@@ -1,11 +1,5 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:8080/api';
-axios.defaults.headers.post['Content-Type'] = 'application/json';
-axios.defaults.headers.patch['Content-Type'] = 'application/json';
-axios.defaults.headers.get['Content-Type'] = 'application/json';
-axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbWMiLCJpYXQiOjE2MDU0ODI4ODAsImV4cCI6MTYwNTQ5MTg4MH0.pd7srkbEqOM7Bet-K_PkrHTl8ycuBAe-thLoNtMWzwuzMkKAv5Jj9RixwKH70ZoICzJWMuBlD09upucmx3hsrA';
-
 export function logInRequest(payload) {
     return axios.post(`/auth/login`, JSON.stringify(payload));
 }

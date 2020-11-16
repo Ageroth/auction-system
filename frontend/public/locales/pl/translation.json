@@ -51,7 +51,9 @@
     "sendPasswordResetEmail": "Wyślij email do resetu hasła",
     "changePassword": "Zmień hasło",
     "yes": "Tak",
-    "no": "Nie"
+    "no": "Nie",
+    "home": "Strona główna",
+    "404": "Strona, której szukasz, nie istnieje (błąd 404)"
   },
   "role": {
     "admin": "Administrator",

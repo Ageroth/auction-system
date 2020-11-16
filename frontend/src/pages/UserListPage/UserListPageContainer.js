@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import UserListPage from './UserListPageComponent'
 import { getUsersRequest } from '../../utils/api';
-import { toast } from 'react-toastify';
 
 export default class UserListPageContainer extends Component { 
     state = {
