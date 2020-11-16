@@ -8,6 +8,7 @@
     flex-grow: 1;
     align-items: center;
     justify-content: center;
+    background: white;
 }
 .app-footer {
     text-align: center;

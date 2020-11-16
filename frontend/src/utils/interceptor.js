@@ -19,8 +19,6 @@ const interceptor = (store) => {
             
             config.baseURL = 'http://localhost:8080/api';
             
-            console.log(config);
-
             return config;
         },
         (error) => {
