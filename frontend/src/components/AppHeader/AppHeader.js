@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Layout,Menu ,Dropdown ,Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
-import { logOut, changeCurrentRole } from "../../actions/userActions";
+import { logOut, changeCurrentRole } from '../../actions/userActions';
 import { useTranslation } from 'react-i18next';
-import { HomeOutlined } from "@ant-design/icons";
+import { HomeOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './AppHeader.css'
 
