@@ -21,7 +21,7 @@ export default class PasswordResetPageContainer extends Component {
                 isSubmitting: false,
                 emailSent: true
             });
-        }).catch((e) => {
+        }).catch(e => {
             this.setState({ isSubmitting: false });
             toast.error(e.response.data.message, {
                 position: "bottom-right",

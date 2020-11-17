@@ -49,3 +49,7 @@ export function getUsersRequest(values) {
         }
     });
 }
+
+export function getUserDetailsRequest(value) {
+    return axios.get('/users/' + value);
+}

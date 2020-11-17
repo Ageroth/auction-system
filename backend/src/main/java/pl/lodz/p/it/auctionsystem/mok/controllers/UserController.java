@@ -289,15 +289,19 @@ public class UserController {
      * Zwraca szczegóły konta użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return HTTP status 200 z obiektem typu {@link UserSummaryDto}
+     * @return HTTP status 200 z obiektem typu {@link UserDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserDetails(@PathVariable(value = "userId") Long userId) throws ApplicationException {
         User user = userService.getUserById(userId);
-        UserSummaryDto userSummaryDto = modelMapper.map(user, UserSummaryDto.class);
+        UserDto userDto = modelMapper.map(user, UserDto.class);
 
-        return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
+        userDto.setUserAccessLevelsName(user.getUserAccessLevels().stream()
+                .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
+                .collect(Collectors.toList()));
+
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     /**

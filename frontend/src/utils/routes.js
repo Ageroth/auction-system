@@ -6,6 +6,7 @@ import ActivationPage from '../pages/ActivationPage';
 import PasswordResetPage from '../pages/PasswordResetPage'
 import DashboardPage from '../pages/DashboardPage'
 import UserListPage from '../pages/UserListPage'
+import UserDetailsPage from '../pages/UserDetailsPage'
 import NotFoundPage from '../pages/NotFoundPage'
 
 const { ADMINISTRATOR, MODERATOR, CLIENT } = ALLROLES;
@@ -19,5 +20,6 @@ export const routes = [
   { path: '/password_reset/:passwordResetCode', component: PasswordResetPage, public: true },
   { path: '/dashboard', component: DashboardPage, canAccess: [CLIENT, MODERATOR] },
   { path: '/users', component: UserListPage, canAccess: [ADMINISTRATOR] },
+  { path: '/users/:userId', component: UserDetailsPage, canAccess: [ADMINISTRATOR] },
   { path: '*', component: NotFoundPage, public: true },
 ];

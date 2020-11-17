@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
 import './ActivationPage.css'
 
-const ActivationPage = props => {
+const ActivationPage = (props) => {
     const {t} = useTranslation();
     const error = props.error;
 

@@ -17,7 +17,7 @@ class LoginPageContainer extends Component {
         this.props.logIn(payload).then(() => {
             this.setState({ isSubmitting: false });
             this.props.history.push("/");
-        }).catch((e) => {
+        }).catch(e => {
             this.setState({ isSubmitting: false });
             toast.error(e.response.data.message, {
                 position: "bottom-right",
