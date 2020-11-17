@@ -4,5 +4,5 @@ import { routes } from './routes';
 import { PrivateRoute } from '../components/PrivateRoute';
 
 export const mappedRoutes = routes.map(route => route.public 
-  ? <Route exact path={route.path} component={route.component} key={route.path} />
-  : <PrivateRoute exact path={route.path} component={route.component} key={route.path} canAccess={route.canAccess} />)
+  ? <Route key={route.path} exact path={route.path} component={route.component} />
+  : <PrivateRoute key={route.path} exact path={route.path} component={route.component} canAccess={route.canAccess} />)

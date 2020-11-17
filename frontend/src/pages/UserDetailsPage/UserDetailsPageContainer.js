@@ -10,7 +10,7 @@ export default class UserDetailsPageContainer extends Component {
         this.state = {
             userId: this.props.match.params.userId,
             userDetails: null,
-            error: false,
+            error: false
         };  
     } 
     
