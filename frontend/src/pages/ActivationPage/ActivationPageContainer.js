@@ -15,9 +15,9 @@ export default class ActivationPageContainer extends Component {
 
     activateUser = () => {
         activateUserRequest(this.state.activationCode).then(() => {
-            this.setState({error: false});
+            this.setState({ error: false });
         }).catch(() => {
-            this.setState({error: true});
+            this.setState({ error: true });
         });
     }
 

@@ -54,7 +54,8 @@
     "no": "Nie",
     "home": "Strona główna",
     "404": "Strona, której szukasz, nie istnieje (błąd 404)",
-    "userDetails": "Szczegóły użytkownika"
+    "userDetails": "Szczegóły użytkownika",
+    "edit": "Edytuj"
   },
   "role": {
     "admin": "Administrator",

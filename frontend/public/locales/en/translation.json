@@ -54,7 +54,8 @@
     "no": "No",
     "home": "Home page",
     "404": "The page you are looking for doesn't exist (error 404)",
-    "userDetails": "User details"
+    "userDetails": "User details",
+    "edit": "Edit"
   },
   "role": {
     "admin": "Administrator",
