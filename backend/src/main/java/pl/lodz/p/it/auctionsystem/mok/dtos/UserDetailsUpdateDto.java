@@ -23,5 +23,5 @@ public class UserDetailsUpdateDto {
     
     private String phoneNumber;
 
-    private List<String> userAccessLevelsName = new ArrayList<>();
+    private List<String> userAccessLevelNames = new ArrayList<>();
 }

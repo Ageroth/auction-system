@@ -17,7 +17,6 @@ const UserDetailsEditPage = (props) => {
         props.onSubmit(payload);
     }
     
-
     return (
         <AppLayout>
             {userDetails ? (
@@ -29,7 +28,7 @@ const UserDetailsEditPage = (props) => {
                     onFinish={onFinish}
                     scrollToFirstError
                     initialValues={{
-                        'userAccessLevelsName': userDetails.userAccessLevelsName
+                        'userAccessLevelNames': userDetails.userAccessLevelNames
                     }}
                 >
                     <Form.Item
@@ -96,7 +95,7 @@ const UserDetailsEditPage = (props) => {
 
                     <Form.Item
                         label={t('userLabels.roles')}
-                        name="userAccessLevelsName"
+                        name="userAccessLevelNames"
                         rules={[
                             {
                                 required: true,

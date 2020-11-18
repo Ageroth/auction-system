@@ -40,11 +40,11 @@ const UserListPage = (props) => {
         },
         {
             title: t('userLabels.roles'),
-            key: 'userAccessLevelsName',
-            dataIndex: 'userAccessLevelsName',
-            render: userAccessLevelsName => (
+            key: 'userAccessLevelNames',
+            dataIndex: 'userAccessLevelNames',
+            render: userAccessLevelNames => (
                 <>
-                    {userAccessLevelsName.map(userAccessLevelName => {
+                    {userAccessLevelNames.map(userAccessLevelName => {
                         let color;
                         let value;
 
@@ -103,6 +103,7 @@ const UserListPage = (props) => {
                 pagination={props.pagination}
                 loading={props.isLoading}
                 onChange={handleTableChange}
+                bordered
             />
         </AppLayout>
     );

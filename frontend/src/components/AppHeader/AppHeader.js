@@ -53,22 +53,6 @@ const AppHeader = () => {
                             <p style={{ color: "white" }}> {username} </p>
                         </Dropdown>
                     </Menu.Item>
-
-                    {/* {userDetails.userAccessLevelsName.map(userAccessLevelName => {
-                                let value;
-
-                                if (userAccessLevelName === "ADMINISTRATOR") 
-                                    value = t('role.admin');
-                                    
-                                else if (userAccessLevelName === "MODERATOR")
-                                    value = t('role.mod');
-                                else 
-                                    value =  t('role.client')
-
-                                return (
-                                    <Checkbox key={value} indeterminate="true"> {value} </Checkbox>
-                                );
-                             })}  */}
                     <Menu.Item className="menu-right-item" key="select" disabled="true">
                         <Select defaultValue={currentRole} style={{ width: 140 }} onChange={handleRoleChange}>
                             {roles.includes("ADMINISTRATOR") ? <Select.Option value="ADMINISTRATOR"> {t('role.admin')} </Select.Option> : null}

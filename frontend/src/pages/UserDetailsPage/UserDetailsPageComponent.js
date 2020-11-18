@@ -41,7 +41,7 @@ const UserDetailsPage = (props) => {
                         <Descriptions.Item label={t('userLabels.activated')}> {userDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
                         <Descriptions.Item label={t('userLabels.created')}> {formatDate(userDetails.createdAt)} </Descriptions.Item>
                         <Descriptions.Item label={t('userLabels.roles')}>
-                            {userDetails.userAccessLevelsName.map(userAccessLevelName => {
+                            {userDetails.userAccessLevelNames.map(userAccessLevelName => {
                                 let value;
 
                                 if (userAccessLevelName === "ADMINISTRATOR") 

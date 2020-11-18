@@ -22,13 +22,9 @@ export default class UserDetailsEditPageContainer extends Component {
 
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).then(res => {
-            this.setState({
-                userDetails: res.data
-            });
+            this.setState({ userDetails: res.data });
         }).catch(() => {
-            this.setState({
-                error: true
-            });
+            this.setState({ error: true });
         });
     }
 
@@ -37,7 +33,7 @@ export default class UserDetailsEditPageContainer extends Component {
 
         updateUserDetailsRequest(this.state.userId, payload).then(() => {
             this.setState({ isSubmitting: false });
-            this.props.history.push("/login");
+            this.props.history.goBack();
         }).catch(e => {
             this.setState({ isSubmitting: false });
             toast.error(e.response.data.message, {

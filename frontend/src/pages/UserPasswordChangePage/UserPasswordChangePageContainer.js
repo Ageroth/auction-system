@@ -31,7 +31,6 @@ export default class UserPasswordChangePageContainer extends Component {
 
         changeUserPasswordRequest(this.state.userId, payload).then(res => {
             this.setState({ isSubmitting: false });
-            
             this.props.history.goBack();
             toast.success(res.data.message, {
                 position: "bottom-right",
@@ -54,7 +53,6 @@ export default class UserPasswordChangePageContainer extends Component {
     render() {
         const onSubmit = this.handleUserPasswordChange;
         const isSubmitting = this.state.isSubmitting;
-
         return (
             <>
                 {this.state.error ? <NotFoundPage/> : <UserPasswordChangePage onSubmit={onSubmit} isSubmitting={isSubmitting} />}

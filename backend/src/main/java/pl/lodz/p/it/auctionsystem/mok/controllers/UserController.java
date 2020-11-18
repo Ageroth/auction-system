@@ -15,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.dtos.*;
+import pl.lodz.p.it.auctionsystem.mok.services.UserAccessLevelService;
 import pl.lodz.p.it.auctionsystem.mok.services.UserService;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
@@ -36,6 +37,8 @@ public class UserController {
 
     private final UserService userService;
 
+    private final UserAccessLevelService userAccessLevelService;
+
     private final ModelMapper modelMapper;
 
     private final MessageService messageService;
@@ -44,8 +47,9 @@ public class UserController {
     private int pageSize;
 
     @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper, MessageService messageService) {
+    public UserController(UserService userService, UserAccessLevelService userAccessLevelService, ModelMapper modelMapper, MessageService messageService) {
         this.userService = userService;
+        this.userAccessLevelService = userAccessLevelService;
         this.modelMapper = modelMapper;
         this.messageService = messageService;
     }
@@ -193,7 +197,7 @@ public class UserController {
         for (User user : users) {
             UserDto userDto = modelMapper.map(user, UserDto.class);
 
-            userDto.setUserAccessLevelsName(user.getUserAccessLevels().stream()
+            userDto.setUserAccessLevelNames(user.getUserAccessLevels().stream()
                     .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
                     .collect(Collectors.toList()));
 
@@ -297,7 +301,7 @@ public class UserController {
         User user = userService.getUserById(userId);
         UserDto userDto = modelMapper.map(user, UserDto.class);
 
-        userDto.setUserAccessLevelsName(user.getUserAccessLevels().stream()
+        userDto.setUserAccessLevelNames(user.getUserAccessLevels().stream()
                 .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
                 .collect(Collectors.toList()));
 
@@ -316,8 +320,9 @@ public class UserController {
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
                                                @Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto) throws ApplicationException {
         User user = modelMapper.map(userDetailsUpdateDto, User.class);
-        
+
         userService.updateUserDetailsByUserId(userId, user);
+        userAccessLevelService.modifyUserAccessLevels(userId, userDetailsUpdateDto.getUserAccessLevelNames());
 
         String message = messageService.getMessage("info.userDetailsUpdated");
 
