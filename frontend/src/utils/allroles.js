@@ -1,7 +1,7 @@
-const ALLROLES = {
+const allroles = {
     ADMINISTRATOR: 'ADMINISTRATOR',
     MODERATOR: 'MODERATOR',
     CLIENT: 'CLIENT'
 };
 
-export default ALLROLES;
+export default allroles;

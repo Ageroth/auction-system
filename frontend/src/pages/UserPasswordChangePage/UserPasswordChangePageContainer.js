@@ -52,10 +52,13 @@ export default class UserPasswordChangePageContainer extends Component {
     }
 
     render() {
+        const onSubmit = this.handleUserPasswordChange;
+        const isSubmitting = this.state.isSubmitting;
+
         return (
             <>
-                {this.state.error ? <NotFoundPage/> : <UserPasswordChangePage onSubmit={this.handleUserPasswordChange} isSubmitting={this.state.isSubmitting} />}
+                {this.state.error ? <NotFoundPage/> : <UserPasswordChangePage onSubmit={onSubmit} isSubmitting={isSubmitting} />}
             </>
         );
-      }
+    }
 }

@@ -57,3 +57,8 @@ export function getUserDetailsRequest(value) {
 export function changeUserPasswordRequest(value, payload) {
     return axios.patch(`/users/${value}/password`, JSON.stringify(payload));
 }
+
+export function updateUserDetailsRequest(value, payload) {
+    console.log(payload);
+    return axios.put(`/users/${value}/details`, JSON.stringify(payload));
+}

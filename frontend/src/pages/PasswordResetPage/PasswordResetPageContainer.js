@@ -51,15 +51,18 @@ class PasswordResetPageContainer extends Component {
     }
 
     render() {
+        const passwordResetCode = this.state.passwordResetCode;
+        const isSubmitting = this.state.isSubmitting;
+
         return (
             <>  {this.props.isLoggedIn ? (
                     <Redirect to="/" />
                 ) : (
                     <>
                         {this.state.passwordResetCode
-                            ? <PasswordResetPage onSubmit={this.handlePasswordReset} passwordResetCode={this.state.passwordResetCode} isSubmitting={this.state.isSubmitting} />
+                            ? <PasswordResetPage onSubmit={this.handlePasswordReset} passwordResetCode={passwordResetCode} isSubmitting={isSubmitting} />
                             : <PasswordResetPage onSubmit={this.handlePasswordResetEmailSending} emailSent={this.state.emailSent}
-                                passwordResetCode={this.state.passwordResetCode} isSubmitting={this.state.isSubmitting} />
+                                passwordResetCode={passwordResetCode} isSubmitting={isSubmitting} />
                         }
                     </>
                 )}

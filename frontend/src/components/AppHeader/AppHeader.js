@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { HomeOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './AppHeader.css'
-import ALLROLES from '../../utils/allroles'
 
 const Header = Layout.Header;
 
@@ -36,7 +35,7 @@ const AppHeader = () => {
                 Wyloguj
             </Menu.Item>
         </Menu>
-      );
+    );
 
     const handleRoleChange = (newRole) => {
         dispatch(changeCurrentRole(newRole));
@@ -50,8 +49,8 @@ const AppHeader = () => {
                         <Link className="menu-link" to={`/`}> <HomeOutlined/> </Link>
                     </Menu.Item>
                     <Menu.Item className="menu-right-item" key="dropdown">
-                        <Dropdown overlay={dropdownMenu}>
-                            <a style={{ color: "white" }}> {username} </a>
+                        <Dropdown classname="dropdown" overlay={dropdownMenu}>
+                            <p style={{ color: "white" }}> {username} </p>
                         </Dropdown>
                     </Menu.Item>
 

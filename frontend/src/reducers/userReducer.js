@@ -1,5 +1,5 @@
 import { LOGIN_USER, LOGOUT_USER, CHANGE_CURRENT_ROLE } from '../actions/types';
-import ALLROLES from '../utils/allroles'
+import allroles from '../utils/allroles'
 
 const initialState = {
     isLoggedIn: false,
@@ -13,7 +13,7 @@ export default function userReducer(state = initialState, action) {
     switch (action.type) {
         case LOGIN_USER:
             const slicedRoles = action.payload.roles.map(s => s.slice(5));
-            const userRoles = Object.keys(ALLROLES).filter(r =>
+            const userRoles = Object.keys(allroles).filter(r =>
                 slicedRoles.includes(r)
             );
             return {

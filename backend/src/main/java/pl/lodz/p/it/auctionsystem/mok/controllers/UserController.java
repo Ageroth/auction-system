@@ -316,7 +316,7 @@ public class UserController {
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
                                                @Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto) throws ApplicationException {
         User user = modelMapper.map(userDetailsUpdateDto, User.class);
-
+        
         userService.updateUserDetailsByUserId(userId, user);
 
         String message = messageService.getMessage("info.userDetailsUpdated");
