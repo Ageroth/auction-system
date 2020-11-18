@@ -12,8 +12,8 @@ const UserDetailsPage = (props) => {
     const history = useHistory();
     const userDetails = props.userDetails;
 
-    const formatDate = (string) => {
-        return new Date(string).toLocaleString([]);
+    const formatDate = (date) => {
+        return new Date(date).toLocaleString([]);
     }
 
     const onPasswordChangeClick = () => {

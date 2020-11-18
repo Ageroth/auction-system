@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import PasswordResetPage from './PasswordResetPageComponent';
 import { sendPasswordResetEmailRequest, resetPasswordRequest } from '../../utils/api';
 import { toast } from 'react-toastify';
 
-export default class PasswordResetPageContainer extends Component {
+class PasswordResetPageContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -50,13 +52,26 @@ export default class PasswordResetPageContainer extends Component {
 
     render() {
         return (
-            <>
-                {this.state.passwordResetCode
-                    ? <PasswordResetPage onSubmit={this.handlePasswordReset} passwordResetCode={this.state.passwordResetCode} isSubmitting={this.state.isSubmitting} />
-                    : <PasswordResetPage onSubmit={this.handlePasswordResetEmailSending} emailSent={this.state.emailSent}
-                        passwordResetCode={this.state.passwordResetCode} isSubmitting={this.state.isSubmitting} />
-                }
+            <>  {this.props.isLoggedIn ? (
+                    <Redirect to="/" />
+                ) : (
+                    <>
+                        {this.state.passwordResetCode
+                            ? <PasswordResetPage onSubmit={this.handlePasswordReset} passwordResetCode={this.state.passwordResetCode} isSubmitting={this.state.isSubmitting} />
+                            : <PasswordResetPage onSubmit={this.handlePasswordResetEmailSending} emailSent={this.state.emailSent}
+                                passwordResetCode={this.state.passwordResetCode} isSubmitting={this.state.isSubmitting} />
+                        }
+                    </>
+                )}
             </>
         );
-      }
+    }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        isLoggedIn: state.user.isLoggedIn
+    };
+}
+
+export default connect(mapStateToProps, null)(PasswordResetPageContainer);

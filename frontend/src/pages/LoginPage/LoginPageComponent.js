@@ -7,10 +7,10 @@ import AppLayout from '../../components/AppLayout'
 import 'antd/dist/antd.css'
 import './LoginPage.css'
 
-const LoginPage = props => {
+const LoginPage = (props) => {
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
-    const onFinish = values => {
+    const onFinish = (values) => {
         const payload = Object.assign({}, values);
         props.onSubmit(payload);
     };

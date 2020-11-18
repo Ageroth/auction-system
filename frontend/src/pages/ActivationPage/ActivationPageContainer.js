@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import ActivationPage from './ActivationPageComponent';
 import { activateUserRequest } from '../../utils/api';
 
 
-export default class ActivationPageContainer extends Component {
+class ActivationPageContainer extends Component {
     state = {
         activationCode: this.props.match.params.activationCode,
         error: null
@@ -23,7 +25,20 @@ export default class ActivationPageContainer extends Component {
 
     render() {
         return (
-            <ActivationPage error={this.state.error} />
+            <>
+                {this.props.isLoggedIn
+                    ? <Redirect to="/" />
+                    : <ActivationPage error={this.state.error} />
+                }
+            </>
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        isLoggedIn: state.user.isLoggedIn
+    };
+}
+
+export default connect(mapStateToProps, null)(ActivationPageContainer);

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import SignupPage from './SignupPageComponent';
 import { signUpRequest } from '../../utils/api';
@@ -26,7 +27,7 @@ class SignupPageContainer extends Component {
         return (
             <>
                 {this.props.isLoggedIn
-                    ? this.props.history.push("/")
+                    ? <Redirect to="/" />
                     : <SignupPage onSubmit={this.handleSignup} isSubmitting={this.state.isSubmitting} />
                 }
             </>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import { Table, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
@@ -18,7 +19,7 @@ const UserListPage = (props) => {
             dataIndex: 'lastName',
             key: 'lastName',
             sorter: true,
-            render: (text, record) => <a href={'/users/' + record.id}> {record.firstName} {record.lastName} </a>,
+            render: (text, record) => <Link style={{ color: "#1890ff" }} to={`/users/${record.id}`}> {record.firstName} {record.lastName} </Link> ,
         },
         {
             title: t('userLabels.username'),
