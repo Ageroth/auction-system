@@ -14,7 +14,7 @@ const SignupPage = (props) => {
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
 
-    const onFinish = values => {
+    const onFinish = (values) => {
         const payload = Object.assign({}, values);
         delete payload.confirmPassword;
         

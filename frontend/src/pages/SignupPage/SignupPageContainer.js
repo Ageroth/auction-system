@@ -12,7 +12,7 @@ class SignupPageContainer extends Component {
         };  
     }
 
-    handleSignup = payload => {
+    handleSignup = (payload) => {
         this.setState({ isSubmitting: true });
 
         return signUpRequest(payload).then(() => {
@@ -35,7 +35,7 @@ class SignupPageContainer extends Component {
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         isLoggedIn: state.user.isLoggedIn
     };

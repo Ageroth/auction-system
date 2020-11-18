@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import PasswordChangePage from './PasswordChangePageComponent';
+import UserPasswordChangePage from './UserPasswordChangePageComponent';
 import NotFoundPage from '../NotFoundPage'
-import { changeUserPasswordRequest } from '../../utils/api';
+import { changeUserPasswordRequest, getUserDetailsRequest } from '../../utils/api';
 import { toast } from 'react-toastify';
 
-export default class PasswordChangePageContainer extends Component {
+export default class UserPasswordChangePageContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,6 +12,18 @@ export default class PasswordChangePageContainer extends Component {
             isSubmitting: null,
             error: false,
         };  
+    }
+
+    componentDidMount() {
+        this.getUserDetails();
+    }
+
+    getUserDetails = () => {
+        getUserDetailsRequest(this.state.userId).catch(() => {
+            this.setState({
+                error: true
+            });
+        });
     }
 
     handleUserPasswordChange = (payload) => {
@@ -42,7 +54,7 @@ export default class PasswordChangePageContainer extends Component {
     render() {
         return (
             <>
-                {this.state.error ? <NotFoundPage/> : <PasswordChangePage onSubmit={this.handleUserPasswordChange} isSubmitting={this.state.isSubmitting} />}
+                {this.state.error ? <NotFoundPage/> : <UserPasswordChangePage onSubmit={this.handleUserPasswordChange} isSubmitting={this.state.isSubmitting} />}
             </>
         );
       }

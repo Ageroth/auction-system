@@ -8,7 +8,8 @@ import DashboardPage from '../pages/DashboardPage'
 import UserListPage from '../pages/UserListPage'
 import UserDetailsPage from '../pages/UserDetailsPage'
 import NotFoundPage from '../pages/NotFoundPage'
-import PasswordChangePage from '../pages/PasswordChangePage'
+import UserPasswordChangePage from '../pages/UserPasswordChangePage'
+import UserDetailsEditPage from '../pages/UserDetailsEditPage'
 
 const { ADMINISTRATOR, MODERATOR, CLIENT } = ALLROLES;
 
@@ -22,6 +23,7 @@ export const routes = [
   { path: '/dashboard', component: DashboardPage, canAccess: [CLIENT, MODERATOR] },
   { path: '/users', component: UserListPage, canAccess: [ADMINISTRATOR] },
   { path: '/users/:userId', component: UserDetailsPage, canAccess: [ADMINISTRATOR] },
-  { path: '/users/:userId/password_change', component: PasswordChangePage, canAccess: [ADMINISTRATOR] },
+  { path: '/users/:userId/password_change', component: UserPasswordChangePage, canAccess: [ADMINISTRATOR] },
+  { path: '/users/:userId/edit', component: UserDetailsEditPage, canAccess: [ADMINISTRATOR] },
   { path: '*', component: NotFoundPage, public: true },
 ];

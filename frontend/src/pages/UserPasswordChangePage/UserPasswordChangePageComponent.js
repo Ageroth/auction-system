@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
 import 'antd/dist/antd.css'
 
-const PasswordChangePage = props => {
+const UserPasswordChangePage = (props) => {
     const [form] = Form.useForm();
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
     
-    const onFinish = values => {
+    const onFinish = (values) => {
         const payload = Object.assign({}, values);
         delete payload.confirmNewPassword;
         props.onSubmit(payload);
@@ -78,4 +78,4 @@ const PasswordChangePage = props => {
     );
 }
 
-export default PasswordChangePage;
+export default UserPasswordChangePage;

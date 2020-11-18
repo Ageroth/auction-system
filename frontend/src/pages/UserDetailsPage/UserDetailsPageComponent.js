@@ -16,7 +16,13 @@ const UserDetailsPage = (props) => {
         return new Date(date).toLocaleString([]);
     }
 
-    const onPasswordChangeClick = () => {
+    const handleEditClick = () => {
+        const currentLocation = history.location.pathname;
+
+        history.push(`${currentLocation}/edit`);
+    }
+
+    const handlePasswordChangeClick = () => {
         const currentLocation = history.location.pathname;
 
         history.push(`${currentLocation}/password_change`);
@@ -53,8 +59,8 @@ const UserDetailsPage = (props) => {
                         </Descriptions.Item>
                     </Descriptions>
                     <div className="buttons">
-                        <Button type="primary"> {t('text.edit')} </Button>
-                        <Button type="primary" onClick={onPasswordChangeClick}> {t('text.changePassword')} </Button>
+                        <Button type="primary" onClick={handleEditClick}> {t('text.edit')} </Button>
+                        <Button type="primary" onClick={handlePasswordChangeClick}> {t('text.changePassword')} </Button>
                     </div>
                 </div>
             ) : (

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { HomeOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './AppHeader.css'
+import ALLROLES from '../../utils/allroles'
 
 const Header = Layout.Header;
 
@@ -53,11 +54,27 @@ const AppHeader = () => {
                             <a style={{ color: "white" }}> {username} </a>
                         </Dropdown>
                     </Menu.Item>
+
+                    {/* {userDetails.userAccessLevelsName.map(userAccessLevelName => {
+                                let value;
+
+                                if (userAccessLevelName === "ADMINISTRATOR") 
+                                    value = t('role.admin');
+                                    
+                                else if (userAccessLevelName === "MODERATOR")
+                                    value = t('role.mod');
+                                else 
+                                    value =  t('role.client')
+
+                                return (
+                                    <Checkbox key={value} indeterminate="true"> {value} </Checkbox>
+                                );
+                             })}  */}
                     <Menu.Item className="menu-right-item" key="select" disabled="true">
                         <Select defaultValue={currentRole} style={{ width: 140 }} onChange={handleRoleChange}>
-                            <Select.Option value="ADMINISTRATOR" disabled={!roles.includes("ADMINISTRATOR")}> {t('role.admin')} </Select.Option>
-                            <Select.Option value="MODERATOR" disabled={!roles.includes("MODERATOR")}> {t('role.mod')} </Select.Option>
-                            <Select.Option value="CLIENT"disabled={!roles.includes("CLIENT")}> {t('role.client')} </Select.Option>
+                            {roles.includes("ADMINISTRATOR") ? <Select.Option value="ADMINISTRATOR"> {t('role.admin')} </Select.Option> : null}
+                            {roles.includes("MODERATOR") ? <Select.Option value="MODERATOR"> {t('role.mod')} </Select.Option> : null}
+                            {roles.includes("CLIENT") ? <Select.Option value="CLIENT"> {t('role.client')} </Select.Option> : null}
                         </Select>
                     </Menu.Item>
                 </Menu>
