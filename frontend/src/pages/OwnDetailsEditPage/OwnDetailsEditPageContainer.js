@@ -1,29 +1,25 @@
 import React, { Component } from 'react';
-import UserDetailsEditPage from './UserDetailsEditPageComponent';
-import NotFoundPage from '../NotFoundPage'
+import OwnDetailsEditPage from './OwnDetailsEditPageComponent';
 import { toast } from 'react-toastify';
-import { getUserDetailsRequest, updateUserDetailsRequest } from '../../utils/api';
+import { getMyDetailsRequest, updateOwnDetailsRequest } from '../../utils/api';
 
-export default class UserDetailsEditPageContainer extends Component {
+export default class OwnDetailsEditPageContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userId: this.props.match.params.userId,
-            userDetails: null,
+            myDetails: null,
             isSubmitting: null,
-            error: false
         };  
     } 
-    
+ 
     componentDidMount() {
-        this.getUserDetails();
+        this.getMyDetails();
     }
 
-    getUserDetails = () => {
-        getUserDetailsRequest(this.state.userId).then(res => {
-            this.setState({ userDetails: res.data });
+    getMyDetails = () => {
+        getMyDetailsRequest().then(res => {
+            this.setState({myDetails: res.data});
         }).catch((e) => {
-            this.setState({ error: true });
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -34,7 +30,7 @@ export default class UserDetailsEditPageContainer extends Component {
 
     handleEdit = (payload) => {
         this.setState({ isSubmitting: true });
-        updateUserDetailsRequest(this.state.userId, payload).then((res) => {
+        updateOwnDetailsRequest(payload).then((res) => {
             this.setState({ isSubmitting: false });
             toast.success(res.data.message, {
                 position: "bottom-right",
@@ -53,12 +49,10 @@ export default class UserDetailsEditPageContainer extends Component {
     }
 
     render() {
-        const userDetails = this.state.userDetails;
+        const myDetails = this.state.myDetails;
         const isSubmitting = this.state.isSubmitting;
         return (
-            <>
-                {this.state.error ? <NotFoundPage/> : <UserDetailsEditPage userDetails={userDetails} onSubmit={this.handleEdit} isSubmitting={isSubmitting} />}
-            </>
+            <OwnDetailsEditPage myDetails={myDetails} onSubmit={this.handleEdit} isSubmitting={isSubmitting} />
         );
     }
 }

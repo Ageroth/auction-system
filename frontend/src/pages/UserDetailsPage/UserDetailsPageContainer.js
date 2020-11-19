@@ -4,7 +4,6 @@ import NotFoundPage from '../NotFoundPage'
 import { toast } from 'react-toastify';
 import { getUserDetailsRequest } from '../../utils/api';
 
-
 export default class UserDetailsPageContainer extends Component {
     constructor(props) {
         super(props);

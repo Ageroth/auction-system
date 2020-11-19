@@ -59,10 +59,13 @@ export function changeUserPasswordRequest(value, payload) {
 }
 
 export function updateUserDetailsRequest(value, payload) {
-    console.log(payload);
     return axios.put(`/users/${value}/details`, JSON.stringify(payload));
 }
 
 export function getMyDetailsRequest() {
     return axios.get('/users/me');
+}
+
+export function updateOwnDetailsRequest(payload) {
+    return axios.put('/users/me/details', JSON.stringify(payload));
 }

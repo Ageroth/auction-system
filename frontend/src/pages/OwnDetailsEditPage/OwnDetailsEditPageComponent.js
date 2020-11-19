@@ -1,18 +1,15 @@
 import React from 'react';
-import { Button, Form, Input, Checkbox, Spin} from 'antd'
+import { Button, Form, Input, Spin } from 'antd'
 import AppLayout from '../../components/AppLayout';
 import { useTranslation } from 'react-i18next';
-import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
-import './UserDetailsEditPage.css'
+import './OwnDetailsEditPage.css'
 
-const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
-
-const UserDetailsEditPage = (props) => {
+const OwnDetailsEditPage = (props) => {
     const [form] = Form.useForm();
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
-    const userDetails = props.userDetails;
+    const myDetails = props.myDetails;
 
     const onFinish = (values) => {
         const payload = Object.assign({}, values);
@@ -21,22 +18,19 @@ const UserDetailsEditPage = (props) => {
     
     return (
         <AppLayout>
-            {userDetails ? (
+            {myDetails ? (
                 <Form
                     form={form}
                     layout="vertical"
-                    name="user_details_edit_form"
-                    className="user-details-edit-form"
+                    name="my_details_edit_form"
+                    className="my-details-edit-form"
                     onFinish={onFinish}
                     scrollToFirstError
-                    initialValues={{
-                        'userAccessLevelNames': userDetails.userAccessLevelNames
-                    }}
                 >
                     <Form.Item
                         label={t('userLabels.firstName')}
                         name="firstName"
-                        initialValue={userDetails.firstName}
+                        initialValue={myDetails.firstName}
                         rules={[
                             {
                                 required: true,
@@ -58,7 +52,7 @@ const UserDetailsEditPage = (props) => {
                     <Form.Item
                         label={t('userLabels.lastName')}
                         name="lastName"
-                        initialValue={userDetails.lastName}
+                        initialValue={myDetails.lastName}
                         rules={[
                             {
                                 required: true,
@@ -80,7 +74,7 @@ const UserDetailsEditPage = (props) => {
                     <Form.Item
                         label={t('userLabels.phoneNumber')}
                         name="phoneNumber"
-                        initialValue={userDetails.phoneNumber}
+                        initialValue={myDetails.phoneNumber}
                         rules={[
                             {
                                 required: true,
@@ -93,37 +87,6 @@ const UserDetailsEditPage = (props) => {
                         ]} 
                     >
                         <Input/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label={t('userLabels.roles')}
-                        name="userAccessLevelNames"
-                        rules={[
-                            {
-                                required: true,
-                                message: t('validation.required')
-                            }
-                        ]} 
-                    >
-                        <Checkbox.Group>
-                            <Checkbox
-                                value={ADMINISTRATOR}
-                            >
-                                {t('role.admin')}       
-                            </Checkbox>
-                    
-                            <Checkbox
-                                value={MODERATOR}
-                            >
-                                {t('role.mod')}  
-                            </Checkbox>
-         
-                            <Checkbox
-                                value={CLIENT}
-                            >
-                                {t('role.client')}  
-                            </Checkbox>
-                        </Checkbox.Group>
                     </Form.Item>
 
                     <Form.Item>
@@ -139,4 +102,4 @@ const UserDetailsEditPage = (props) => {
     );
 }
 
-export default UserDetailsEditPage;
+export default OwnDetailsEditPage;

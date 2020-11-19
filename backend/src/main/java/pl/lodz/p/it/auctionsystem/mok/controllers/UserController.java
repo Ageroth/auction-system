@@ -265,7 +265,7 @@ public class UserController {
 
         userService.updateCurrentUserDetails(user, authentication);
 
-        String message = messageService.getMessage("info.userDetailsUpdated");
+        String message = messageService.getMessage("info.yourDetailsUpdated");
 
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import OwnDetailsPage from './OwnDetailsPageComponent';
-import NotFoundPage from '../NotFoundPage'
 import { toast } from 'react-toastify';
 import { getMyDetailsRequest } from '../../utils/api';
-
 
 export default class OwnDetailsPageContainer extends Component {
     state = {
@@ -28,9 +26,7 @@ export default class OwnDetailsPageContainer extends Component {
 
     render() {
         return (
-            <>
-                {this.state.error ? <NotFoundPage/> : <OwnDetailsPage myDetails={this.state.myDetails} />}
-            </>
+            <OwnDetailsPage myDetails={this.state.myDetails} />
         );
     }
 }

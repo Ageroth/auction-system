@@ -16,11 +16,15 @@ const OwnDetailsPage = (props) => {
     }
 
     const handleEditClick = () => {
-        history.push('./edit');
+        const currentLocation = history.location.pathname;
+
+        history.push(`${currentLocation}/edit`);
     }
 
     const handlePasswordChangeClick = () => {
-        history.push('/password_change');
+        const currentLocation = history.location.pathname;
+
+        history.push(`${currentLocation}/password_change`);
     }
 
     return (
