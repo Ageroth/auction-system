@@ -3,9 +3,11 @@ import { Descriptions, Checkbox, Button, Spin } from 'antd';
 import AppLayout from '../../components/AppLayout';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from "react-router-dom";
+import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
 import './UserDetailsPage.css'
 
+const { ADMINISTRATOR, MODERATOR } = allroles;
 
 const UserDetailsPage = (props) => {
     const {t} = useTranslation();
@@ -44,10 +46,10 @@ const UserDetailsPage = (props) => {
                             {userDetails.userAccessLevelNames.map(userAccessLevelName => {
                                 let value;
 
-                                if (userAccessLevelName === "ADMINISTRATOR") 
+                                if (userAccessLevelName === ADMINISTRATOR) 
                                     value = t('role.admin');
                                     
-                                else if (userAccessLevelName === "MODERATOR")
+                                else if (userAccessLevelName === MODERATOR)
                                     value = t('role.mod');
                                 else 
                                     value =  t('role.client')

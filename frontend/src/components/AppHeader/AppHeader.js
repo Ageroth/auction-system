@@ -5,10 +5,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logOut, changeCurrentRole } from '../../actions/userActions';
 import { useTranslation } from 'react-i18next';
 import { HomeOutlined } from '@ant-design/icons';
+import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
 import './AppHeader.css'
 
 const Header = Layout.Header;
+const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
 
 const AppHeader = () => {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
@@ -55,9 +57,9 @@ const AppHeader = () => {
                     </Menu.Item>
                     <Menu.Item className="menu-right-item" key="select" disabled="true">
                         <Select defaultValue={currentRole} style={{ width: 140 }} onChange={handleRoleChange}>
-                            {roles.includes("ADMINISTRATOR") ? <Select.Option value="ADMINISTRATOR"> {t('role.admin')} </Select.Option> : null}
-                            {roles.includes("MODERATOR") ? <Select.Option value="MODERATOR"> {t('role.mod')} </Select.Option> : null}
-                            {roles.includes("CLIENT") ? <Select.Option value="CLIENT"> {t('role.client')} </Select.Option> : null}
+                            {roles.includes(ADMINISTRATOR) ? <Select.Option value={ADMINISTRATOR}> {t('role.admin')} </Select.Option> : null}
+                            {roles.includes(MODERATOR) ? <Select.Option value={MODERATOR}> {t('role.mod')} </Select.Option> : null}
+                            {roles.includes(CLIENT) ? <Select.Option value={CLIENT}> {t('role.client')} </Select.Option> : null}
                         </Select>
                     </Menu.Item>
                 </Menu>

@@ -1,4 +1,4 @@
-import ALLROLES from '../utils/allroles';
+import allroles from '../utils/allroles';
 import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage'
@@ -11,7 +11,7 @@ import NotFoundPage from '../pages/NotFoundPage'
 import UserPasswordChangePage from '../pages/UserPasswordChangePage'
 import UserDetailsEditPage from '../pages/UserDetailsEditPage'
 
-const { ADMINISTRATOR, MODERATOR, CLIENT } = ALLROLES;
+const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
 
 export const routes = [
   { path: '/', component: HomePage, public: true },

@@ -309,7 +309,7 @@ public class UserController {
     }
 
     /**
-     * Aktualizuje dane personalne użytkownika o podanym id.
+     * Aktualizuje dane personalne użytkownika o podanym id oraz jego role.
      *
      * @param userId               id użytkownika
      * @param userDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}

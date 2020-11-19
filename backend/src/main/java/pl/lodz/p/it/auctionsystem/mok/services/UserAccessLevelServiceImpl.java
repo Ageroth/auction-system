@@ -107,7 +107,6 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
         oldUserAccessLevelNames.retainAll(userAccessLevelNames);
         combined.removeAll(oldUserAccessLevelNames);
 
-        System.out.println("HERE");
         for (String userAccessLevelName : combined) {
             if (userAccessLevelNames.contains(userAccessLevelName))
                 addUserAccessLevel(userId, userAccessLevelName);

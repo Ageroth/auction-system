@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import { Table, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
+import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css'
 import './UserListPage.css'
+
+const { ADMINISTRATOR, MODERATOR } = allroles;
 
 const UserListPage = (props) => {
     const {t} = useTranslation();
@@ -48,11 +51,11 @@ const UserListPage = (props) => {
                         let color;
                         let value;
 
-                        if (userAccessLevelName === "ADMINISTRATOR") {
+                        if (userAccessLevelName === ADMINISTRATOR) {
                             color = 'volcano';
                             value = t('role.admin');
                         }
-                        else if (userAccessLevelName === "MODERATOR") {
+                        else if (userAccessLevelName === MODERATOR) {
                             color = 'green';
                             value = t('role.mod');
                         }

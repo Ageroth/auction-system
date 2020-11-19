@@ -2,9 +2,11 @@ import React from 'react';
 import { Button, Form, Input, Checkbox, Spin} from 'antd'
 import AppLayout from '../../components/AppLayout';
 import { useTranslation } from 'react-i18next';
+import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
 import './UserDetailsEditPage.css'
 
+const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
 
 const UserDetailsEditPage = (props) => {
     const [form] = Form.useForm();
@@ -105,19 +107,19 @@ const UserDetailsEditPage = (props) => {
                     >
                         <Checkbox.Group>
                             <Checkbox
-                                value="ADMINISTRATOR"
+                                value={ADMINISTRATOR}
                             >
                                 {t('role.admin')}       
                             </Checkbox>
                     
                             <Checkbox
-                                value="MODERATOR" 
+                                value={MODERATOR}
                             >
                                 {t('role.mod')}  
                             </Checkbox>
          
                             <Checkbox
-                                value="CLIENT"
+                                value={CLIENT}
                             >
                                 {t('role.client')}  
                             </Checkbox>
