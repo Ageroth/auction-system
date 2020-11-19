@@ -23,16 +23,25 @@ export default class UserDetailsEditPageContainer extends Component {
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).then(res => {
             this.setState({ userDetails: res.data });
-        }).catch(() => {
+        }).catch((e) => {
             this.setState({ error: true });
+            toast.error(e.response.data.message, {
+                position: "bottom-right",
+                autoClose: 3000,
+                closeOnClick: true
+            });
         });
     }
 
     handleEdit = (payload) => {
         this.setState({ isSubmitting: true });
-
-        updateUserDetailsRequest(this.state.userId, payload).then(() => {
+        updateUserDetailsRequest(this.state.userId, payload).then((res) => {
             this.setState({ isSubmitting: false });
+            toast.success(res.data.message, {
+                position: "bottom-right",
+                autoClose: 3000,
+                closeOnClick: true
+            });
             this.props.history.goBack();
         }).catch(e => {
             this.setState({ isSubmitting: false });

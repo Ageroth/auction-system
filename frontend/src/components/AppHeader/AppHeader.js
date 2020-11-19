@@ -29,7 +29,7 @@ const AppHeader = () => {
     const dropdownMenu = (
         <Menu onClick={handleDropdownMenuClick}>
             <Menu.Item className="dropdown-item" key="profile" >
-                {/* <Link to={`/my-profile`}>Twoje konto</Link> */}
+                {/* <Link to={`/my_profile`}>Twoje konto</Link> */}
                 Twoje konto
             </Menu.Item>
             <Menu.Divider/>

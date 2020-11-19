@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import UserDetailsPage from './UserDetailsPageComponent';
 import NotFoundPage from '../NotFoundPage'
+import { toast } from 'react-toastify';
 import { getUserDetailsRequest } from '../../utils/api';
 
 
@@ -20,12 +21,13 @@ export default class UserDetailsPageContainer extends Component {
 
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).then(res => {
-            this.setState({
-                userDetails: res.data
-            });
-        }).catch(() => {
-            this.setState({
-                error: true
+            this.setState({userDetails: res.data});
+        }).catch((e) => {
+            this.setState({error: true});
+            toast.error(e.response.data.message, {
+                position: "bottom-right",
+                autoClose: 3000,
+                closeOnClick: true
             });
         });
     }

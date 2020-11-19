@@ -20,9 +20,7 @@ export default class UserPasswordChangePageContainer extends Component {
 
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).catch(() => {
-            this.setState({
-                error: true
-            });
+            this.setState({error: true});
         });
     }
 

@@ -128,7 +128,7 @@ const UserDetailsEditPage = (props) => {
 
                     <Form.Item>
                         <Button type="primary" htmlType="submit" className="signup-form-button" disabled={isSubmitting}>
-                            Edit
+                        {t('text.edit')}
                         </Button>
                     </Form.Item>
                 </Form>
