@@ -68,7 +68,7 @@ const UserDetailsPage = (props) => {
             ) : (
                     <Spin size="large" />
             )}
-      </AppLayout>
+        </AppLayout>
     );
 }
 

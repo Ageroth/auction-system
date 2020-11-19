@@ -282,9 +282,9 @@ public class UserController {
     public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
                                                Authentication authentication) throws ApplicationException {
         userService.changePassword(ownPasswordChangeDto.getNewPassword(),
-                ownPasswordChangeDto.getOldPassword(), authentication);
+                ownPasswordChangeDto.getCurrentPassword(), authentication);
 
-        String message = messageService.getMessage("info.userPasswordChanged");
+        String message = messageService.getMessage("info.yourPasswordChanged");
 
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }

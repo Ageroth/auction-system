@@ -127,15 +127,13 @@ const UserDetailsEditPage = (props) => {
                     </Form.Item>
 
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" className="signup-form-button" disabled={isSubmitting}>
-                        {t('text.edit')}
-                        </Button>
+                        <Button type="primary" htmlType="submit" className="user-details-edit-form-button" disabled={isSubmitting}> {t('text.edit')} </Button>
                     </Form.Item>
                 </Form>
             ) : (
                 <Spin size="large" />
             )}
-      </AppLayout>
+        </AppLayout>
     );
 }
 

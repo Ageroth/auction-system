@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
 import 'antd/dist/antd.css'
 
-const UserPasswordChangePage = (props) => {
+const OwnPasswordChangePage = (props) => {
     const [form] = Form.useForm();
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
@@ -20,11 +20,33 @@ const UserPasswordChangePage = (props) => {
             <Form
                 form={form}
                 layout="vertical"
-                name="user_password_change_form"
-                className="user-password-change-form"
+                name="own_password_change_form"
+                className="own-password-change-form"
                 onFinish={onFinish}
                 scrollToFirstError
             >
+                <Form.Item
+                    label={t('userLabels.currentPassword')}
+                    name="currentPassword"
+                    hasFeedback
+                    rules={[
+                        {
+                            required: true,
+                            message: t('validation.required')
+                        },
+                        {
+                            pattern: new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,}$"),
+                            message: t('validation.regex.password')
+                        },
+                        {
+                            max: 64,
+                            message: t('validation.max64chars')
+                        }
+                    ]}
+                >
+                    <Input.Password/>
+                </Form.Item>
+
                 <Form.Item
                     label={t('userLabels.newPassword')}
                     name="newPassword"
@@ -69,11 +91,11 @@ const UserPasswordChangePage = (props) => {
                 </Form.Item>
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="user-password-change-form-button" disabled={isSubmitting}> {t('text.changePassword')} </Button>
+                    <Button type="primary" htmlType="submit" className="own-password-change-form-button" disabled={isSubmitting}> {t('text.changePassword')} </Button>
                 </Form.Item>
             </Form> 
         </AppLayout>
     );
 }
 
-export default UserPasswordChangePage;
+export default OwnPasswordChangePage;

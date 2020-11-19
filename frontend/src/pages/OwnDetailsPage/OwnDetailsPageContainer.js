@@ -15,7 +15,7 @@ export default class OwnDetailsPageContainer extends Component {
     getMyDetails = () => {
         getMyDetailsRequest().then(res => {
             this.setState({myDetails: res.data});
-        }).catch((e) => {
+        }).catch(e => {
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,

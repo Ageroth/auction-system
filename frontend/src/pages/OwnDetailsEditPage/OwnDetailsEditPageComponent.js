@@ -22,8 +22,8 @@ const OwnDetailsEditPage = (props) => {
                 <Form
                     form={form}
                     layout="vertical"
-                    name="my_details_edit_form"
-                    className="my-details-edit-form"
+                    name="own_details_edit_form"
+                    className="own-details-edit-form"
                     onFinish={onFinish}
                     scrollToFirstError
                 >
@@ -90,15 +90,13 @@ const OwnDetailsEditPage = (props) => {
                     </Form.Item>
 
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" className="signup-form-button" disabled={isSubmitting}>
-                        {t('text.edit')}
-                        </Button>
+                        <Button type="primary" htmlType="submit" className="own-details-edit-form-button" disabled={isSubmitting}> {t('text.edit')} </Button>
                     </Form.Item>
                 </Form>
             ) : (
                 <Spin size="large" />
             )}
-      </AppLayout>
+        </AppLayout>
     );
 }
 

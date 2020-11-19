@@ -48,7 +48,7 @@ const OwnDetailsPage = (props) => {
             ) : (
                     <Spin size="large" />
             )}
-      </AppLayout>
+        </AppLayout>
     );
 }
 

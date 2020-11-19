@@ -11,6 +11,7 @@ import NotFoundPage from '../pages/NotFoundPage'
 import UserPasswordChangePage from '../pages/UserPasswordChangePage'
 import UserDetailsEditPage from '../pages/UserDetailsEditPage'
 import OwnDetailsPage from '../pages/OwnDetailsPage'
+import OwnPasswordChangePage from '../pages/OwnPasswordChangePage'
 import OwnDetailsEditPage from '../pages/OwnDetailsEditPage'
 
 const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
@@ -28,6 +29,7 @@ export const routes = [
   { path: '/users/:userId/password_change', component: UserPasswordChangePage, canAccess: [ADMINISTRATOR] },
   { path: '/users/:userId/edit', component: UserDetailsEditPage, canAccess: [ADMINISTRATOR] },
   { path: '/my_profile', component: OwnDetailsPage},
+  { path: '/my_profile/password_change', component: OwnPasswordChangePage},
   { path: '/my_profile/edit', component: OwnDetailsEditPage},
   { path: '*', component: NotFoundPage, public: true },
 ];

@@ -66,6 +66,10 @@ export function getMyDetailsRequest() {
     return axios.get('/users/me');
 }
 
+export function changeOwnPasswordRequest(payload) {
+    return axios.patch('/users/me/password', JSON.stringify(payload));
+}
+
 export function updateOwnDetailsRequest(payload) {
     return axios.put('/users/me/details', JSON.stringify(payload));
 }

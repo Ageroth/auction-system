@@ -36,10 +36,7 @@ export default class UserPasswordChangePageContainer extends Component {
                 closeOnClick: true
             });
         }).catch(e => {
-            this.setState({ 
-                isSubmitting: false,
-                error: true
-            });
+            this.setState({ isSubmitting: false});
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,

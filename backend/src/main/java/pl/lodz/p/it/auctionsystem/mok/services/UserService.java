@@ -146,11 +146,11 @@ public interface UserService {
      * Zmienia hasło aktualnie zalogowanego użytkownika.
      *
      * @param newPassword    nowe hasło
-     * @param oldPassword    stare hasło
+     * @param currentPassword    obecne hasło
      * @param authentication obiekt typu {@link Authentication}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void changePassword(String newPassword, String oldPassword, Authentication authentication) throws ApplicationException;
+    void changePassword(String newPassword, String currentPassword, Authentication authentication) throws ApplicationException;
 
     /**
      * Zmienia hasło użytkownika o podanym id.
