@@ -1,5 +1,5 @@
 import React from 'react';
-import { Descriptions, Checkbox, Button, Spin } from 'antd';
+import { Descriptions, Button, Spin } from 'antd';
 import AppLayout from '../../components/AppLayout';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from "react-router-dom";
