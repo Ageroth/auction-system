@@ -5,23 +5,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * DTO wykorzystywane przy aktualizacji danych personalnych użytkownika.
+ * DTO z danymi wykorzystywane do wyświetlania szczegółów użytkownika.
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDetailsUpdateDto {
+public class UserDetailsDto {
+
+    private String username;
+
+    private String email;
+
+    private boolean activated;
+
+    private LocalDateTime createdAt;
+
+    private List<Long> accessLevelIds;
 
     private String firstName;
 
     private String lastName;
 
     private String phoneNumber;
-
-    private List<Long> accessLevelIds = new ArrayList<>();
 }

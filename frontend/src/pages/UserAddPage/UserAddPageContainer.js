@@ -19,7 +19,6 @@ export default class UserAddPageContainer extends Component {
     getAllAccessLevels = () => {
         getAllAccessLevelsRequest().then(res => {
             this.setState({ accessLevels: res.data });
-            console.log(this.state.accessLevels);
         }).catch(e => {
             toast.error(e.response.data.message, {
                 position: "bottom-right",

@@ -3,11 +3,8 @@ import { Descriptions, Checkbox, Button, Spin } from 'antd';
 import AppLayout from '../../components/AppLayout';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from "react-router-dom";
-import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
 import './UserDetailsPage.css'
-
-const { ADMINISTRATOR, MODERATOR } = allroles;
 
 const UserDetailsPage = (props) => {
     const {t} = useTranslation();
@@ -43,21 +40,20 @@ const UserDetailsPage = (props) => {
                         <Descriptions.Item label={t('userLabels.activated')}> {userDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
                         <Descriptions.Item label={t('userLabels.created')}> {formatDate(userDetails.createdAt)} </Descriptions.Item>
                         <Descriptions.Item label={t('userLabels.roles')}>
-                            {userDetails.userAccessLevelNames.map(userAccessLevelName => {
+                            {userDetails.accessLevelIds.map(accessLevelId => {
                                 let value;
 
-                                if (userAccessLevelName === ADMINISTRATOR) 
+                                if (accessLevelId === 1) 
                                     value = t('role.admin');
-                                    
-                                else if (userAccessLevelName === MODERATOR)
+                                else if (accessLevelId === 2)
                                     value = t('role.mod');
-                                else 
+                                else if (accessLevelId === 3)
                                     value =  t('role.client')
 
                                 return (
                                     <Checkbox key={value} indeterminate="true"> {value} </Checkbox>
                                 );
-                            })} 
+                             })} 
                         </Descriptions.Item>
                     </Descriptions>
                     <div className="buttons">

@@ -14,6 +14,7 @@ const UserDetailsEditPage = (props) => {
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
     const userDetails = props.userDetails;
+    const accessLevels = props.accessLevels;
 
     const onFinish = (values) => {
         const payload = Object.assign({}, values);
@@ -36,7 +37,7 @@ const UserDetailsEditPage = (props) => {
     
     return (
         <AppLayout>
-            {userDetails ? (
+            {userDetails && accessLevels ? (
                 <Form
                     form={form}
                     layout="vertical"
@@ -45,7 +46,7 @@ const UserDetailsEditPage = (props) => {
                     onFinish={onFinish}
                     scrollToFirstError
                     initialValues={{
-                        'userAccessLevelNames': userDetails.userAccessLevelNames
+                        'accessLevelIds': userDetails.accessLevelIds
                     }}
                 >
                     <Form.Item
@@ -112,7 +113,7 @@ const UserDetailsEditPage = (props) => {
 
                     <Form.Item
                         label={t('userLabels.roles')}
-                        name="userAccessLevelNames"
+                        name="accessLevelIds"
                         rules={[
                             {
                                 required: true,
@@ -121,25 +122,23 @@ const UserDetailsEditPage = (props) => {
                         ]} 
                     >
                         <Checkbox.Group>
-                            <Checkbox
-                                value={ADMINISTRATOR}
-                            >
-                                {t('role.admin')}       
-                            </Checkbox>
-                    
-                            <Checkbox
-                                value={MODERATOR}
-                            >
-                                {t('role.mod')}  
-                            </Checkbox>
-         
-                            <Checkbox
-                                value={CLIENT}
-                            >
-                                {t('role.client')}  
-                            </Checkbox>
+                            {accessLevels.map(accessLevel => {
+                                let text;
+
+                                if (accessLevel.name === ADMINISTRATOR) 
+                                    text = t('role.admin'); 
+                                else if (accessLevel.name === MODERATOR)
+                                    text = t('role.mod');
+                                else if (accessLevel.name === CLIENT)
+                                    text =  t('role.client')
+
+                                return (
+                                    <Checkbox key={accessLevel.id} value={accessLevel.id}> {text} </Checkbox>
+                                );
+                            })} 
                         </Checkbox.Group>
                     </Form.Item>
+
                     <Form.Item>
                         <Popconfirm
                             title={t('text.areYouSure')}

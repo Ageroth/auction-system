@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * DTO ze szczegółowymi danymi użytkownika.
+ * DTO z danymi wykorzystywane do wyświetlania własnych szczegółów.
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserSummaryDto {
+public class OwnDetailsDto {
 
     private String username;
 

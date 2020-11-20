@@ -13,7 +13,6 @@ import pl.lodz.p.it.auctionsystem.exceptions.UserAccessLevelAlreadyExistsExcepti
 import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserAccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
-import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 import java.util.List;
@@ -63,18 +62,6 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
         userAccessLevelRepository.save(userAccessLevel);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public void addUserAccessLevel(Long userId, String accessLevelName) throws ApplicationException {
-        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
-        String accessLevelNotFoundMessage = messageService.getMessage("exception.accessLevelNotFound");
-        AccessLevel accessLevel =
-                accessLevelRepository.findByName(AccessLevelEnum.valueOf(accessLevelName)).orElseThrow(() -> new EntityNotFoundException(accessLevelNotFoundMessage));
-        UserAccessLevel userAccessLevel = new UserAccessLevel(user, accessLevel);
-
-        userAccessLevelRepository.save(userAccessLevel);
-    }
-
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public List<UserAccessLevel> getUserAccessLevelsByUserId(Long userId) {
@@ -88,30 +75,32 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public void deleteUserAccessLevel(Long userId, String accessLevelName) throws ApplicationException {
+    public void deleteUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException {
         String userAccessLevelNotFoundMessage = messageService.getMessage("exception.userAccessLevelNotFound");
-        UserAccessLevel userAccessLevel = userAccessLevelRepository.findByUser_IdAndAccessLevel_Name(userId, AccessLevelEnum.valueOf(accessLevelName))
+        UserAccessLevel userAccessLevel = userAccessLevelRepository.findByUser_IdAndAccessLevel_Id(userId,
+                accessLevelId)
                 .orElseThrow(() -> new EntityNotFoundException(userAccessLevelNotFoundMessage));
+
         userAccessLevelRepository.deleteById(userAccessLevel.getId());
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public void modifyUserAccessLevels(Long userId, List<String> userAccessLevelNames) throws ApplicationException {
+    public void modifyUserAccessLevels(Long userId, List<Long> accessLevelIds) throws ApplicationException {
         List<UserAccessLevel> oldUserAccessLevels = userAccessLevelRepository.findByUser_Id(userId);
-        List<String> oldUserAccessLevelNames = oldUserAccessLevels.stream()
-                .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString()).collect(Collectors.toList());
-        List<String> combined = Stream.concat(oldUserAccessLevelNames.stream(), userAccessLevelNames.stream())
+        List<Long> oldUserAccessLevelIds = oldUserAccessLevels.stream()
+                .map(userAccessLevel -> userAccessLevel.getAccessLevel().getId()).collect(Collectors.toList());
+        List<Long> combined = Stream.concat(oldUserAccessLevelIds.stream(), accessLevelIds.stream())
                 .collect(Collectors.toList());
 
-        oldUserAccessLevelNames.retainAll(userAccessLevelNames);
-        combined.removeAll(oldUserAccessLevelNames);
+        oldUserAccessLevelIds.retainAll(accessLevelIds);
+        combined.removeAll(oldUserAccessLevelIds);
 
-        for (String userAccessLevelName : combined) {
-            if (userAccessLevelNames.contains(userAccessLevelName))
-                addUserAccessLevel(userId, userAccessLevelName);
+        for (Long accessLevelId : combined) {
+            if (accessLevelIds.contains(accessLevelId))
+                addUserAccessLevel(userId, accessLevelId);
             else
-                deleteUserAccessLevel(userId, userAccessLevelName);
+                deleteUserAccessLevel(userId, accessLevelId);
         }
     }
 }

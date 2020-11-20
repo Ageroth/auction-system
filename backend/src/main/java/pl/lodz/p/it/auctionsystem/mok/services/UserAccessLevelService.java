@@ -37,7 +37,7 @@ public interface UserAccessLevelService {
      */
     void deleteUserAccessLevel(Long userAccessLevelId);
 
-    void deleteUserAccessLevel(Long userId, String accessLevelName) throws ApplicationException;
+    void deleteUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException;
 
-    void modifyUserAccessLevels(Long userId, List<String> userAccessLevelNames) throws ApplicationException;
+    void modifyUserAccessLevels(Long userId, List<Long> accessLevelIds) throws ApplicationException;
 }

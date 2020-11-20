@@ -49,5 +49,5 @@ public interface UserAccessLevelRepository extends JpaRepository<UserAccessLevel
      */
     boolean existsById(Long id);
 
-    Optional<UserAccessLevel> findByUser_IdAndAccessLevel_Name(Long userId, AccessLevelEnum accessLevelName);
+    Optional<UserAccessLevel> findByUser_IdAndAccessLevel_Id(Long userId, Long accessLevelId);
 }

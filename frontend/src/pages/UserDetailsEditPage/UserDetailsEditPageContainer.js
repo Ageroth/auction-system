@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import UserDetailsEditPage from './UserDetailsEditPageComponent';
 import NotFoundPage from '../NotFoundPage'
 import { toast } from 'react-toastify';
-import { getUserDetailsRequest, updateUserDetailsRequest } from '../../utils/api';
+import { getUserDetailsRequest, updateUserDetailsRequest, getAllAccessLevelsRequest } from '../../utils/api';
 
 export default class UserDetailsEditPageContainer extends Component {
     constructor(props) {
@@ -10,6 +10,7 @@ export default class UserDetailsEditPageContainer extends Component {
         this.state = {
             userId: this.props.match.params.userId,
             userDetails: null,
+            accessLevels: [],
             isSubmitting: false,
             error: false
         };  
@@ -17,6 +18,19 @@ export default class UserDetailsEditPageContainer extends Component {
     
     componentDidMount() {
         this.getUserDetails();
+        this.getAllAccessLevels();
+    }
+
+    getAllAccessLevels = () => {
+        getAllAccessLevelsRequest().then(res => {
+            this.setState({ accessLevels: res.data });
+        }).catch(e => {
+            toast.error(e.response.data.message, {
+                position: "bottom-right",
+                autoClose: 3000,
+                closeOnClick: true
+            });
+        });
     }
 
     getUserDetails = () => {
@@ -54,10 +68,11 @@ export default class UserDetailsEditPageContainer extends Component {
 
     render() {
         const userDetails = this.state.userDetails;
+        const accessLevels = this.state.accessLevels;
         const isSubmitting = this.state.isSubmitting;
         return (
             <>
-                {this.state.error ? <NotFoundPage/> : <UserDetailsEditPage userDetails={userDetails} onSubmit={this.handleEdit} isSubmitting={isSubmitting} />}
+                {this.state.error ? <NotFoundPage/> : <UserDetailsEditPage userDetails={userDetails} accessLevels={accessLevels} onSubmit={this.handleEdit} isSubmitting={isSubmitting} />}
             </>
         );
     }

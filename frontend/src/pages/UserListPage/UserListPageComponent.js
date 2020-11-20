@@ -1,17 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Tag, Input, Space, Button } from 'antd';
-import { useTranslation } from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
+import { useTranslation } from 'react-i18next';
+import { useHistory } from "react-router-dom";
 import allroles from '../../utils/allroles'
 import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css'
 import './UserListPage.css'
 
-const { ADMINISTRATOR, MODERATOR } = allroles;
+const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
 
 const UserListPage = (props) => {
     const {t} = useTranslation();
+    const history = useHistory();
 
     const formatDate = (date) => {
         return new Date(date).toLocaleString([]);
@@ -50,9 +52,15 @@ const UserListPage = (props) => {
         confirm();
       };
     
-    const handleReset = clearFilters => {
+    const handleReset = (clearFilters) => {
         clearFilters();
     };
+
+    const handleAdd = () => {
+        const currentLocation = history.location.pathname;
+
+        history.push(`${currentLocation}/add`);
+    }
 
     const columns = [
         {
@@ -99,7 +107,7 @@ const UserListPage = (props) => {
                             color = 'green';
                             value = t('role.mod');
                         }
-                        else {
+                        else if (userAccessLevelName === CLIENT) {
                             color = 'geekblue';
                             value =  t('role.client');
                         }
@@ -137,16 +145,18 @@ const UserListPage = (props) => {
     
     return (
         <AppLayout>
-            <Table
-                className="user-table"
-                columns={columns}
-                rowKey={record => record.id}
-                dataSource={props.data}
-                pagination={props.pagination}
-                loading={props.isLoading}
-                onChange={handleTableChange}
-                bordered
-            />
+            <div className="user-list-wrapper">
+                <Table
+                    columns={columns}
+                    rowKey={record => record.id}
+                    dataSource={props.data}
+                    pagination={props.pagination}
+                    loading={props.isLoading}
+                    onChange={handleTableChange}
+                    bordered
+                />
+                <Button type="primary" onClick={handleAdd}> {t('text.add')} </Button>
+            </div>
         </AppLayout>
     );
 }

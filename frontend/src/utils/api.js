@@ -54,7 +54,6 @@ export function getUsersRequest(values) {
 }
 
 export function addUserRequest(payload) {
-    console.log(payload);
     return axios.post('/users', JSON.stringify(payload));
 }
 

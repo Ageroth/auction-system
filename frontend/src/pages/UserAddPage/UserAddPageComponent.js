@@ -225,19 +225,18 @@ const UserAddPage = (props) => {
                     >
                         <Checkbox.Group>
                             {accessLevels.map(accessLevel => {
-                                    let text;
+                                let text;
 
-                                    if (accessLevel.name === ADMINISTRATOR) 
-                                        text = t('role.admin');
-                                        
-                                    else if (accessLevel.name === MODERATOR)
-                                        text = t('role.mod');
-                                    else if (accessLevel.name === CLIENT)
-                                        text =  t('role.client')
+                                if (accessLevel.name === ADMINISTRATOR) 
+                                    text = t('role.admin'); 
+                                else if (accessLevel.name === MODERATOR)
+                                    text = t('role.mod');
+                                else if (accessLevel.name === CLIENT)
+                                    text =  t('role.client')
 
-                                    return (
-                                        <Checkbox key={accessLevel.id} value={accessLevel.id}> {text} </Checkbox>
-                                    );
+                                return (
+                                    <Checkbox key={accessLevel.id} value={accessLevel.id}> {text} </Checkbox>
+                                );
                             })} 
                         </Checkbox.Group>
                     </Form.Item>
