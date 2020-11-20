@@ -37,7 +37,6 @@ export function resetPasswordRequest(value, payload) {
 }
 
 export function getUsersRequest(values) {
-    console.log(values)
     let activationStatus;
     let searchQuery;
     values.activated ?  activationStatus = values.activated[0] : activationStatus = null;
@@ -52,6 +51,11 @@ export function getUsersRequest(values) {
             query: searchQuery
         }
     });
+}
+
+export function addUserRequest(payload) {
+    console.log(payload);
+    return axios.post('/users', JSON.stringify(payload));
 }
 
 export function getUserDetailsRequest(value) {
@@ -76,4 +80,8 @@ export function changeOwnPasswordRequest(payload) {
 
 export function updateOwnDetailsRequest(payload) {
     return axios.put('/users/me/details', JSON.stringify(payload));
+}
+
+export function getAllAccessLevelsRequest() {
+    return axios.get('/access-levels');
 }

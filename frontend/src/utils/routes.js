@@ -13,6 +13,7 @@ import UserDetailsEditPage from '../pages/UserDetailsEditPage'
 import OwnDetailsPage from '../pages/OwnDetailsPage'
 import OwnPasswordChangePage from '../pages/OwnPasswordChangePage'
 import OwnDetailsEditPage from '../pages/OwnDetailsEditPage'
+import UserAddPage from '../pages/UserAddPage'
 
 const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
 
@@ -25,6 +26,7 @@ export const routes = [
   { path: '/password_reset/:passwordResetCode', component: PasswordResetPage, public: true },
   { path: '/dashboard', component: DashboardPage, canAccess: [CLIENT, MODERATOR] },
   { path: '/users', component: UserListPage, canAccess: [ADMINISTRATOR] },
+  { path: '/users/add', component: UserAddPage, canAccess: [ADMINISTRATOR] },
   { path: '/users/:userId', component: UserDetailsPage, canAccess: [ADMINISTRATOR] },
   { path: '/users/:userId/password_change', component: UserPasswordChangePage, canAccess: [ADMINISTRATOR] },
   { path: '/users/:userId/edit', component: UserDetailsEditPage, canAccess: [ADMINISTRATOR] },

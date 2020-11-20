@@ -21,6 +21,7 @@ import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.containsTextInName;
@@ -55,9 +56,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public User createUser(User user) throws ApplicationException {
+    public User createUser(User user, List<Long> accessLevelIds) throws ApplicationException {
         User addedUser = addUser(user);
         addedUser.setActivated(true);
+
+        for (Long accessLevelId : accessLevelIds) {
+            String accessLevelNotFoundMessage = messageService.getMessage("exception.accessLevelNotFound");
+            AccessLevel accessLevel =
+                    accessLevelRepository.findById(accessLevelId).orElseThrow(() -> new EntityNotFoundException(accessLevelNotFoundMessage));
+            UserAccessLevel userAccessLevel = new UserAccessLevel(user, accessLevel);
+
+            user.getUserAccessLevels().add(userAccessLevel);
+        }
 
         return userRepository.save(addedUser);
     }
@@ -67,6 +77,13 @@ public class UserServiceImpl implements UserService {
     public User registerUser(User user) throws ApplicationException {
         User addedUser = addUser(user);
         addedUser.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
+
+        String clientAccessLevelNotFoundMessage = messageService.getMessage("exception.accessLevelNotFound");
+        AccessLevel clientAccessLevel =
+                accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException(clientAccessLevelNotFoundMessage));
+        UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
+
+        user.getUserAccessLevels().add(userAccessLevel);
 
         mailService.sendAccountActivationMail(addedUser);
 
@@ -86,13 +103,7 @@ public class UserServiceImpl implements UserService {
             throw new ValueNotUniqueException(emailNotUnique);
         }
 
-        String clientAccessLevelNotFoundMessage = messageService.getMessage("exception.accessLevelNotFound");
-        AccessLevel clientAccessLevel =
-                accessLevelRepository.findByName(AccessLevelEnum.CLIENT).orElseThrow(() -> new EntityNotFoundException(clientAccessLevelNotFoundMessage));
-        UserAccessLevel userAccessLevel = new UserAccessLevel(user, clientAccessLevel);
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getUserAccessLevels().add(userAccessLevel);
 
         return user;
     }

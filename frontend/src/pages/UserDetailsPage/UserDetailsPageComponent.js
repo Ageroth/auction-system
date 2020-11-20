@@ -57,7 +57,7 @@ const UserDetailsPage = (props) => {
                                 return (
                                     <Checkbox key={value} indeterminate="true"> {value} </Checkbox>
                                 );
-                             })} 
+                            })} 
                         </Descriptions.Item>
                     </Descriptions>
                     <div className="buttons">

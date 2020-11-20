@@ -29,8 +29,8 @@ const UserDetailsEditPage = (props) => {
     };
 
     const handleOk = () => {
-        form.submit();
         setVisible(false);
+        form.submit();
     };
     
     
@@ -149,7 +149,7 @@ const UserDetailsEditPage = (props) => {
                             okText={t('text.yes')}
                             cancelText={t('text.no')}
                         >
-                        <Button type="primary" className="user-details-edit-form-button" loading={isSubmitting} onClick={showPopconfirm}> {t('text.edit')} </Button>
+                            <Button type="primary" className="user-details-edit-form-button" loading={isSubmitting} onClick={showPopconfirm}> {t('text.edit')} </Button>
                         </Popconfirm>
                     </Form.Item>
                 </Form>

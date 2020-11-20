@@ -47,7 +47,8 @@ public class UserController {
     private int pageSize;
 
     @Autowired
-    public UserController(UserService userService, UserAccessLevelService userAccessLevelService, ModelMapper modelMapper, MessageService messageService) {
+    public UserController(UserService userService, UserAccessLevelService userAccessLevelService,
+                          ModelMapper modelMapper, MessageService messageService) {
         this.userService = userService;
         this.userAccessLevelService = userAccessLevelService;
         this.modelMapper = modelMapper;
@@ -131,17 +132,17 @@ public class UserController {
     /**
      * Dodaje nowego użytkownika.
      *
-     * @param signupDto obiekt typu {@link SignupDto}
+     * @param userAddDto obiekt typu {@link UserAddDto}
      * @return HTTP status 201 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping
-    public ResponseEntity<?> addUser(@Valid @RequestBody SignupDto signupDto) throws ApplicationException {
-        User user = new User(signupDto.getUsername(), signupDto.getPassword(),
-                signupDto.getEmail(), signupDto.getFirstName(), signupDto.getLastName(),
-                signupDto.getPhoneNumber());
+    public ResponseEntity<?> addUser(@Valid @RequestBody UserAddDto userAddDto) throws ApplicationException {
+        User user = new User(userAddDto.getUsername(), userAddDto.getPassword(),
+                userAddDto.getEmail(), userAddDto.getFirstName(), userAddDto.getLastName(),
+                userAddDto.getPhoneNumber());
 
-        User result = userService.createUser(user);
+        User result = userService.createUser(user, userAddDto.getAccessLevelIds());
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{userId}")
@@ -236,7 +237,8 @@ public class UserController {
      */
     @GetMapping("/username-availability")
     public ResponseEntity<?> checkUsernameAvailability(@RequestParam(value = "username") String username) {
-        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByUsername(username)), HttpStatus.OK);
+        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByUsername(username)),
+                HttpStatus.OK);
     }
 
     /**

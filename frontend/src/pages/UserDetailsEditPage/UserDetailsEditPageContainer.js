@@ -34,7 +34,7 @@ export default class UserDetailsEditPageContainer extends Component {
 
     handleEdit = (payload) => {
         this.setState({ isSubmitting: true });
-        updateUserDetailsRequest(this.state.userId, payload).then((res) => {
+        updateUserDetailsRequest(this.state.userId, payload).then(res => {
             this.setState({ isSubmitting: false });
             toast.success(res.data.message, {
                 position: "bottom-right",
