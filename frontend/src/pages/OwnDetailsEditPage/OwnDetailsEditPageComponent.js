@@ -1,11 +1,12 @@
-import React from 'react';
-import { Button, Form, Input, Spin } from 'antd'
+import React, { useState } from 'react';
+import { Button, Popconfirm, Form, Input, Spin } from 'antd'
 import AppLayout from '../../components/AppLayout';
 import { useTranslation } from 'react-i18next';
 import 'antd/dist/antd.css';
 import './OwnDetailsEditPage.css'
 
 const OwnDetailsEditPage = (props) => {
+    const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
@@ -15,6 +16,19 @@ const OwnDetailsEditPage = (props) => {
         const payload = Object.assign({}, values);
         props.onSubmit(payload);
     }
+
+    const showPopconfirm = () => {
+        setVisible(true);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
+
+    const handleOk = () => {
+        form.submit();
+        setVisible(false);
+    };
     
     return (
         <AppLayout>
@@ -90,7 +104,16 @@ const OwnDetailsEditPage = (props) => {
                     </Form.Item>
 
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" className="own-details-edit-form-button" disabled={isSubmitting}> {t('text.edit')} </Button>
+                        <Popconfirm
+                            title={t('text.areYouSure')}
+                            visible={visible}
+                            onConfirm={handleOk}
+                            onCancel={handleCancel}
+                            okText={t('text.yes')}
+                            cancelText={t('text.no')}
+                        >
+                        <Button type="primary" className="own-details-edit-form-button" loading={isSubmitting} onClick={showPopconfirm}> {t('text.edit')} </Button>
+                        </Popconfirm>
                     </Form.Item>
                 </Form>
             ) : (

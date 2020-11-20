@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Form, Input, Checkbox, Spin} from 'antd'
+import React, { useState } from 'react';
+import { Button, Popconfirm, Form, Input, Checkbox, Spin} from 'antd'
 import AppLayout from '../../components/AppLayout';
 import { useTranslation } from 'react-i18next';
 import allroles from '../../utils/allroles'
@@ -9,6 +9,7 @@ import './UserDetailsEditPage.css'
 const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
 
 const UserDetailsEditPage = (props) => {
+    const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
@@ -18,6 +19,20 @@ const UserDetailsEditPage = (props) => {
         const payload = Object.assign({}, values);
         props.onSubmit(payload);
     }
+
+    const showPopconfirm = () => {
+        setVisible(true);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
+
+    const handleOk = () => {
+        form.submit();
+        setVisible(false);
+    };
+    
     
     return (
         <AppLayout>
@@ -125,9 +140,17 @@ const UserDetailsEditPage = (props) => {
                             </Checkbox>
                         </Checkbox.Group>
                     </Form.Item>
-
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" className="user-details-edit-form-button" disabled={isSubmitting}> {t('text.edit')} </Button>
+                        <Popconfirm
+                            title={t('text.areYouSure')}
+                            visible={visible}
+                            onConfirm={handleOk}
+                            onCancel={handleCancel}
+                            okText={t('text.yes')}
+                            cancelText={t('text.no')}
+                        >
+                        <Button type="primary" className="user-details-edit-form-button" loading={isSubmitting} onClick={showPopconfirm}> {t('text.edit')} </Button>
+                        </Popconfirm>
                     </Form.Item>
                 </Form>
             ) : (

@@ -59,7 +59,10 @@
     "userDetails": "User details",
     "yourDetails": "Your details",
     "yourAccount": "Your account",
-    "edit": "Edit"
+    "edit": "Edit",
+    "areYouSure": "Are you sure?",
+    "reset": "Reset",
+    "search": "Search"
   },
   "role": {
     "admin": "Administrator",

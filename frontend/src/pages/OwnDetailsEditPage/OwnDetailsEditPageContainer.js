@@ -8,7 +8,7 @@ export default class OwnDetailsEditPageContainer extends Component {
         super(props);
         this.state = {
             myDetails: null,
-            isSubmitting: null,
+            isSubmitting: false
         };  
     } 
  

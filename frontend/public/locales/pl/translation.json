@@ -59,7 +59,10 @@
     "userDetails": "Szczegóły użytkownika",
     "yourDetails": "Twoje szczegóły",
     "yourAccount": "Twoje konto",
-    "edit": "Edytuj"
+    "edit": "Edytuj",
+    "areYouSure": "Jesteś pewny?",
+    "reset": "Reset",
+    "search": "Szukaj"
   },
   "role": {
     "admin": "Administrator",

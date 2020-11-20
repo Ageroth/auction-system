@@ -10,7 +10,7 @@ export default class UserDetailsEditPageContainer extends Component {
         this.state = {
             userId: this.props.match.params.userId,
             userDetails: null,
-            isSubmitting: null,
+            isSubmitting: false,
             error: false
         };  
     } 
@@ -22,7 +22,7 @@ export default class UserDetailsEditPageContainer extends Component {
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).then(res => {
             this.setState({ userDetails: res.data });
-        }).catch((e) => {
+        }).catch(e => {
             this.setState({ error: true });
             toast.error(e.response.data.message, {
                 position: "bottom-right",

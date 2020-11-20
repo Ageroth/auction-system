@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Tag } from 'antd';
+import { Table, Tag, Input, Space, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
 import allroles from '../../utils/allroles'
+import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css'
 import './UserListPage.css'
 
@@ -12,17 +13,56 @@ const { ADMINISTRATOR, MODERATOR } = allroles;
 const UserListPage = (props) => {
     const {t} = useTranslation();
 
-    const formatDate = (string) => {
-        return new Date(string).toLocaleString([]);
+    const formatDate = (date) => {
+        return new Date(date).toLocaleString([]);
     }
+
+    const getColumnSearchProps = () => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    placeholder={t('text.search')}
+                    value={selectedKeys[0]}
+                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm)}
+                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys, confirm)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        {t('text.search')}
+                    </Button>
+                    <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+                        {t('text.reset')}
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    });
+
+    const handleSearch = (selectedKeys, confirm) => {
+        confirm();
+      };
+    
+    const handleReset = clearFilters => {
+        clearFilters();
+    };
 
     const columns = [
         {
             title: t('userLabels.name'),
             dataIndex: 'lastName',
             key: 'lastName',
+            width: '20%',
             sorter: true,
-            render: (text, record) => <Link style={{ color: "#1890ff" }} to={`/users/${record.id}`}> {record.firstName} {record.lastName} </Link> ,
+            ...getColumnSearchProps(),
+            render: (text, record) => <Link style={{ color: "#1890ff" }} to={`/users/${record.id}`}> {record.firstName} {record.lastName} </Link>
         },
         {
             title: t('userLabels.username'),
@@ -86,11 +126,10 @@ const UserListPage = (props) => {
         }
     ];
 
-    const handleTableChange = (pagination, filters, sorter, searchText) => {
+    const handleTableChange = (pagination, filters, sorter) => {
         props.handleTableChange({
             sortField: sorter.field,
             order: sorter.order,
-            query: searchText,
             pagination,
             ...filters
         })
