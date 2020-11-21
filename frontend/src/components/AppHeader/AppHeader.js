@@ -4,7 +4,7 @@ import { Layout,Menu ,Dropdown ,Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import { logOut, changeCurrentRole } from '../../actions/userActions';
 import { useTranslation } from 'react-i18next';
-import { HomeOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserAddOutlined, TeamOutlined } from '@ant-design/icons';
 import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
 import './AppHeader.css'
@@ -36,10 +36,43 @@ const AppHeader = () => {
                 {t('text.logOut')}
             </Menu.Item>
         </Menu>
-    );
+    )
 
     const handleRoleChange = (newRole) => {
         dispatch(changeCurrentRole(newRole));
+    }
+
+    const navigationBar = () => {
+        let items = null;
+        switch (currentRole) {
+            case ADMINISTRATOR:
+                items = (
+                    <>
+                        <Menu.Item className="menu-left-item" key="users" icon={<TeamOutlined />}>
+                            <Link className="menu-link" to={`/users`}> Users </Link>
+                        </Menu.Item>
+                        <Menu.Item className="menu-left-item" key="user-add" icon={<UserAddOutlined />}>
+                            <Link className="menu-link" to={`/users/add`}> Add user </Link>
+                        </Menu.Item>
+                    </>
+                )
+                break;
+            
+            case MODERATOR:
+                break;
+            
+            case CLIENT:
+                break;
+            
+            default:
+                break;
+        }
+
+        return (
+            <>
+                {items}
+            </>
+        );
     }
 
     return (
@@ -49,6 +82,7 @@ const AppHeader = () => {
                     <Menu.Item className="menu-left-item" key="home">
                         <Link className="menu-link" to={`/`}> <HomeOutlined/> </Link>
                     </Menu.Item>
+                    {navigationBar()}
                     <Menu.Item className="menu-right-item" key="dropdown">
                         <Dropdown classname="dropdown" overlay={dropdownMenu}>
                             <p style={{ color: "white" }}> {username} </p>
