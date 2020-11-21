@@ -15,16 +15,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.dtos.*;
+import pl.lodz.p.it.auctionsystem.mok.services.UserAccessLevelService;
 import pl.lodz.p.it.auctionsystem.mok.services.UserService;
+import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +35,8 @@ public class UserController {
 
     private final UserService userService;
 
+    private final UserAccessLevelService userAccessLevelService;
+
     private final ModelMapper modelMapper;
 
     private final MessageService messageService;
@@ -44,8 +45,10 @@ public class UserController {
     private int pageSize;
 
     @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper, MessageService messageService) {
+    public UserController(UserService userService, UserAccessLevelService userAccessLevelService,
+                          ModelMapper modelMapper, MessageService messageService) {
         this.userService = userService;
+        this.userAccessLevelService = userAccessLevelService;
         this.modelMapper = modelMapper;
         this.messageService = messageService;
     }
@@ -127,17 +130,17 @@ public class UserController {
     /**
      * Dodaje nowego użytkownika.
      *
-     * @param signupDto obiekt typu {@link SignupDto}
+     * @param userAddDto obiekt typu {@link UserAddDto}
      * @return HTTP status 201 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping
-    public ResponseEntity<?> addUser(@Valid @RequestBody SignupDto signupDto) throws ApplicationException {
-        User user = new User(signupDto.getUsername(), signupDto.getPassword(),
-                signupDto.getEmail(), signupDto.getFirstName(), signupDto.getLastName(),
-                signupDto.getPhoneNumber());
+    public ResponseEntity<?> addUser(@Valid @RequestBody UserAddDto userAddDto) throws ApplicationException {
+        User user = new User(userAddDto.getUsername(), userAddDto.getPassword(),
+                userAddDto.getEmail(), userAddDto.getFirstName(), userAddDto.getLastName(),
+                userAddDto.getPhoneNumber());
 
-        User result = userService.createUser(user);
+        User result = userService.createUser(user, userAddDto.getAccessLevelIds());
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{userId}")
@@ -193,9 +196,11 @@ public class UserController {
         for (User user : users) {
             UserDto userDto = modelMapper.map(user, UserDto.class);
 
-            userDto.setUserAccessLevelsName(user.getUserAccessLevels().stream()
+            userDto.setUserAccessLevelNames(user.getUserAccessLevels().stream()
                     .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
                     .collect(Collectors.toList()));
+
+            userDto.getUserAccessLevelNames().sort((Comparator.comparingInt(o -> AccessLevelEnum.valueOf((String) o).ordinal())).reversed());
 
             userDtos.add(userDto);
         }
@@ -213,15 +218,15 @@ public class UserController {
      * Zwraca szczegóły naszego konta.
      *
      * @param authentication obiekt typu {@link Authentication}
-     * @return HTTP status 200 z obiektem typu {@link UserSummaryDto}
+     * @return HTTP status 200 z obiektem typu {@link OwnDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/me")
     public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
         User user = userService.getCurrentUser(authentication);
-        UserSummaryDto userSummaryDto = modelMapper.map(user, UserSummaryDto.class);
+        OwnDetailsDto ownDetailsDto = modelMapper.map(user, OwnDetailsDto.class);
 
-        return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
+        return new ResponseEntity<>(ownDetailsDto, HttpStatus.OK);
     }
 
     /**
@@ -232,7 +237,8 @@ public class UserController {
      */
     @GetMapping("/username-availability")
     public ResponseEntity<?> checkUsernameAvailability(@RequestParam(value = "username") String username) {
-        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByUsername(username)), HttpStatus.OK);
+        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByUsername(username)),
+                HttpStatus.OK);
     }
 
     /**
@@ -249,19 +255,19 @@ public class UserController {
     /**
      * Aktualizuje nasze dane personalne.
      *
-     * @param userDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
-     * @param authentication       obiekt typu {@link Authentication}
+     * @param ownDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
+     * @param authentication      obiekt typu {@link Authentication}
      * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PutMapping("/me/details")
-    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto,
+    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnDetailsUpdateDto ownDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
-        User user = modelMapper.map(userDetailsUpdateDto, User.class);
+        User user = modelMapper.map(ownDetailsUpdateDto, User.class);
 
         userService.updateCurrentUserDetails(user, authentication);
 
-        String message = messageService.getMessage("info.userDetailsUpdated");
+        String message = messageService.getMessage("info.yourDetailsUpdated");
 
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
@@ -278,9 +284,9 @@ public class UserController {
     public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
                                                Authentication authentication) throws ApplicationException {
         userService.changePassword(ownPasswordChangeDto.getNewPassword(),
-                ownPasswordChangeDto.getOldPassword(), authentication);
+                ownPasswordChangeDto.getCurrentPassword(), authentication);
 
-        String message = messageService.getMessage("info.userPasswordChanged");
+        String message = messageService.getMessage("info.yourPasswordChanged");
 
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
@@ -289,19 +295,23 @@ public class UserController {
      * Zwraca szczegóły konta użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return HTTP status 200 z obiektem typu {@link UserSummaryDto}
+     * @return HTTP status 200 z obiektem typu {@link UserDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserDetails(@PathVariable(value = "userId") Long userId) throws ApplicationException {
         User user = userService.getUserById(userId);
-        UserSummaryDto userSummaryDto = modelMapper.map(user, UserSummaryDto.class);
+        UserDetailsDto userDetailsDto = modelMapper.map(user, UserDetailsDto.class);
 
-        return new ResponseEntity<>(userSummaryDto, HttpStatus.OK);
+        userDetailsDto.setAccessLevelIds(user.getUserAccessLevels().stream()
+                .map(userAccessLevel -> userAccessLevel.getAccessLevel().getId())
+                .collect(Collectors.toList()));
+
+        return new ResponseEntity<>(userDetailsDto, HttpStatus.OK);
     }
 
     /**
-     * Aktualizuje dane personalne użytkownika o podanym id.
+     * Aktualizuje dane personalne użytkownika o podanym id oraz jego role.
      *
      * @param userId               id użytkownika
      * @param userDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
@@ -314,6 +324,7 @@ public class UserController {
         User user = modelMapper.map(userDetailsUpdateDto, User.class);
 
         userService.updateUserDetailsByUserId(userId, user);
+        userAccessLevelService.modifyUserAccessLevels(userId, userDetailsUpdateDto.getAccessLevelIds());
 
         String message = messageService.getMessage("info.userDetailsUpdated");
 

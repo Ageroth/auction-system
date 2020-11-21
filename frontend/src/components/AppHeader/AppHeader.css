@@ -15,3 +15,7 @@
 .menu-link {
     color: white !important;
 }
+
+.ant-dropdown-trigger {
+    margin: auto;
+}

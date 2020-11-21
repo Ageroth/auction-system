@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Form, Input } from 'antd'
+import { Link } from 'react-router-dom';
 import { checkUsernameAvailabilityRequest, checkEmailAvailabilityRequest } from '../../utils/api'
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +14,7 @@ const SignupPage = (props) => {
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
 
-    const onFinish = values => {
+    const onFinish = (values) => {
         const payload = Object.assign({}, values);
         delete payload.confirmPassword;
         
@@ -213,7 +214,10 @@ const SignupPage = (props) => {
                     <Button type="primary" htmlType="submit" className="signup-form-button" disabled={isSubmitting}>
                         {t('text.signUp')}
                     </Button>
-                    <p className="log-in"> {t('text.alreadyHaveAnAccount')} <a href="/login"> {t('text.logIn')} </a></p> 
+                    <p className="log-in"> 
+                        {t('text.alreadyHaveAnAccount')}
+                        <Link style={{ color: "#1890ff" }} to={'/login'}> {t('text.logIn')} </Link> 
+                    </p> 
                 </Form.Item>
             </Form>
         </AppLayout>

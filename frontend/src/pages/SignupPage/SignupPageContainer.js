@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import SignupPage from './SignupPageComponent';
 import { signUpRequest } from '../../utils/api';
@@ -11,7 +12,7 @@ class SignupPageContainer extends Component {
         };  
     }
 
-    handleSignup = payload => {
+    handleSignup = (payload) => {
         this.setState({ isSubmitting: true });
 
         return signUpRequest(payload).then(() => {
@@ -26,7 +27,7 @@ class SignupPageContainer extends Component {
         return (
             <>
                 {this.props.isLoggedIn
-                    ? this.props.history.push("/")
+                    ? <Redirect to="/" />
                     : <SignupPage onSubmit={this.handleSignup} isSubmitting={this.state.isSubmitting} />
                 }
             </>
@@ -34,7 +35,7 @@ class SignupPageContainer extends Component {
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         isLoggedIn: state.user.isLoggedIn
     };

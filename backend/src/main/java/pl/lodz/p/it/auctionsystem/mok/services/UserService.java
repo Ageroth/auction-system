@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 
+import java.util.List;
+
 /**
  * Interfejs definiujący dozwolone operacje na obiektach typu {@link User}
  */
@@ -17,9 +19,10 @@ public interface UserService {
      * Dodanie nowego użytkownika przez administratora.
      *
      * @param user użytkownik do dodania
+     * @param accessLevelIds id poziomów dostępu jakie ma otrzymać dodawany użytkownik
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    User createUser(User user) throws ApplicationException;
+    User createUser(User user, List<Long> accessLevelIds) throws ApplicationException;
 
     /**
      * Samodzielna rejestracja przez użytkownika.
@@ -146,11 +149,11 @@ public interface UserService {
      * Zmienia hasło aktualnie zalogowanego użytkownika.
      *
      * @param newPassword    nowe hasło
-     * @param oldPassword    stare hasło
+     * @param currentPassword    obecne hasło
      * @param authentication obiekt typu {@link Authentication}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void changePassword(String newPassword, String oldPassword, Authentication authentication) throws ApplicationException;
+    void changePassword(String newPassword, String currentPassword, Authentication authentication) throws ApplicationException;
 
     /**
      * Zmienia hasło użytkownika o podanym id.

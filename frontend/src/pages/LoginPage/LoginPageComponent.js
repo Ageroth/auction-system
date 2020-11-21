@@ -1,15 +1,16 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
+import { Link } from 'react-router-dom';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
 import 'antd/dist/antd.css'
 import './LoginPage.css'
 
-const LoginPage = props => {
+const LoginPage = (props) => {
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
-    const onFinish = values => {
+    const onFinish = (values) => {
         const payload = Object.assign({}, values);
         props.onSubmit(payload);
     };
@@ -51,8 +52,13 @@ const LoginPage = props => {
                     <Button type="primary" htmlType="submit" className="login-form-button" disabled={isSubmitting}>
                         {t('text.logIn')}
                     </Button>
-                    <p className="sign-up"> {t('text.noAccount')} <a href="/signup"> {t('text.signUp')} </a></p>
-                    <p className="forgot-password"><a href="/password_reset"> {t('text.forgotPassword')} </a></p>
+                    <p className="sign-up"> 
+                        {t('text.noAccount')} 
+                        <Link style={{ color: "#1890ff" }} to={'/signup'}> {t('text.signUp')} </Link> 
+                    </p>
+                    <p className="forgot-password"> 
+                        <Link style={{ color: "#1890ff" }} to={'/password_reset'}> {t('text.forgotPassword')} </Link> 
+                    </p>
                 </Form.Item>
             </Form>
         </AppLayout>

@@ -5,6 +5,7 @@
     "passwordConfirmation": "Potwierdź hasło",
     "newPassword": "Nowe hasło",
     "newPasswordConfirmation": "Potwierdź nowe hasło",
+    "currentPassword": "Obecne hasło",
     "email": "Email",
     "firstName": "Imię",
     "lastName": "Nazwisko",
@@ -45,7 +46,8 @@
   "text": {
     "logIn": "Zaloguj",
     "forgotPassword": "Zapomniałeś hasła?",
-    "signUp": "Zarejestruj się",
+    "signUp": "Zarejestruj",
+    "logOut": "Wyloguj",
     "noAccount": "Nie masz jeszcze konta?",
     "alreadyHaveAnAccount": "Masz już konto?",
     "sendPasswordResetEmail": "Wyślij email do resetu hasła",
@@ -53,7 +55,15 @@
     "yes": "Tak",
     "no": "Nie",
     "home": "Strona główna",
-    "404": "Strona, której szukasz, nie istnieje (błąd 404)"
+    "404": "Strona, której szukasz, nie istnieje (błąd 404)",
+    "userDetails": "Szczegóły użytkownika",
+    "yourDetails": "Twoje szczegóły",
+    "yourAccount": "Twoje konto",
+    "edit": "Edytuj",
+    "add": "Dodaj",
+    "areYouSure": "Jesteś pewny?",
+    "reset": "Reset",
+    "search": "Szukaj"
   },
   "role": {
     "admin": "Administrator",

@@ -5,6 +5,7 @@
     "passwordConfirmation": "Confirm password",
     "newPassword": "New password",
     "newPasswordConfirmation": "Confirm new password",
+    "currentPassword": "Current password",
     "email": "Email",
     "firstName": "First name",
     "lastName": "Last name",
@@ -46,6 +47,7 @@
     "logIn": "Log in",
     "forgotPassword": "Forgot password?",
     "signUp": "Sign up",
+    "logOut": "Log out",
     "noAccount": "Don't have an account yet?",
     "alreadyHaveAnAccount": "Already have an account?",
     "sendPasswordResetEmail": "Send password reset email",
@@ -53,7 +55,15 @@
     "yes": "Yes",
     "no": "No",
     "home": "Home page",
-    "404": "The page you are looking for doesn't exist (error 404)"
+    "404": "The page you are looking for doesn't exist (error 404)",
+    "userDetails": "User details",
+    "yourDetails": "Your details",
+    "yourAccount": "Your account",
+    "edit": "Edit",
+    "add": "Dodaj",
+    "areYouSure": "Are you sure?",
+    "reset": "Reset",
+    "search": "Search"
   },
   "role": {
     "admin": "Administrator",

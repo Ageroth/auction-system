@@ -11,6 +11,7 @@ import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
 import pl.lodz.p.it.auctionsystem.mok.dtos.AccessLevelDto;
 import pl.lodz.p.it.auctionsystem.mok.services.AccessLevelService;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,7 @@ public class AccessLevelController {
     public ResponseEntity<?> getAllAccessLevels() {
         List<AccessLevel> accessLevels = accessLevelService.getAllAccessLevels();
         List<AccessLevelDto> accessLevelDtos = accessLevels.stream()
+                .sorted(Comparator.comparing(AccessLevel::getId))
                 .map(accessLevel -> modelMapper.map(accessLevel, AccessLevelDto.class))
                 .collect(Collectors.toList());
         

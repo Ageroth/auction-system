@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import LoginPage from './LoginPageComponent';
@@ -12,12 +13,10 @@ class LoginPageContainer extends Component {
         };  
     }
 
-    handleLogin = payload => {
+    handleLogin = (payload) => {
         this.setState({ isSubmitting: true });
-        this.props.logIn(payload).then(() => {
-            this.setState({ isSubmitting: false });
-            this.props.history.push("/");
-        }).catch((e) => {
+
+        this.props.logIn(payload).catch(e => {
             this.setState({ isSubmitting: false });
             toast.error(e.response.data.message, {
                 position: "bottom-right",
@@ -29,12 +28,17 @@ class LoginPageContainer extends Component {
 
     render() {
         return (
-            <LoginPage onSubmit={this.handleLogin} isSubmitting={this.state.isSubmitting} />
+            <>
+                {this.props.isLoggedIn
+                    ? <Redirect to="/" />
+                    : <LoginPage onSubmit={this.handleLogin} isSubmitting={this.state.isSubmitting} />
+                }
+            </>
         );
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         isLoggedIn: state.user.isLoggedIn
     };

@@ -5,10 +5,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logOut, changeCurrentRole } from '../../actions/userActions';
 import { useTranslation } from 'react-i18next';
 import { HomeOutlined } from '@ant-design/icons';
+import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
 import './AppHeader.css'
 
 const Header = Layout.Header;
+const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
 
 const AppHeader = () => {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
@@ -27,15 +29,14 @@ const AppHeader = () => {
     const dropdownMenu = (
         <Menu onClick={handleDropdownMenuClick}>
             <Menu.Item className="dropdown-item" key="profile" >
-                {/* <Link to={`/my-profile`}>Twoje konto</Link> */}
-                Twoje konto
+                <Link to={`/my_profile`}> {t('text.yourAccount')} </Link>
             </Menu.Item>
             <Menu.Divider/>
             <Menu.Item className="dropdown-item" key="logout" >
-                Wyloguj
+                {t('text.logOut')}
             </Menu.Item>
         </Menu>
-      );
+    );
 
     const handleRoleChange = (newRole) => {
         dispatch(changeCurrentRole(newRole));
@@ -49,15 +50,15 @@ const AppHeader = () => {
                         <Link className="menu-link" to={`/`}> <HomeOutlined/> </Link>
                     </Menu.Item>
                     <Menu.Item className="menu-right-item" key="dropdown">
-                        <Dropdown overlay={dropdownMenu}>
-                            <a style={{ color: "white" }}> {username} </a>
+                        <Dropdown classname="dropdown" overlay={dropdownMenu}>
+                            <p style={{ color: "white" }}> {username} </p>
                         </Dropdown>
                     </Menu.Item>
                     <Menu.Item className="menu-right-item" key="select" disabled="true">
                         <Select defaultValue={currentRole} style={{ width: 140 }} onChange={handleRoleChange}>
-                            <Select.Option value="ADMINISTRATOR" disabled={!roles.includes("ADMINISTRATOR")}> {t('role.admin')} </Select.Option>
-                            <Select.Option value="MODERATOR" disabled={!roles.includes("MODERATOR")}> {t('role.mod')} </Select.Option>
-                            <Select.Option value="CLIENT"disabled={!roles.includes("CLIENT")}> {t('role.client')} </Select.Option>
+                            {roles.includes(ADMINISTRATOR) ? <Select.Option value={ADMINISTRATOR}> {t('role.admin')} </Select.Option> : null}
+                            {roles.includes(MODERATOR) ? <Select.Option value={MODERATOR}> {t('role.mod')} </Select.Option> : null}
+                            {roles.includes(CLIENT) ? <Select.Option value={CLIENT}> {t('role.client')} </Select.Option> : null}
                         </Select>
                     </Menu.Item>
                 </Menu>

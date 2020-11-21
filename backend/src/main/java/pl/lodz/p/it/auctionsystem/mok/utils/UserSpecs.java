@@ -7,7 +7,7 @@ import pl.lodz.p.it.auctionsystem.entities.User;
  * Klasa zawierająca metody wykorzystywane do zaawansowanych zapytań bazy danych.
  */
 public class UserSpecs {
-    
+
     /**
      * Służy do znalezienia encji {@link User} zawierających daną frazę w imieniu, nazwisku lub nazwie użytkownika.
      *
@@ -15,16 +15,17 @@ public class UserSpecs {
      * @return obiekt typu {@link Specification}
      */
     public static Specification<User> containsTextInName(String text) {
-        if (!text.contains("%")) {
+        if (!text.contains("%"))
             text = "%" + text + "%";
-        }
-        String finalText = text;
+
+        String finalText = text.toLowerCase();
+
         return (root, query, builder) -> builder.or(
-                builder.like(root.get("firstName"), finalText),
-                builder.like(root.get("lastName"), finalText)
+                builder.like(builder.lower(root.get("firstName")), finalText),
+                builder.like(builder.lower(root.get("lastName")), finalText)
         );
     }
-    
+
     /**
      * Służy do znalezienia encji {@link User} w zależności od parametru aktywacji konta.
      *

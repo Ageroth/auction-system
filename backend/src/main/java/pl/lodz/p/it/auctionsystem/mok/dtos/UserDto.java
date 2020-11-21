@@ -31,9 +31,11 @@ public class UserDto {
 
     private LocalDateTime createdAt;
 
-    private List<String> userAccessLevelsName;
+    private List<String> userAccessLevelNames;
 
     private String firstName;
 
     private String lastName;
+
+    private String phoneNumber;
 }

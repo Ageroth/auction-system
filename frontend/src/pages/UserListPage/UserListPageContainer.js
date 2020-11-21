@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import UserListPage from './UserListPageComponent'
+import { toast } from 'react-toastify';
 import { getUsersRequest } from '../../utils/api';
 
 export default class UserListPageContainer extends Component { 
@@ -19,18 +20,22 @@ export default class UserListPageContainer extends Component {
     getUsers = (params = {}) => {
       this.setState({ isLoading: true });
 
-      getUsersRequest(params).then(response => {
+      getUsersRequest(params).then(res => {
         this.setState({
           isLoading: false,
-          data: response.data.users,
+          data: res.data.users,
           pagination: {
             ...params.pagination,
-            total: response.data.totalItems,
+            total: res.data.totalItems,
           }
         });
       }).catch((e) => {
         this.setState({ isLoading: false })
-        console.log(e);
+        toast.error(e.response.data.message, {
+          position: "bottom-right",
+          autoClose: 3000,
+          closeOnClick: true
+      });
       });
     }
     

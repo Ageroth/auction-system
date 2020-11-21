@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * DTO wykorzystywane przy aktualizacji danych personalnych użytkownika.
  */
@@ -13,10 +16,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDetailsUpdateDto {
-    
+
     private String firstName;
-    
+
     private String lastName;
-    
+
     private String phoneNumber;
+
+    private List<Long> accessLevelIds = new ArrayList<>();
 }

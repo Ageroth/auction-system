@@ -22,5 +22,5 @@ public class OwnPasswordChangeDto {
     
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(){}:\";'<>?,./+=])(?=\\S+$).{8,}$", message =
             "{validation.password}")
-    private String oldPassword;
+    private String currentPassword;
 }

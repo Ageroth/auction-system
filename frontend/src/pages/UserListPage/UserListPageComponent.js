@@ -1,15 +1,65 @@
-import React from 'react'
-import { Table, Tag } from 'antd';
-import { useTranslation } from 'react-i18next';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Table, Tag, Input, Space, Button } from 'antd';
 import AppLayout from '../../components/AppLayout'
+import { useTranslation } from 'react-i18next';
+import { useHistory } from "react-router-dom";
+import allroles from '../../utils/allroles'
+import { SearchOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css'
 import './UserListPage.css'
 
+const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
+
 const UserListPage = (props) => {
     const {t} = useTranslation();
+    const history = useHistory();
 
-    const formatDate = (string) => {
-        return new Date(string).toLocaleString([]);
+    const formatDate = (date) => {
+        return new Date(date).toLocaleString([]);
+    }
+
+    const getColumnSearchProps = () => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    placeholder={t('text.search')}
+                    value={selectedKeys[0]}
+                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm)}
+                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys, confirm)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        {t('text.search')}
+                    </Button>
+                    <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+                        {t('text.reset')}
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    });
+
+    const handleSearch = (selectedKeys, confirm) => {
+        confirm();
+      };
+    
+    const handleReset = (clearFilters) => {
+        clearFilters();
+    };
+
+    const handleAdd = () => {
+        const currentLocation = history.location.pathname;
+
+        history.push(`${currentLocation}/add`);
     }
 
     const columns = [
@@ -17,8 +67,10 @@ const UserListPage = (props) => {
             title: t('userLabels.name'),
             dataIndex: 'lastName',
             key: 'lastName',
+            width: '20%',
             sorter: true,
-            render: (text, record) => <a href={'/users/' + record.id}> {record.firstName} {record.lastName} </a>,
+            ...getColumnSearchProps(),
+            render: (text, record) => <Link style={{ color: "#1890ff" }} to={`/users/${record.id}`}> {record.firstName} {record.lastName} </Link>
         },
         {
             title: t('userLabels.username'),
@@ -39,23 +91,23 @@ const UserListPage = (props) => {
         },
         {
             title: t('userLabels.roles'),
-            key: 'userAccessLevelsName',
-            dataIndex: 'userAccessLevelsName',
-            render: userAccessLevelsName => (
+            key: 'userAccessLevelNames',
+            dataIndex: 'userAccessLevelNames',
+            render: userAccessLevelNames => (
                 <>
-                    {userAccessLevelsName.map(userAccessLevelName => {
+                    {userAccessLevelNames.map(userAccessLevelName => {
                         let color;
                         let value;
 
-                        if (userAccessLevelName === "ADMINISTRATOR") {
+                        if (userAccessLevelName === ADMINISTRATOR) {
                             color = 'volcano';
                             value = t('role.admin');
                         }
-                        else if (userAccessLevelName === "MODERATOR") {
+                        else if (userAccessLevelName === MODERATOR) {
                             color = 'green';
                             value = t('role.mod');
                         }
-                        else {
+                        else if (userAccessLevelName === CLIENT) {
                             color = 'geekblue';
                             value =  t('role.client');
                         }
@@ -82,11 +134,10 @@ const UserListPage = (props) => {
         }
     ];
 
-    const handleTableChange = (pagination, filters, sorter, searchText) => {
+    const handleTableChange = (pagination, filters, sorter) => {
         props.handleTableChange({
             sortField: sorter.field,
             order: sorter.order,
-            query: searchText,
             pagination,
             ...filters
         })
@@ -94,15 +145,18 @@ const UserListPage = (props) => {
     
     return (
         <AppLayout>
-            <Table
-                className="user-table"
-                columns={columns}
-                rowKey={record => record.id}
-                dataSource={props.data}
-                pagination={props.pagination}
-                loading={props.isLoading}
-                onChange={handleTableChange}
-            />
+            <div className="user-list-wrapper">
+                <Table
+                    columns={columns}
+                    rowKey={record => record.id}
+                    dataSource={props.data}
+                    pagination={props.pagination}
+                    loading={props.isLoading}
+                    onChange={handleTableChange}
+                    bordered
+                />
+                <Button type="primary" onClick={handleAdd}> {t('text.add')} </Button>
+            </div>
         </AppLayout>
     );
 }

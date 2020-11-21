@@ -4,8 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
+import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interfejs definiujący dozwolone operacje na encji {@link UserAccessLevel}.
@@ -46,4 +48,6 @@ public interface UserAccessLevelRepository extends JpaRepository<UserAccessLevel
      * @return true jeśli istnieje, w przeciwnym wypadku false
      */
     boolean existsById(Long id);
+
+    Optional<UserAccessLevel> findByUser_IdAndAccessLevel_Id(Long userId, Long accessLevelId);
 }
