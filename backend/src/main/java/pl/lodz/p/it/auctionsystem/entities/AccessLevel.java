@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "access_level")
@@ -22,5 +23,6 @@ public class AccessLevel extends BaseEntity {
     
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, unique = true, updatable = false, length = 32)
+    @NotNull
     private AccessLevelEnum name;
 }

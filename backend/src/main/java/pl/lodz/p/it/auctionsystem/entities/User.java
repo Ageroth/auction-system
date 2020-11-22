@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,20 +26,25 @@ public class User extends BaseEntity {
     private Long id;
     
     @Column(name = "username", nullable = false, unique = true, updatable = false, length = 32)
+    @NotNull
     private String username;
     
     @Column(name = "password", nullable = false, length = 64)
     @Setter
+    @NotNull
     private String password;
     
     @Column(name = "email", nullable = false, unique = true, updatable = false, length = 64)
+    @NotNull
     private String email;
     
     @Column(name = "activated", nullable = false)
     @Setter
+    @NotNull
     private boolean activated;
     
     @Column(name = "created_at", nullable = false, updatable = false)
+    @NotNull
     private LocalDateTime createdAt;
     
     @Column(name = "activation_code", unique = true, length = 128)
@@ -54,18 +60,22 @@ public class User extends BaseEntity {
     private LocalDateTime passwordResetCodeAddDate;
     
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE}, mappedBy = "user")
+    @NotNull
     private Collection<UserAccessLevel> userAccessLevels = new ArrayList<>();
     
     @Column(name = "first_name", table = "user_details", nullable = false, length = 32)
     @Setter
+    @NotNull
     private String firstName;
     
     @Column(name = "last_name", table = "user_details", nullable = false, length = 32)
     @Setter
+    @NotNull
     private String lastName;
     
     @Column(name = "phone_number", table = "user_details", nullable = false, length = 10)
     @Setter
+    @NotNull
     private String phoneNumber;
     
     public User(String username, String password, String email, String firstName, String lastName, String phoneNumber) {
