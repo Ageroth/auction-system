@@ -1,9 +1,9 @@
 import React from 'react'
-import { Button, Form, Input } from 'antd'
-import { Link } from 'react-router-dom';
-import { checkUsernameAvailabilityRequest, checkEmailAvailabilityRequest } from '../../utils/api'
-import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
+import {Button, Form, Input} from 'antd'
+import {Link} from 'react-router-dom';
+import {checkEmailAvailabilityRequest, checkUsernameAvailabilityRequest} from '../../utils/api'
+import {toast} from 'react-toastify';
+import {useTranslation} from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
 import 'antd/dist/antd.css'
 import './SignupPage.css'
@@ -17,7 +17,7 @@ const SignupPage = (props) => {
     const onFinish = (values) => {
         const payload = Object.assign({}, values);
         delete payload.confirmPassword;
-        
+
         props.onSubmit(payload).then(() => {
             toast.success(t('message.content.activationEmailSent'), {
                 position: "bottom-right",
@@ -34,25 +34,25 @@ const SignupPage = (props) => {
     }
 
     const validateUsernameAvailability = async (rule, value) => {
-        if(value) {
+        if (value) {
             const result = await checkUsernameAvailabilityRequest(value);
-            if(result.data.available) return Promise.resolve('');
+            if (result.data.available) return Promise.resolve('');
             else return Promise.reject(t('validation.usernameTaken'));
         }
     }
 
     const validateEmailAvailability = async (rule, value) => {
-        if(value) {
+        if (value) {
             const result = await checkEmailAvailabilityRequest(value);
-            if(result.data.available) return Promise.resolve('');
+            if (result.data.available) return Promise.resolve('');
             else return Promise.reject(t('validation.emailTaken'));
         }
     }
-           
+
     return (
         <AppLayout>
             <div className="signup-page-wrapper">
-                <h1 style={{ fontWeight: "bold" }}> {t('pageName.signup')} </h1>
+                <h1 style={{fontWeight: "bold"}}> {t('pageName.signup')} </h1>
                 <Form
                     form={form}
                     layout="vertical"
@@ -139,7 +139,7 @@ const SignupPage = (props) => {
                                 pattern: new RegExp("^[0-9]{9,10}$"),
                                 message: t('validation.regex.phoneNumber')
                             }
-                        ]} 
+                        ]}
                     >
                         <Input/>
                     </Form.Item>
@@ -216,10 +216,10 @@ const SignupPage = (props) => {
                         <Button type="primary" htmlType="submit" className="signup-form-button" loading={isSubmitting}>
                             {t('text.signUp')}
                         </Button>
-                        <p className="log-in"> 
+                        <p className="log-in">
                             {t('text.alreadyHaveAnAccount')}
-                            <Link style={{ color: "#1890ff" }} to={'/login'}> {t('text.logIn')} </Link> 
-                        </p> 
+                            <Link style={{color: "#1890ff"}} to={'/login'}> {t('text.logIn')} </Link>
+                        </p>
                     </Form.Item>
                 </Form>
             </div>

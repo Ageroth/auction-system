@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
 import SignupPage from './SignupPageComponent';
-import { signUpRequest } from '../../utils/api';
+import {signUpRequest} from '../../utils/api';
 
 class SignupPageContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isSubmitting: false
-        };  
+        };
     }
 
     handleSignup = (payload) => {
-        this.setState({ isSubmitting: true });
+        this.setState({isSubmitting: true});
 
         return signUpRequest(payload).then(() => {
-            this.setState({ isSubmitting: false });
+            this.setState({isSubmitting: false});
             this.props.history.push("/login");
         }).catch(() => {
-            this.setState({ isSubmitting: false });
+            this.setState({isSubmitting: false});
         });
     }
 
@@ -27,8 +27,8 @@ class SignupPageContainer extends Component {
         return (
             <>
                 {this.props.isLoggedIn
-                    ? <Redirect to="/" />
-                    : <SignupPage onSubmit={this.handleSignup} isSubmitting={this.state.isSubmitting} />
+                    ? <Redirect to="/"/>
+                    : <SignupPage onSubmit={this.handleSignup} isSubmitting={this.state.isSubmitting}/>
                 }
             </>
         );

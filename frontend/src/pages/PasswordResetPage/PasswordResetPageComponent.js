@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Form, Input } from 'antd'
-import { useTranslation } from 'react-i18next';
+import {Button, Form, Input} from 'antd'
+import {useTranslation} from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
 import 'antd/dist/antd.css'
 import './PasswordResetPage.css'
@@ -9,7 +9,7 @@ const PasswordResetPage = props => {
     const [form] = Form.useForm();
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
-    
+
     const onFinish = (values) => {
         const payload = Object.assign({}, values);
         delete payload.confirmNewPassword;
@@ -19,7 +19,7 @@ const PasswordResetPage = props => {
     return (
         <AppLayout>
             <div className="password-reset-page-wrapper">
-                <h1 style={{ fontWeight: "bold" }}> {t('pageName.passwordReset')} </h1>
+                <h1 style={{fontWeight: "bold"}}> {t('pageName.passwordReset')} </h1>
                 {props.passwordResetCode ? (
                     <Form
                         form={form}
@@ -73,18 +73,19 @@ const PasswordResetPage = props => {
                         </Form.Item>
 
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" className="password-reset-form-button" loading={isSubmitting}>
+                            <Button type="primary" htmlType="submit" className="password-reset-form-button"
+                                    loading={isSubmitting}>
                                 {t('text.changePassword')}
                             </Button>
                         </Form.Item>
-                    </Form> 
+                    </Form>
                 ) : (
                     <>
                         {props.emailSent ? (
-                            <div className="activation-box"> 
+                            <div className="activation-box">
                                 <h3> {t('message.title.passwordResetEmailSent')} </h3>
                                 <p> {t('message.content.passwordResetEmailSent')} </p>
-                            </div> 
+                            </div>
                         ) : (
                             <Form
                                 form={form}
@@ -114,9 +115,10 @@ const PasswordResetPage = props => {
                                 >
                                     <Input/>
                                 </Form.Item>
-                
+
                                 <Form.Item>
-                                    <Button type="primary" htmlType="submit" className="password-reset-form-button" loading={isSubmitting}>
+                                    <Button type="primary" htmlType="submit" className="password-reset-form-button"
+                                            loading={isSubmitting}>
                                         {t('text.sendPasswordResetEmail')}
                                     </Button>
                                 </Form.Item>

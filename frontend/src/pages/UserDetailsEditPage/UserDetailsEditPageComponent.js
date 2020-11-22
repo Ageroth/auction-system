@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Button, Popconfirm, Form, Input, Checkbox, Spin} from 'antd'
+import React, {useState} from 'react';
+import {Button, Checkbox, Form, Input, Popconfirm, Spin} from 'antd'
 import AppLayout from '../../components/AppLayout';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
 import './UserDetailsEditPage.css'
 
-const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
+const {ADMINISTRATOR, MODERATOR, CLIENT} = allroles;
 
 const UserDetailsEditPage = (props) => {
     const [visible, setVisible] = useState(false);
@@ -33,13 +33,12 @@ const UserDetailsEditPage = (props) => {
         setVisible(false);
         form.submit();
     };
-    
-    
+
     return (
         <AppLayout>
             {userDetails && accessLevels ? (
                 <div className="user-details-edit-page-wrapper">
-                    <h1 style={{ fontWeight: "bold" }}> {t('pageName.edit')} </h1>
+                    <h1 style={{fontWeight: "bold"}}> {t('pageName.edit')} </h1>
                     <Form
                         form={form}
                         layout="vertical"
@@ -108,7 +107,7 @@ const UserDetailsEditPage = (props) => {
                                     pattern: new RegExp("^[0-9]{9,10}$"),
                                     message: t('validation.regex.phoneNumber')
                                 }
-                            ]} 
+                            ]}
                         >
                             <Input/>
                         </Form.Item>
@@ -121,27 +120,27 @@ const UserDetailsEditPage = (props) => {
                                     required: true,
                                     message: t('validation.required')
                                 }
-                            ]} 
+                            ]}
                         >
                             <Checkbox.Group>
                                 {accessLevels.map(accessLevel => {
                                     let text;
 
-                                    if (accessLevel.name === ADMINISTRATOR) 
-                                        text = t('role.admin'); 
+                                    if (accessLevel.name === ADMINISTRATOR)
+                                        text = t('role.admin');
                                     else if (accessLevel.name === MODERATOR)
                                         text = t('role.mod');
                                     else if (accessLevel.name === CLIENT)
-                                        text =  t('role.client')
+                                        text = t('role.client')
 
                                     return (
                                         <Checkbox key={accessLevel.id} value={accessLevel.id}> {text} </Checkbox>
                                     );
-                                })} 
+                                })}
                             </Checkbox.Group>
                         </Form.Item>
 
-                        <Form.Item style={{ marginBottom:"0" }}>
+                        <Form.Item style={{marginBottom: "0"}}>
                             <Popconfirm
                                 title={t('text.areYouSure')}
                                 visible={visible}
@@ -150,13 +149,14 @@ const UserDetailsEditPage = (props) => {
                                 okText={t('text.yes')}
                                 cancelText={t('text.no')}
                             >
-                                <Button type="primary" className="user-details-edit-form-button" loading={isSubmitting} onClick={showPopconfirm}> {t('text.edit')} </Button>
+                                <Button type="primary" className="user-details-edit-form-button" loading={isSubmitting}
+                                        onClick={showPopconfirm}> {t('text.edit')} </Button>
                             </Popconfirm>
                         </Form.Item>
                     </Form>
                 </div>
             ) : (
-                <Spin size="large" />
+                <Spin size="large"/>
             )}
         </AppLayout>
     );

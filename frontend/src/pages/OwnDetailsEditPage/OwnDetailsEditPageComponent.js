@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Button, Popconfirm, Form, Input, Spin } from 'antd'
+import React, {useState} from 'react';
+import {Button, Form, Input, Popconfirm, Spin} from 'antd'
 import AppLayout from '../../components/AppLayout';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import 'antd/dist/antd.css';
 import './OwnDetailsEditPage.css'
 
@@ -29,12 +29,12 @@ const OwnDetailsEditPage = (props) => {
         form.submit();
         setVisible(false);
     };
-    
+
     return (
         <AppLayout>
             {myDetails ? (
                 <div className="own-details-edit-page-wrapper">
-                    <h1 style={{ fontWeight: "bold" }}> {t('pageName.edit')} </h1>
+                    <h1 style={{fontWeight: "bold"}}> {t('pageName.edit')} </h1>
                     <Form
                         form={form}
                         layout="vertical"
@@ -100,12 +100,12 @@ const OwnDetailsEditPage = (props) => {
                                     pattern: new RegExp("^[0-9]{9,10}$"),
                                     message: t('validation.regex.phoneNumber')
                                 }
-                            ]} 
+                            ]}
                         >
                             <Input/>
                         </Form.Item>
 
-                        <Form.Item style={{ marginBottom:"0" }}>
+                        <Form.Item style={{marginBottom: "0"}}>
                             <Popconfirm
                                 title={t('text.areYouSure')}
                                 visible={visible}
@@ -114,13 +114,14 @@ const OwnDetailsEditPage = (props) => {
                                 okText={t('text.yes')}
                                 cancelText={t('text.no')}
                             >
-                            <Button type="primary" className="own-details-edit-form-button" loading={isSubmitting} onClick={showPopconfirm}> {t('text.edit')} </Button>
+                                <Button type="primary" className="own-details-edit-form-button" loading={isSubmitting}
+                                        onClick={showPopconfirm}> {t('text.edit')} </Button>
                             </Popconfirm>
                         </Form.Item>
                     </Form>
                 </div>
             ) : (
-                <Spin size="large" />
+                <Spin size="large"/>
             )}
         </AppLayout>
     );

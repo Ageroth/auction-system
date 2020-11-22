@@ -39,7 +39,7 @@ export function resetPasswordRequest(value, payload) {
 export function getUsersRequest(values) {
     let activationStatus;
     let searchQuery;
-    values.activated ?  activationStatus = values.activated[0] : activationStatus = null;
+    values.activated ? activationStatus = values.activated[0] : activationStatus = null;
     values.lastName ? searchQuery = values.lastName[0] : searchQuery = null;
 
     return axios.get('/users', {

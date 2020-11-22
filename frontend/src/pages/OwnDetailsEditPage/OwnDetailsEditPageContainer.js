@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import OwnDetailsEditPage from './OwnDetailsEditPageComponent';
-import { toast } from 'react-toastify';
-import { getMyDetailsRequest, updateOwnDetailsRequest } from '../../utils/api';
+import {toast} from 'react-toastify';
+import {getMyDetailsRequest, updateOwnDetailsRequest} from '../../utils/api';
 
 export default class OwnDetailsEditPageContainer extends Component {
     constructor(props) {
@@ -9,9 +9,9 @@ export default class OwnDetailsEditPageContainer extends Component {
         this.state = {
             myDetails: null,
             isSubmitting: false
-        };  
-    } 
- 
+        };
+    }
+
     componentDidMount() {
         this.getMyDetails();
     }
@@ -29,9 +29,9 @@ export default class OwnDetailsEditPageContainer extends Component {
     }
 
     handleEdit = (payload) => {
-        this.setState({ isSubmitting: true });
+        this.setState({isSubmitting: true});
         updateOwnDetailsRequest(payload).then((res) => {
-            this.setState({ isSubmitting: false });
+            this.setState({isSubmitting: false});
             toast.success(res.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -39,7 +39,7 @@ export default class OwnDetailsEditPageContainer extends Component {
             });
             this.props.history.goBack();
         }).catch(e => {
-            this.setState({ isSubmitting: false });
+            this.setState({isSubmitting: false});
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -52,7 +52,7 @@ export default class OwnDetailsEditPageContainer extends Component {
         const myDetails = this.state.myDetails;
         const isSubmitting = this.state.isSubmitting;
         return (
-            <OwnDetailsEditPage myDetails={myDetails} onSubmit={this.handleEdit} isSubmitting={isSubmitting} />
+            <OwnDetailsEditPage myDetails={myDetails} onSubmit={this.handleEdit} isSubmitting={isSubmitting}/>
         );
     }
 }

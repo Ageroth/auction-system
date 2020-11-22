@@ -1,8 +1,8 @@
 import React from 'react';
-import { useHistory } from "react-router-dom";
-import { Descriptions, Button, Spin } from 'antd';
+import {useHistory} from "react-router-dom";
+import {Button, Descriptions, Spin} from 'antd';
 import AppLayout from '../../components/AppLayout';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import 'antd/dist/antd.css';
 import './OwnDetailsPage.css'
 
@@ -36,9 +36,12 @@ const OwnDetailsPage = (props) => {
                         <Descriptions.Item label={t('userLabels.firstName')}> {myDetails.firstName} </Descriptions.Item>
                         <Descriptions.Item label={t('userLabels.lastName')}> {myDetails.lastName} </Descriptions.Item>
                         <Descriptions.Item label={t('userLabels.email')}> {myDetails.email} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.phoneNumber')}> {myDetails.phoneNumber} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.activated')}> {myDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.created')}> {formatDate(myDetails.createdAt)} </Descriptions.Item>
+                        <Descriptions.Item
+                            label={t('userLabels.phoneNumber')}> {myDetails.phoneNumber} </Descriptions.Item>
+                        <Descriptions.Item
+                            label={t('userLabels.activated')}> {myDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
+                        <Descriptions.Item
+                            label={t('userLabels.created')}> {formatDate(myDetails.createdAt)} </Descriptions.Item>
                     </Descriptions>
                     <div className="buttons">
                         <Button type="primary" onClick={handleEditClick}> {t('text.edit')} </Button>
@@ -46,7 +49,7 @@ const OwnDetailsPage = (props) => {
                     </div>
                 </div>
             ) : (
-                    <Spin size="large" />
+                <Spin size="large"/>
             )}
         </AppLayout>
     );

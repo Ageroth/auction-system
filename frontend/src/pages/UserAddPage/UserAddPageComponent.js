@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Button, Form, Input, Spin, Popconfirm, Checkbox } from 'antd'
+import React, {useState} from 'react';
+import {Button, Checkbox, Form, Input, Popconfirm, Spin} from 'antd'
 import AppLayout from '../../components/AppLayout'
-import { checkUsernameAvailabilityRequest, checkEmailAvailabilityRequest } from '../../utils/api'
-import { useTranslation } from 'react-i18next';
+import {checkEmailAvailabilityRequest, checkUsernameAvailabilityRequest} from '../../utils/api'
+import {useTranslation} from 'react-i18next';
 import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css'
 import './UserAddPage.css'
 
-const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
+const {ADMINISTRATOR, MODERATOR, CLIENT} = allroles;
 
 const UserAddPage = (props) => {
     const [visible, setVisible] = useState(false);
@@ -23,17 +23,17 @@ const UserAddPage = (props) => {
     }
 
     const validateUsernameAvailability = async (rule, value) => {
-        if(value) {
+        if (value) {
             const result = await checkUsernameAvailabilityRequest(value);
-            if(result.data.available) return Promise.resolve('');
+            if (result.data.available) return Promise.resolve('');
             else return Promise.reject(t('validation.usernameTaken'));
         }
     }
 
     const validateEmailAvailability = async (rule, value) => {
-        if(value) {
+        if (value) {
             const result = await checkEmailAvailabilityRequest(value);
-            if(result.data.available) return Promise.resolve('');
+            if (result.data.available) return Promise.resolve('');
             else return Promise.reject(t('validation.emailTaken'));
         }
     }
@@ -50,12 +50,12 @@ const UserAddPage = (props) => {
         setVisible(false);
         form.submit();
     };
-           
+
     return (
-        <AppLayout> 
+        <AppLayout>
             {accessLevels ? (
                 <div className="user-add-page-wrapper">
-                    <h1 style={{ fontWeight: "bold" }}> {t('pageName.userAdd')} </h1>
+                    <h1 style={{fontWeight: "bold"}}> {t('pageName.userAdd')} </h1>
                     <Form
                         form={form}
                         layout="vertical"
@@ -142,7 +142,7 @@ const UserAddPage = (props) => {
                                     pattern: new RegExp("^[0-9]{9,10}$"),
                                     message: t('validation.regex.phoneNumber')
                                 }
-                            ]} 
+                            ]}
                         >
                             <Input/>
                         </Form.Item>
@@ -223,27 +223,27 @@ const UserAddPage = (props) => {
                                     required: true,
                                     message: t('validation.required')
                                 }
-                            ]} 
+                            ]}
                         >
                             <Checkbox.Group>
                                 {accessLevels.map(accessLevel => {
                                     let text;
 
-                                    if (accessLevel.name === ADMINISTRATOR) 
-                                        text = t('role.admin'); 
+                                    if (accessLevel.name === ADMINISTRATOR)
+                                        text = t('role.admin');
                                     else if (accessLevel.name === MODERATOR)
                                         text = t('role.mod');
                                     else if (accessLevel.name === CLIENT)
-                                        text =  t('role.client')
+                                        text = t('role.client')
 
                                     return (
                                         <Checkbox key={accessLevel.id} value={accessLevel.id}> {text} </Checkbox>
                                     );
-                                })} 
+                                })}
                             </Checkbox.Group>
                         </Form.Item>
 
-                        <Form.Item style={{ marginBottom: '0' }}>
+                        <Form.Item style={{marginBottom: '0'}}>
                             <Popconfirm
                                 title={t('text.areYouSure')}
                                 visible={visible}
@@ -252,13 +252,14 @@ const UserAddPage = (props) => {
                                 okText={t('text.yes')}
                                 cancelText={t('text.no')}
                             >
-                                <Button type="primary" className="user-add-form-button" loading={isSubmitting} onClick={showPopconfirm}> {t('text.add')} </Button>
+                                <Button type="primary" className="user-add-form-button" loading={isSubmitting}
+                                        onClick={showPopconfirm}> {t('text.add')} </Button>
                             </Popconfirm>
                         </Form.Item>
                     </Form>
                 </div>
             ) : (
-                <Spin size="large" />
+                <Spin size="large"/>
             )}
         </AppLayout>
     );

@@ -1,16 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Layout,Menu ,Dropdown ,Select } from 'antd';
-import { useSelector, useDispatch } from 'react-redux'
-import { logOut, changeCurrentRole } from '../../actions/userActions';
-import { useTranslation } from 'react-i18next';
-import { HomeOutlined, UserAddOutlined, TeamOutlined } from '@ant-design/icons';
+import {Link} from 'react-router-dom';
+import {Dropdown, Layout, Menu, Select} from 'antd';
+import {useDispatch, useSelector} from 'react-redux'
+import {changeCurrentRole, logOut} from '../../actions/userActions';
+import {useTranslation} from 'react-i18next';
+import {HomeOutlined, TeamOutlined, UserAddOutlined} from '@ant-design/icons';
 import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
 import './AppHeader.css'
 
 const Header = Layout.Header;
-const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
+const {ADMINISTRATOR, MODERATOR, CLIENT} = allroles;
 
 const AppHeader = () => {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
@@ -28,11 +28,11 @@ const AppHeader = () => {
 
     const dropdownMenu = (
         <Menu onClick={handleDropdownMenuClick}>
-            <Menu.Item className="dropdown-item" key="profile" >
+            <Menu.Item className="dropdown-item" key="profile">
                 <Link to={`/my_profile`}> {t('navbarLink.yourAccount')} </Link>
             </Menu.Item>
             <Menu.Divider/>
-            <Menu.Item className="dropdown-item" key="logout" >
+            <Menu.Item className="dropdown-item" key="logout">
                 {t('text.logOut')}
             </Menu.Item>
         </Menu>
@@ -48,22 +48,22 @@ const AppHeader = () => {
             case ADMINISTRATOR:
                 items = (
                     <>
-                        <Menu.Item className="menu-left-item" key="users" icon={<TeamOutlined />}>
+                        <Menu.Item className="menu-left-item" key="users" icon={<TeamOutlined/>}>
                             <Link className="menu-link" to={`/users`}> {t('navbarLink.users')} </Link>
                         </Menu.Item>
-                        <Menu.Item className="menu-left-item" key="user-add" icon={<UserAddOutlined />}>
+                        <Menu.Item className="menu-left-item" key="user-add" icon={<UserAddOutlined/>}>
                             <Link className="menu-link" to={`/users/add`}> {t('navbarLink.addUser')} </Link>
                         </Menu.Item>
                     </>
                 )
                 break;
-            
+
             case MODERATOR:
                 break;
-            
+
             case CLIENT:
                 break;
-            
+
             default:
                 break;
         }
@@ -76,23 +76,26 @@ const AppHeader = () => {
     }
 
     return (
-        <Header className="app-header" style={{ padding: '0 0' }}>
+        <Header className="app-header" style={{padding: '0 0'}}>
             {isLoggedIn ? (
-               <Menu className="header-menu" theme="dark" mode="horizontal">
+                <Menu className="header-menu" theme="dark" mode="horizontal">
                     <Menu.Item className="menu-left-item" key="home">
                         <Link className="menu-link" to={`/`}> <HomeOutlined/> </Link>
                     </Menu.Item>
                     {navigationBar()}
                     <Menu.Item className="menu-right-item" key="dropdown">
                         <Dropdown classname="dropdown" overlay={dropdownMenu}>
-                            <p style={{ color: "white" }}> {username} </p>
+                            <p style={{color: "white"}}> {username} </p>
                         </Dropdown>
                     </Menu.Item>
                     <Menu.Item className="menu-right-item" key="select" disabled="true">
-                        <Select defaultValue={currentRole} style={{ width: 140 }} onChange={handleRoleChange}>
-                            {roles.includes(ADMINISTRATOR) ? <Select.Option value={ADMINISTRATOR}> {t('role.admin')} </Select.Option> : null}
-                            {roles.includes(MODERATOR) ? <Select.Option value={MODERATOR}> {t('role.mod')} </Select.Option> : null}
-                            {roles.includes(CLIENT) ? <Select.Option value={CLIENT}> {t('role.client')} </Select.Option> : null}
+                        <Select defaultValue={currentRole} style={{width: 140}} onChange={handleRoleChange}>
+                            {roles.includes(ADMINISTRATOR) ?
+                                <Select.Option value={ADMINISTRATOR}> {t('role.admin')} </Select.Option> : null}
+                            {roles.includes(MODERATOR) ?
+                                <Select.Option value={MODERATOR}> {t('role.mod')} </Select.Option> : null}
+                            {roles.includes(CLIENT) ?
+                                <Select.Option value={CLIENT}> {t('role.client')} </Select.Option> : null}
                         </Select>
                     </Menu.Item>
                 </Menu>
@@ -107,7 +110,7 @@ const AppHeader = () => {
                     <Menu.Item className="menu-right-item" key="signup">
                         <Link className="menu-link" to={`/signup`}> {t('text.signUp')} </Link>
                     </Menu.Item>
-               </Menu>
+                </Menu>
             )}
         </Header>
     );

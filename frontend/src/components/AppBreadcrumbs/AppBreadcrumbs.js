@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Breadcrumb } from 'antd';
-import { useHistory } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import {Link, useHistory} from 'react-router-dom';
+import {Breadcrumb} from 'antd';
+import {useTranslation} from 'react-i18next';
 import 'antd/dist/antd.css';
 import './AppBreadcrumbs.css'
 
@@ -29,7 +28,7 @@ const AppBreadcrumbs = () => {
     const extraBreadcrumbItems = pathSnippets.map((_, index) => {
         const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
         const name = `/${nameSnippets.slice(0, index + 1).join('/')}`;
-     
+
         return (
             <Breadcrumb.Item key={url}>
                 <Link to={url}>{breadcrumbNameMap[name]}</Link>
@@ -45,7 +44,7 @@ const AppBreadcrumbs = () => {
                 <Link to="/"> {t('pageName.home')} </Link>
             </Breadcrumb.Item>
         ].concat(extraBreadcrumbItems)
-    ) : ( 
+    ) : (
         breadcrumbItems = null
     )
 

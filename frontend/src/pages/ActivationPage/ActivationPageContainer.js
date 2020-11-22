@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
 import ActivationPage from './ActivationPageComponent';
-import { activateUserRequest } from '../../utils/api';
+import {activateUserRequest} from '../../utils/api';
 
 
 class ActivationPageContainer extends Component {
     state = {
         activationCode: this.props.match.params.activationCode,
         error: null
-    };  
-    
+    };
+
     componentDidMount() {
-        if(this.state.activationCode) this.activateUser();
+        if (this.state.activationCode) this.activateUser();
     }
 
     activateUser = () => {
         activateUserRequest(this.state.activationCode).then(() => {
-            this.setState({ error: false });
+            this.setState({error: false});
         }).catch(() => {
-            this.setState({ error: true });
+            this.setState({error: true});
         });
     }
 
@@ -27,8 +27,8 @@ class ActivationPageContainer extends Component {
         return (
             <>
                 {this.props.isLoggedIn
-                    ? <Redirect to="/" />
-                    : <ActivationPage error={this.state.error} />
+                    ? <Redirect to="/"/>
+                    : <ActivationPage error={this.state.error}/>
                 }
             </>
         );

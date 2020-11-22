@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Form, Input } from 'antd'
-import { useTranslation } from 'react-i18next';
+import {Button, Form, Input} from 'antd'
+import {useTranslation} from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
 import 'antd/dist/antd.css'
 import './UserPasswordChangePage.css'
@@ -9,7 +9,7 @@ const UserPasswordChangePage = (props) => {
     const [form] = Form.useForm();
     const {t} = useTranslation();
     const isSubmitting = props.isSubmitting;
-    
+
     const onFinish = (values) => {
         const payload = Object.assign({}, values);
         delete payload.confirmNewPassword;
@@ -19,7 +19,7 @@ const UserPasswordChangePage = (props) => {
     return (
         <AppLayout>
             <div className="user-password-change-page-wrapper">
-                <h1 style={{ fontWeight: "bold" }}> {t('pageName.passwordChange')} </h1>
+                <h1 style={{fontWeight: "bold"}}> {t('pageName.passwordChange')} </h1>
                 <Form
                     form={form}
                     layout="vertical"
@@ -71,10 +71,11 @@ const UserPasswordChangePage = (props) => {
                         <Input.Password/>
                     </Form.Item>
 
-                    <Form.Item style={{ marginBottom:"0" }}>
-                        <Button type="primary" htmlType="submit" className="user-password-change-form-button" loading={isSubmitting}> {t('text.changePassword')} </Button>
+                    <Form.Item style={{marginBottom: "0"}}>
+                        <Button type="primary" htmlType="submit" className="user-password-change-form-button"
+                                loading={isSubmitting}> {t('text.changePassword')} </Button>
                     </Form.Item>
-                </Form> 
+                </Form>
             </div>
         </AppLayout>
     );
