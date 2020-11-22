@@ -18,7 +18,7 @@ public interface UserService {
     /**
      * Dodanie nowego użytkownika przez administratora.
      *
-     * @param user użytkownik do dodania
+     * @param user           użytkownik do dodania
      * @param accessLevelIds id poziomów dostępu jakie ma otrzymać dodawany użytkownik
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
@@ -148,9 +148,9 @@ public interface UserService {
     /**
      * Zmienia hasło aktualnie zalogowanego użytkownika.
      *
-     * @param newPassword    nowe hasło
-     * @param currentPassword    obecne hasło
-     * @param authentication obiekt typu {@link Authentication}
+     * @param newPassword     nowe hasło
+     * @param currentPassword obecne hasło
+     * @param authentication  obiekt typu {@link Authentication}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void changePassword(String newPassword, String currentPassword, Authentication authentication) throws ApplicationException;

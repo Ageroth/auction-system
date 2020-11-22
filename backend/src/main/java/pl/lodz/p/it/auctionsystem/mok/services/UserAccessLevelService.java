@@ -33,7 +33,7 @@ public interface UserAccessLevelService {
     /**
      * Metoda modyfikująca poziomy dostępu użytkownika.
      *
-     * @param userId        id użytkownika, któremego poziomy dostępu mają ulec modyfikacji
+     * @param userId         id użytkownika, któremego poziomy dostępu mają ulec modyfikacji
      * @param accessLevelIds id poziomów dostępu, które użytkownik ma posiadać
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */

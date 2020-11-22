@@ -37,7 +37,7 @@ class PasswordResetPageContainer extends Component {
         resetPasswordRequest(this.state.passwordResetCode, payload).then((res) => {
             toast.success(res.data.message, {
                 position: "bottom-right",
-                autoClose: false,
+                autoClose: 3000,
                 closeOnClick: true
             });
             this.props.history.push("/login");

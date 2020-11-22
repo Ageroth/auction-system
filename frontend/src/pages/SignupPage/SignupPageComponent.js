@@ -21,7 +21,7 @@ const SignupPage = (props) => {
         props.onSubmit(payload).then(() => {
             toast.success(t('message.content.activationEmailSent'), {
                 position: "bottom-right",
-                autoClose: false,
+                autoClose: 3000,
                 closeOnClick: true
             });
         }).catch(e => {
