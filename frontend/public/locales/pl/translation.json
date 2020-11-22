@@ -63,11 +63,21 @@
     "add": "Dodaj",
     "areYouSure": "Jesteś pewny?",
     "reset": "Reset",
-    "search": "Szukaj"
+    "search": "Szukaj",
+    "users": "Użytkownicy",
+    "addUser": "Dodaj użytkownika"
   },
   "role": {
     "admin": "Administrator",
     "mod": "Moderator",
     "client": "Klient"
+  },
+  "pathName": {
+    "home": "Strona główna",
+    "myProfile": "Mój profil",
+    "edit": "Edycja",
+    "passwordChange": "Zmiana hasła",
+    "users": "Użytkownicy",
+    "userDetails": "Szczegóły użytkownika"
   }
 }

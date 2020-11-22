@@ -49,10 +49,10 @@ const AppHeader = () => {
                 items = (
                     <>
                         <Menu.Item className="menu-left-item" key="users" icon={<TeamOutlined />}>
-                            <Link className="menu-link" to={`/users`}> Users </Link>
+                            <Link className="menu-link" to={`/users`}> {t('text.users')} </Link>
                         </Menu.Item>
                         <Menu.Item className="menu-left-item" key="user-add" icon={<UserAddOutlined />}>
-                            <Link className="menu-link" to={`/users/add`}> Add user </Link>
+                            <Link className="menu-link" to={`/users/add`}> {t('text.addUser')} </Link>
                         </Menu.Item>
                     </>
                 )

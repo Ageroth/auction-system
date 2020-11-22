@@ -3,6 +3,10 @@
     align-items: stretch;
 }
 
+.app-breadcrumbs {
+    background: white;
+}
+
 .app-content {
     display: flex;
     flex-grow: 1;

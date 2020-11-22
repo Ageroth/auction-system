@@ -1,8 +1,8 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 import { Descriptions, Button, Spin } from 'antd';
 import AppLayout from '../../components/AppLayout';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from "react-router-dom";
 import 'antd/dist/antd.css';
 import './OwnDetailsPage.css'
 

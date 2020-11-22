@@ -63,11 +63,21 @@
     "add": "Dodaj",
     "areYouSure": "Are you sure?",
     "reset": "Reset",
-    "search": "Search"
+    "search": "Search",
+    "users": "Users",
+    "addUser": "Add user"
   },
   "role": {
     "admin": "Administrator",
     "mod": "Moderator",
     "client": "Client"
+  },
+  "pathName": {
+    "home": "Home",
+    "myProfile": "My profile",
+    "edit": "Edit",
+    "passwordChange": "Password change",
+    "users": "Users",
+    "userDetails": "User details"
   }
 }
