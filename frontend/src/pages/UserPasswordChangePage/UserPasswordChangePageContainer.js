@@ -9,7 +9,7 @@ export default class UserPasswordChangePageContainer extends Component {
         super(props);
         this.state = {
             userId: this.props.match.params.userId,
-            isSubmitting: null,
+            isSubmitting: false,
             error: false,
         };  
     }

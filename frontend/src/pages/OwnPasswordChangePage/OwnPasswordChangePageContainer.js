@@ -7,7 +7,7 @@ export default class OwnPasswordChangePageContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isSubmitting: null
+            isSubmitting: false
         };  
     }
 

@@ -58,27 +58,33 @@
     "404": "Strona, której szukasz, nie istnieje (błąd 404)",
     "userDetails": "Szczegóły użytkownika",
     "yourDetails": "Twoje szczegóły",
-    "yourAccount": "Twoje konto",
     "edit": "Edytuj",
     "add": "Dodaj",
     "areYouSure": "Jesteś pewny?",
     "reset": "Reset",
-    "search": "Szukaj",
-    "users": "Użytkownicy",
-    "addUser": "Dodaj użytkownika"
+    "search": "Szukaj"
   },
   "role": {
     "admin": "Administrator",
     "mod": "Moderator",
     "client": "Klient"
   },
-  "pathName": {
+  "navbarLink": {
+    "users": "Użytkownicy",
+    "addUser": "Dodaj użytkownika",
+    "yourAccount": "Twoje konto",
+  },
+  "pageName": {
     "home": "Strona główna",
+    "login": "Logowanie",
+    "signup": "Rejestracja",
+    "passwordReset": "Reset hasła", 
     "myProfile": "Mój profil",
     "edit": "Edycja",
     "passwordChange": "Zmiana hasła",
     "users": "Użytkownicy",
     "userDetails": "Szczegóły użytkownika",
-    "userAdd": "Nowy użytkownik"
+    "userAdd": "Nowy użytkownik",
+    "activation": "Aktywacja"
   }
 }

@@ -17,50 +17,53 @@ const LoginPage = (props) => {
 
     return (
         <AppLayout>
-            <Form
-            layout={'vertical'}
-            name="login_form"
-            className="login-form"
-            onFinish={onFinish}>
-                <Form.Item
-                    label={t('userLabels.username')}
-                    name="username"
-                    rules={[
-                        {
-                            required: true,
-                            message: (t('validation.required'))
-                        }
-                    ]}
-                >
-                    <Input prefix={<UserOutlined  className="site-form-item-icon"/>} />
-                </Form.Item>
+            <div className="login-page-wrapper">
+                <h1 style={{ fontWeight: "bold" }}> {t('pageName.login')} </h1>
+                <Form
+                layout={'vertical'}
+                name="login_form"
+                className="login-form"
+                onFinish={onFinish}>
+                    <Form.Item
+                        label={t('userLabels.username')}
+                        name="username"
+                        rules={[
+                            {
+                                required: true,
+                                message: (t('validation.required'))
+                            }
+                        ]}
+                    >
+                        <Input prefix={<UserOutlined  className="site-form-item-icon"/>} />
+                    </Form.Item>
 
-                <Form.Item
-                    label={t('userLabels.password')}
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: (t('validation.required'))
-                        }
-                    ]}
-                >
-                    <Input.Password prefix={<LockOutlined className="site-form-item-icon"/>} />
-                </Form.Item>
+                    <Form.Item
+                        label={t('userLabels.password')}
+                        name="password"
+                        rules={[
+                            {
+                                required: true,
+                                message: (t('validation.required'))
+                            }
+                        ]}
+                    >
+                        <Input.Password prefix={<LockOutlined className="site-form-item-icon"/>} />
+                    </Form.Item>
 
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button" disabled={isSubmitting}>
-                        {t('text.logIn')}
-                    </Button>
-                    <p className="sign-up"> 
-                        {t('text.noAccount')} 
-                        <Link style={{ color: "#1890ff" }} to={'/signup'}> {t('text.signUp')} </Link> 
-                    </p>
-                    <p className="forgot-password"> 
-                        <Link style={{ color: "#1890ff" }} to={'/password_reset'}> {t('text.forgotPassword')} </Link> 
-                    </p>
-                </Form.Item>
-            </Form>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" className="login-form-button" loading={isSubmitting}>
+                            {t('text.logIn')}
+                        </Button>
+                        <p className="sign-up"> 
+                            {t('text.noAccount')} 
+                            <Link style={{ color: "#1890ff" }} to={'/signup'}> {t('text.signUp')} </Link> 
+                        </p>
+                        <p className="forgot-password"> 
+                            <Link style={{ color: "#1890ff" }} to={'/password_reset'}> {t('text.forgotPassword')} </Link> 
+                        </p>
+                    </Form.Item>
+                </Form>
+            </div>
         </AppLayout>
     );
 }

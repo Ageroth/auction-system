@@ -1,0 +1,18 @@
+.my-details-page-wrapper {
+    width: 450px;
+    padding: 20px;
+    border-top: 1px solid #eaecef;
+    border-radius: 5px;
+    border: 1px solid #eaecef;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.buttons button {
+    margin-right: 5px;
+}

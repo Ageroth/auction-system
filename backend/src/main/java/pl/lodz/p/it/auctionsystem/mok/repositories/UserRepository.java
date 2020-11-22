@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @param email email użytkownika
      * @return true jeśli istnieje, w przeciwnym wypadku false
      */
-    boolean existsByEmail(String email);
+    boolean existsByEmailIgnoreCase(String email);
     
     /**
      * Wyciąga z bazy danych encję {@link User} o podanej nazwie użytkownika.
@@ -45,7 +45,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @param email email użytkownika
      * @return obiekt encji {@link User} opakowany w {@link Optional}
      */
-    Optional<User> findByEmail(String email);
+    Optional<User> findByEmailIgnoreCase(String email);
     
     /**
      * Wyciąga z bazy danych encję {@link User} o podanym kodzie aktywacyjnym.

@@ -54,206 +54,209 @@ const UserAddPage = (props) => {
     return (
         <AppLayout> 
             {accessLevels ? (
-                <Form
-                    form={form}
-                    layout="vertical"
-                    name="user_add_form"
-                    className="user-add-form"
-                    onFinish={onFinish}
-                    scrollToFirstError
-                >
-                    <Form.Item
-                        label={t('userLabels.username')}
-                        name="username"
-                        rules={[
-                            {
-                                required: true,
-                                message: t('validation.required')
-                            },
-                            {
-                                pattern: new RegExp("^[a-zA-Z0-9]*$"),
-                                message: t('validation.regex.username')
-                            },
-                            {
-                                max: 32,
-                                message: t('validation.max32chars')
-                            },
-                            {
-                                validator: validateUsernameAvailability
-                            }
-                        ]}
+                <div className="user-add-page-wrapper">
+                    <h1 style={{ fontWeight: "bold" }}> {t('pageName.userAdd')} </h1>
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        name="user_add_form"
+                        className="user-add-form"
+                        onFinish={onFinish}
+                        scrollToFirstError
                     >
-                        <Input/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label={t('userLabels.firstName')}
-                        name="firstName"
-                        rules={[
-                            {
-                                required: true,
-                                message: t('validation.required')
-                            },
-                            {
-                                pattern: new RegExp("^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżŻ]*$"),
-                                message: t('validation.regex.name')
-                            },
-                            {
-                                max: 32,
-                                message: t('validation.max32chars')
-                            }
-                        ]}
-                    >
-                        <Input/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label={t('userLabels.lastName')}
-                        name="lastName"
-                        rules={[
-                            {
-                                required: true,
-                                message: t('validation.required')
-                            },
-                            {
-                                pattern: new RegExp("^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżŻ]*$"),
-                                message: t('validation.regex.name')
-                            },
-                            {
-                                max: 32,
-                                message: t('validation.max32chars')
-                            }
-                        ]}
-                    >
-                        <Input/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label={t('userLabels.phoneNumber')}
-                        name="phoneNumber"
-                        rules={[
-                            {
-                                required: true,
-                                message: t('validation.required')
-                            },
-                            {
-                                pattern: new RegExp("^[0-9]{9,10}$"),
-                                message: t('validation.regex.phoneNumber')
-                            }
-                        ]} 
-                    >
-                        <Input/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label={t('userLabels.email')}
-                        name="email"
-                        rules={[
-                            {
-                                required: true,
-                                message: t('validation.required')
-                            },
-                            {
-                                type: "email",
-                                message: t('validation.regex.email')
-                            },
-                            {
-                                max: 32,
-                                message: t('validation.max32chars')
-                            },
-                            {
-                                validator: validateEmailAvailability
-                            }
-                        ]}
-                    >
-                        <Input/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label={t('userLabels.password')}
-                        name="password"
-                        hasFeedback
-                        rules={[
-                            {
-                                required: true,
-                                message: t('validation.required')
-                            },
-                            {
-                                pattern: new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,}$"),
-                                message: t('validation.regex.password')
-                            },
-                            {
-                                max: 64,
-                                message: t('validation.max64chars')
-                            }
-                        ]}
-                    >
-                        <Input.Password/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label={t('userLabels.passwordConfirmation')}
-                        name="confirmPassword"
-                        dependencies={['password']}
-                        hasFeedback
-                        rules={[
-                            {
-                                required: true,
-                                message: t('validation.required')
-                            },
-                            ({getFieldValue}) => ({
-                                validator(rule, value) {
-                                    if (!value || getFieldValue('password') === value) {
-                                        return Promise.resolve()
-                                    } else return Promise.reject(t('validation.passwordMistmatch'))
+                        <Form.Item
+                            label={t('userLabels.username')}
+                            name="username"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: t('validation.required')
+                                },
+                                {
+                                    pattern: new RegExp("^[a-zA-Z0-9]*$"),
+                                    message: t('validation.regex.username')
+                                },
+                                {
+                                    max: 32,
+                                    message: t('validation.max32chars')
+                                },
+                                {
+                                    validator: validateUsernameAvailability
                                 }
-                            })
-                        ]}
-                    >
-                        <Input.Password/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label={t('userLabels.roles')}
-                        name="accessLevelIds"
-                        rules={[
-                            {
-                                required: true,
-                                message: t('validation.required')
-                            }
-                        ]} 
-                    >
-                        <Checkbox.Group>
-                            {accessLevels.map(accessLevel => {
-                                let text;
-
-                                if (accessLevel.name === ADMINISTRATOR) 
-                                    text = t('role.admin'); 
-                                else if (accessLevel.name === MODERATOR)
-                                    text = t('role.mod');
-                                else if (accessLevel.name === CLIENT)
-                                    text =  t('role.client')
-
-                                return (
-                                    <Checkbox key={accessLevel.id} value={accessLevel.id}> {text} </Checkbox>
-                                );
-                            })} 
-                        </Checkbox.Group>
-                    </Form.Item>
-
-                    <Form.Item>
-                        <Popconfirm
-                            title={t('text.areYouSure')}
-                            visible={visible}
-                            onConfirm={handleOk}
-                            onCancel={handleCancel}
-                            okText={t('text.yes')}
-                            cancelText={t('text.no')}
+                            ]}
                         >
-                            <Button type="primary" className="user-add-form-button" loading={isSubmitting} onClick={showPopconfirm}> {t('text.add')} </Button>
-                        </Popconfirm>
-                    </Form.Item>
-                </Form>
+                            <Input/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label={t('userLabels.firstName')}
+                            name="firstName"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: t('validation.required')
+                                },
+                                {
+                                    pattern: new RegExp("^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżŻ]*$"),
+                                    message: t('validation.regex.name')
+                                },
+                                {
+                                    max: 32,
+                                    message: t('validation.max32chars')
+                                }
+                            ]}
+                        >
+                            <Input/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label={t('userLabels.lastName')}
+                            name="lastName"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: t('validation.required')
+                                },
+                                {
+                                    pattern: new RegExp("^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżŻ]*$"),
+                                    message: t('validation.regex.name')
+                                },
+                                {
+                                    max: 32,
+                                    message: t('validation.max32chars')
+                                }
+                            ]}
+                        >
+                            <Input/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label={t('userLabels.phoneNumber')}
+                            name="phoneNumber"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: t('validation.required')
+                                },
+                                {
+                                    pattern: new RegExp("^[0-9]{9,10}$"),
+                                    message: t('validation.regex.phoneNumber')
+                                }
+                            ]} 
+                        >
+                            <Input/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label={t('userLabels.email')}
+                            name="email"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: t('validation.required')
+                                },
+                                {
+                                    type: "email",
+                                    message: t('validation.regex.email')
+                                },
+                                {
+                                    max: 32,
+                                    message: t('validation.max32chars')
+                                },
+                                {
+                                    validator: validateEmailAvailability
+                                }
+                            ]}
+                        >
+                            <Input/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label={t('userLabels.password')}
+                            name="password"
+                            hasFeedback
+                            rules={[
+                                {
+                                    required: true,
+                                    message: t('validation.required')
+                                },
+                                {
+                                    pattern: new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,}$"),
+                                    message: t('validation.regex.password')
+                                },
+                                {
+                                    max: 64,
+                                    message: t('validation.max64chars')
+                                }
+                            ]}
+                        >
+                            <Input.Password/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label={t('userLabels.passwordConfirmation')}
+                            name="confirmPassword"
+                            dependencies={['password']}
+                            hasFeedback
+                            rules={[
+                                {
+                                    required: true,
+                                    message: t('validation.required')
+                                },
+                                ({getFieldValue}) => ({
+                                    validator(rule, value) {
+                                        if (!value || getFieldValue('password') === value) {
+                                            return Promise.resolve()
+                                        } else return Promise.reject(t('validation.passwordMistmatch'))
+                                    }
+                                })
+                            ]}
+                        >
+                            <Input.Password/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label={t('userLabels.roles')}
+                            name="accessLevelIds"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: t('validation.required')
+                                }
+                            ]} 
+                        >
+                            <Checkbox.Group>
+                                {accessLevels.map(accessLevel => {
+                                    let text;
+
+                                    if (accessLevel.name === ADMINISTRATOR) 
+                                        text = t('role.admin'); 
+                                    else if (accessLevel.name === MODERATOR)
+                                        text = t('role.mod');
+                                    else if (accessLevel.name === CLIENT)
+                                        text =  t('role.client')
+
+                                    return (
+                                        <Checkbox key={accessLevel.id} value={accessLevel.id}> {text} </Checkbox>
+                                    );
+                                })} 
+                            </Checkbox.Group>
+                        </Form.Item>
+
+                        <Form.Item style={{ marginBottom: '0' }}>
+                            <Popconfirm
+                                title={t('text.areYouSure')}
+                                visible={visible}
+                                onConfirm={handleOk}
+                                onCancel={handleCancel}
+                                okText={t('text.yes')}
+                                cancelText={t('text.no')}
+                            >
+                                <Button type="primary" className="user-add-form-button" loading={isSubmitting} onClick={showPopconfirm}> {t('text.add')} </Button>
+                            </Popconfirm>
+                        </Form.Item>
+                    </Form>
+                </div>
             ) : (
                 <Spin size="large" />
             )}

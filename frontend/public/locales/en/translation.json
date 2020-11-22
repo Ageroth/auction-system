@@ -58,27 +58,33 @@
     "404": "The page you are looking for doesn't exist (error 404)",
     "userDetails": "User details",
     "yourDetails": "Your details",
-    "yourAccount": "Your account",
     "edit": "Edit",
-    "add": "Dodaj",
+    "add": "Add",
     "areYouSure": "Are you sure?",
     "reset": "Reset",
-    "search": "Search",
-    "users": "Users",
-    "addUser": "Add user"
+    "search": "Search"
   },
   "role": {
     "admin": "Administrator",
     "mod": "Moderator",
     "client": "Client"
   },
-  "pathName": {
+  "navbarLink": {
+    "users": "Users",
+    "addUser": "Add user",
+    "yourAccount": "Your account"
+  },
+  "pageName": {
     "home": "Home",
+    "login": "Login",
+    "signup": "Signup",
+    "passwordReset": "Password reset", 
     "myProfile": "My profile",
     "edit": "Edit",
     "passwordChange": "Password change",
     "users": "Users",
     "userDetails": "User details",
-    "userAdd": "New user"
+    "userAdd": "New user",
+    "activation": "Activation"
   }
 }

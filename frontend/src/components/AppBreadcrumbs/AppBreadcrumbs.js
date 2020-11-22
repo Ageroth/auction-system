@@ -10,34 +10,39 @@ const AppBreadcrumbs = () => {
     const {t} = useTranslation();
     const history = useHistory();
     const breadcrumbNameMap = {
-        '/users': t('pathName.users'),
-        '/users/add': t('pathName.userAdd'),
-        '/users/details': t('pathName.userDetails'),
-        '/users/details/edit': t('pathName.edit'),
-        '/users/details/password_change': t('pathName.passwordChange'),
-        '/my_profile': t('pathName.myProfile'),
-        '/my_profile/edit': t('pathName.edit'),
-        '/my_profile/password_change': t('pathName.passwordChange')
+        '/users': t('pageName.users'),
+        '/users/add': t('pageName.userAdd'),
+        '/users/details': t('pageName.userDetails'),
+        '/users/details/edit': t('pageName.edit'),
+        '/users/details/password_change': t('pageName.passwordChange'),
+        '/my_profile': t('pageName.myProfile'),
+        '/my_profile/edit': t('pageName.edit'),
+        '/my_profile/password_change': t('pageName.passwordChange'),
+        '/login': t('pageName.login'),
+        '/signup': t('pageName.signup'),
+        '/password_reset': t('pageName.passwordReset'),
+        '/activation': t('pageName.activation'),
     };
     const pathSnippets = history.location.pathname.split('/').filter(i => i);
     const nameSnippets = pathSnippets.map(path => isNaN(path) ? path : "details");
-
+    console.log(nameSnippets)
     const extraBreadcrumbItems = pathSnippets.map((_, index) => {
         const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
         const name = `/${nameSnippets.slice(0, index + 1).join('/')}`;
+     
         return (
-          <Breadcrumb.Item key={url}>
-            <Link to={url}>{breadcrumbNameMap[name]}</Link>
-          </Breadcrumb.Item>
+            <Breadcrumb.Item key={url}>
+                <Link to={url}>{breadcrumbNameMap[name]}</Link>
+            </Breadcrumb.Item>
         );
     });
 
     let breadcrumbItems;
-    
+
     extraBreadcrumbItems.length > 0 ? (
         breadcrumbItems = [
             <Breadcrumb.Item key="home">
-                <Link to="/"> {t('pathName.home')} </Link>
+                <Link to="/"> {t('pageName.home')} </Link>
             </Breadcrumb.Item>
         ].concat(extraBreadcrumbItems)
     ) : ( 

@@ -29,7 +29,7 @@ const AppHeader = () => {
     const dropdownMenu = (
         <Menu onClick={handleDropdownMenuClick}>
             <Menu.Item className="dropdown-item" key="profile" >
-                <Link to={`/my_profile`}> {t('text.yourAccount')} </Link>
+                <Link to={`/my_profile`}> {t('navbarLink.yourAccount')} </Link>
             </Menu.Item>
             <Menu.Divider/>
             <Menu.Item className="dropdown-item" key="logout" >
@@ -49,10 +49,10 @@ const AppHeader = () => {
                 items = (
                     <>
                         <Menu.Item className="menu-left-item" key="users" icon={<TeamOutlined />}>
-                            <Link className="menu-link" to={`/users`}> {t('text.users')} </Link>
+                            <Link className="menu-link" to={`/users`}> {t('navbarLink.users')} </Link>
                         </Menu.Item>
                         <Menu.Item className="menu-left-item" key="user-add" icon={<UserAddOutlined />}>
-                            <Link className="menu-link" to={`/users/add`}> {t('text.addUser')} </Link>
+                            <Link className="menu-link" to={`/users/add`}> {t('navbarLink.addUser')} </Link>
                         </Menu.Item>
                     </>
                 )
