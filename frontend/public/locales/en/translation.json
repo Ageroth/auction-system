@@ -78,6 +78,7 @@
     "edit": "Edit",
     "passwordChange": "Password change",
     "users": "Users",
-    "userDetails": "User details"
+    "userDetails": "User details",
+    "userAdd": "New user"
   }
 }
