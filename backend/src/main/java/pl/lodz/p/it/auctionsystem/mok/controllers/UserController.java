@@ -215,21 +215,6 @@ public class UserController {
     }
 
     /**
-     * Zwraca szczegóły naszego konta.
-     *
-     * @param authentication obiekt typu {@link Authentication}
-     * @return HTTP status 200 z obiektem typu {@link OwnDetailsDto}
-     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
-     */
-    @GetMapping("/me")
-    public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
-        User user = userService.getCurrentUser(authentication);
-        OwnDetailsDto ownDetailsDto = modelMapper.map(user, OwnDetailsDto.class);
-
-        return new ResponseEntity<>(ownDetailsDto, HttpStatus.OK);
-    }
-
-    /**
      * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie użytkownika.
      *
      * @param username nazwa użytkownika
@@ -250,6 +235,21 @@ public class UserController {
     @GetMapping("/email-availability")
     public ResponseEntity<?> checkEmailAvailability(@RequestParam(value = "email") String email) {
         return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByEmail(email)), HttpStatus.OK);
+    }
+
+    /**
+     * Zwraca szczegóły naszego konta.
+     *
+     * @param authentication obiekt typu {@link Authentication}
+     * @return HTTP status 200 z obiektem typu {@link OwnDetailsDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @GetMapping("/me")
+    public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
+        User user = userService.getCurrentUser(authentication);
+        OwnDetailsDto ownDetailsDto = modelMapper.map(user, OwnDetailsDto.class);
+
+        return new ResponseEntity<>(ownDetailsDto, HttpStatus.OK);
     }
 
     /**

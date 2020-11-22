@@ -64,17 +64,6 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public List<UserAccessLevel> getUserAccessLevelsByUserId(Long userId) {
-        return userAccessLevelRepository.findByUser_Id(userId);
-    }
-
-    @Override
-    public void deleteUserAccessLevel(Long userAccessLevelId) {
-
-    }
-
-    @Override
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void deleteUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException {
         String userAccessLevelNotFoundMessage = messageService.getMessage("exception.userAccessLevelNotFound");
         UserAccessLevel userAccessLevel = userAccessLevelRepository.findByUser_IdAndAccessLevel_Id(userId,

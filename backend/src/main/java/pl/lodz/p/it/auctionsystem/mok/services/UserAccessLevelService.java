@@ -3,7 +3,6 @@ package pl.lodz.p.it.auctionsystem.mok.services;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
-import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
 public interface UserAccessLevelService {
 
     /**
-     * Metoda przypisująca użytkownikowi poziom dostępu
+     * Metoda przypisująca użytkownikowi poziom dostępu.
      *
      * @param userId        id użytkownika, któremu ma zostać przypisany poziom dostępu
      * @param accessLevelId id poziomu dostępu do przypisania
@@ -23,21 +22,20 @@ public interface UserAccessLevelService {
     void addUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException;
 
     /**
-     * Metoda, która zwraca wszystkie poziomy dostępu użytkownika o podanym id.
+     * Metoda usuwająca poziom dostępu użytkownika.
      *
-     * @param userId id użytkownika
-     * @return lista poziomów dostępu
+     * @param userId        id użytkownika, któremu ma zostać odjęty poziom dostępu
+     * @param accessLevelId id poziomu dostępu do usunięcia
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    List<UserAccessLevel> getUserAccessLevelsByUserId(Long userId);
-
-    /**
-     * Metoda, która odbiera użytkownikowi poziom dostępu o podanym id.
-     *
-     * @param userAccessLevelId id poziomu dostępu
-     */
-    void deleteUserAccessLevel(Long userAccessLevelId);
-
     void deleteUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException;
 
+    /**
+     * Metoda modyfikująca poziomy dostępu użytkownika.
+     *
+     * @param userId        id użytkownika, któremego poziomy dostępu mają ulec modyfikacji
+     * @param accessLevelIds id poziomów dostępu, które użytkownik ma posiadać
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     void modifyUserAccessLevels(Long userId, List<Long> accessLevelIds) throws ApplicationException;
 }
