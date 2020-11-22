@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * DTO z informacją o dostępności.
+ * DTO reprezentujące informację o dostępności adresu email lub nazwy użytkownika.
  */
 @AllArgsConstructor
 @NoArgsConstructor

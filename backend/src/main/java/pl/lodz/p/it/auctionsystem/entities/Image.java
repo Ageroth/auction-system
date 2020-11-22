@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "image")
@@ -22,10 +23,12 @@ public class Image extends BaseEntity {
     
     @JoinColumn(name = "item_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
+    @NotNull
     private Item item;
     
     @Column(name = "lob", nullable = false, updatable = false)
     @Lob
     @Type(type = "org.hibernate.type.BinaryType")
+    @NotNull
     private byte[] lob;
 }

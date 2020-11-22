@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import OwnPasswordChangePage from './OwnPasswordChangePageComponent';
-import { changeOwnPasswordRequest } from '../../utils/api';
-import { toast } from 'react-toastify';
+import {changeOwnPasswordRequest} from '../../utils/api';
+import {toast} from 'react-toastify';
 
 export default class OwnPasswordChangePageContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isSubmitting: null
-        };  
+            isSubmitting: false
+        };
     }
 
     handleOwnPasswordChange = (payload) => {
-        this.setState({ isSubmitting: true });
+        this.setState({isSubmitting: true});
         changeOwnPasswordRequest(payload).then(res => {
-            this.setState({ isSubmitting: false });
+            this.setState({isSubmitting: false});
             this.props.history.goBack();
             toast.success(res.data.message, {
                 position: "bottom-right",
@@ -22,7 +22,7 @@ export default class OwnPasswordChangePageContainer extends Component {
                 closeOnClick: true
             });
         }).catch(e => {
-            this.setState({ isSubmitting: false });
+            this.setState({isSubmitting: false});
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -35,7 +35,7 @@ export default class OwnPasswordChangePageContainer extends Component {
         const onSubmit = this.handleOwnPasswordChange;
         const isSubmitting = this.state.isSubmitting;
         return (
-            <OwnPasswordChangePage onSubmit={onSubmit} isSubmitting={isSubmitting} />
+            <OwnPasswordChangePage onSubmit={onSubmit} isSubmitting={isSubmitting}/>
         );
     }
 }

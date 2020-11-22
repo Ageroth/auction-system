@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class Item extends BaseEntity {
     
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "item")
+    @NotNull
     Set<Image> images = new HashSet<>();
     
     @Id
@@ -27,12 +29,15 @@ public class Item extends BaseEntity {
     private Long id;
     
     @Column(name = "name", table = "item", nullable = false, updatable = false, length = 32)
+    @NotNull
     private String name;
     
     @Column(name = "starting_price", table = "item", nullable = false, updatable = false)
+    @NotNull
     private BigDecimal startingPrice;
     
     @Column(name = "description", table = "item", nullable = false, length = 4096)
     @Setter
+    @NotNull
     private String description;
 }

@@ -25,7 +25,7 @@ export function checkEmailAvailabilityRequest(value) {
 }
 
 export function activateUserRequest(value) {
-    return axios.post('/users/me/activation' + value);
+    return axios.post(`/users/me/activation/${value}`);
 }
 
 export function sendPasswordResetEmailRequest(payload) {
@@ -33,13 +33,13 @@ export function sendPasswordResetEmailRequest(payload) {
 }
 
 export function resetPasswordRequest(value, payload) {
-    return axios.post('/users/me/password-reset' + value, JSON.stringify(payload));
+    return axios.post(`/users/me/password-reset/${value}`, JSON.stringify(payload));
 }
 
 export function getUsersRequest(values) {
     let activationStatus;
     let searchQuery;
-    values.activated ?  activationStatus = values.activated[0] : activationStatus = null;
+    values.activated ? activationStatus = values.activated[0] : activationStatus = null;
     values.lastName ? searchQuery = values.lastName[0] : searchQuery = null;
 
     return axios.get('/users', {
@@ -58,7 +58,7 @@ export function addUserRequest(payload) {
 }
 
 export function getUserDetailsRequest(value) {
-    return axios.get('/users/' + value);
+    return axios.get(`/users/${value}`);
 }
 
 export function changeUserPasswordRequest(value, payload) {

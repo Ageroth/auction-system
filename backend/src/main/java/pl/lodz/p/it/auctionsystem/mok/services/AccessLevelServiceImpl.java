@@ -13,14 +13,14 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
 public class AccessLevelServiceImpl implements AccessLevelService {
-    
+
     private final AccessLevelRepository accessLevelRepository;
-    
+
     @Autowired
     public AccessLevelServiceImpl(AccessLevelRepository accessLevelRepository) {
         this.accessLevelRepository = accessLevelRepository;
     }
-    
+
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public List<AccessLevel> getAllAccessLevels() {

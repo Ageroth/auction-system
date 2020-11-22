@@ -1,15 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Table, Tag, Input, Space, Button } from 'antd';
+import {Link, useHistory} from 'react-router-dom';
+import {Button, Input, Space, Table, Tag} from 'antd';
 import AppLayout from '../../components/AppLayout'
-import { useTranslation } from 'react-i18next';
-import { useHistory } from "react-router-dom";
+import {useTranslation} from 'react-i18next';
 import allroles from '../../utils/allroles'
-import { SearchOutlined } from '@ant-design/icons';
+import {SearchOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css'
 import './UserListPage.css'
 
-const { ADMINISTRATOR, MODERATOR, CLIENT } = allroles;
+const {ADMINISTRATOR, MODERATOR, CLIENT} = allroles;
 
 const UserListPage = (props) => {
     const {t} = useTranslation();
@@ -20,38 +19,38 @@ const UserListPage = (props) => {
     }
 
     const getColumnSearchProps = () => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-            <div style={{ padding: 8 }}>
+        filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
+            <div style={{padding: 8}}>
                 <Input
                     placeholder={t('text.search')}
                     value={selectedKeys[0]}
                     onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                     onPressEnter={() => handleSearch(selectedKeys, confirm)}
-                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                    style={{width: 188, marginBottom: 8, display: 'block'}}
                 />
                 <Space>
                     <Button
                         type="primary"
                         onClick={() => handleSearch(selectedKeys, confirm)}
-                        icon={<SearchOutlined />}
+                        icon={<SearchOutlined/>}
                         size="small"
-                        style={{ width: 90 }}
+                        style={{width: 90}}
                     >
                         {t('text.search')}
                     </Button>
-                    <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+                    <Button onClick={() => handleReset(clearFilters)} size="small" style={{width: 90}}>
                         {t('text.reset')}
                     </Button>
                 </Space>
             </div>
         ),
-        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        filterIcon: filtered => <SearchOutlined style={{color: filtered ? '#1890ff' : undefined}}/>,
     });
 
     const handleSearch = (selectedKeys, confirm) => {
         confirm();
-      };
-    
+    };
+
     const handleReset = (clearFilters) => {
         clearFilters();
     };
@@ -70,7 +69,8 @@ const UserListPage = (props) => {
             width: '20%',
             sorter: true,
             ...getColumnSearchProps(),
-            render: (text, record) => <Link style={{ color: "#1890ff" }} to={`/users/${record.id}`}> {record.firstName} {record.lastName} </Link>
+            render: (text, record) => <Link style={{color: "#1890ff"}}
+                                            to={`/users/${record.id}`}> {record.firstName} {record.lastName} </Link>
         },
         {
             title: t('userLabels.username'),
@@ -102,14 +102,12 @@ const UserListPage = (props) => {
                         if (userAccessLevelName === ADMINISTRATOR) {
                             color = 'volcano';
                             value = t('role.admin');
-                        }
-                        else if (userAccessLevelName === MODERATOR) {
+                        } else if (userAccessLevelName === MODERATOR) {
                             color = 'green';
                             value = t('role.mod');
-                        }
-                        else if (userAccessLevelName === CLIENT) {
+                        } else if (userAccessLevelName === CLIENT) {
                             color = 'geekblue';
-                            value =  t('role.client');
+                            value = t('role.client');
                         }
 
                         return (
@@ -126,8 +124,8 @@ const UserListPage = (props) => {
             dataIndex: 'activated',
             key: 'activated',
             filters: [
-                { text: t('text.yes'), value: true },
-                { text: t('text.no'), value: false }
+                {text: t('text.yes'), value: true},
+                {text: t('text.no'), value: false}
             ],
             filterMultiple: false,
             render: activated => activated ? t('text.yes') : t('text.no'),
@@ -141,8 +139,8 @@ const UserListPage = (props) => {
             pagination,
             ...filters
         })
-      };
-    
+    };
+
     return (
         <AppLayout>
             <div className="user-list-wrapper">

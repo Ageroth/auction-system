@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
             throw new ValueNotUniqueException(usernameNotUniqueMessage);
         }
 
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsByEmailIgnoreCase(user.getEmail())) {
             String emailNotUnique = messageService.getMessage("exception.emailNotUnique");
 
             throw new ValueNotUniqueException(emailNotUnique);
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("permitAll()")
     public Boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return userRepository.existsByEmailIgnoreCase(email);
     }
 
     @Override
@@ -202,7 +202,7 @@ public class UserServiceImpl implements UserService {
     public void sendPasswordResetEmail(String email) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.emailInvalid");
         User userFromRepository =
-                userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepository.findByEmailIgnoreCase(email).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordResetCode = UUID.randomUUID().toString().replace("-", "");
 
         userFromRepository.setPasswordResetCode(passwordResetCode);

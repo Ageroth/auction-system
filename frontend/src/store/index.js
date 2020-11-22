@@ -1,7 +1,7 @@
-import { applyMiddleware, createStore } from 'redux';
-import { persistReducer, persistStore } from 'redux-persist';
+import {applyMiddleware, createStore} from 'redux';
+import {persistReducer, persistStore} from 'redux-persist';
 import thunk from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension'
+import {composeWithDevTools} from 'redux-devtools-extension'
 
 import rootReducer from './combinedReducers';
 import storage from 'redux-persist/lib/storage';

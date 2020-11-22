@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import UserDetailsEditPage from './UserDetailsEditPageComponent';
 import NotFoundPage from '../NotFoundPage'
-import { toast } from 'react-toastify';
-import { getUserDetailsRequest, updateUserDetailsRequest, getAllAccessLevelsRequest } from '../../utils/api';
+import {toast} from 'react-toastify';
+import {getAllAccessLevelsRequest, getUserDetailsRequest, updateUserDetailsRequest} from '../../utils/api';
 
 export default class UserDetailsEditPageContainer extends Component {
     constructor(props) {
@@ -13,9 +13,9 @@ export default class UserDetailsEditPageContainer extends Component {
             accessLevels: [],
             isSubmitting: false,
             error: false
-        };  
-    } 
-    
+        };
+    }
+
     componentDidMount() {
         this.getUserDetails();
         this.getAllAccessLevels();
@@ -23,7 +23,7 @@ export default class UserDetailsEditPageContainer extends Component {
 
     getAllAccessLevels = () => {
         getAllAccessLevelsRequest().then(res => {
-            this.setState({ accessLevels: res.data });
+            this.setState({accessLevels: res.data});
         }).catch(e => {
             toast.error(e.response.data.message, {
                 position: "bottom-right",
@@ -35,9 +35,9 @@ export default class UserDetailsEditPageContainer extends Component {
 
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).then(res => {
-            this.setState({ userDetails: res.data });
+            this.setState({userDetails: res.data});
         }).catch(e => {
-            this.setState({ error: true });
+            this.setState({error: true});
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -47,9 +47,9 @@ export default class UserDetailsEditPageContainer extends Component {
     }
 
     handleEdit = (payload) => {
-        this.setState({ isSubmitting: true });
+        this.setState({isSubmitting: true});
         updateUserDetailsRequest(this.state.userId, payload).then(res => {
-            this.setState({ isSubmitting: false });
+            this.setState({isSubmitting: false});
             toast.success(res.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -57,7 +57,7 @@ export default class UserDetailsEditPageContainer extends Component {
             });
             this.props.history.goBack();
         }).catch(e => {
-            this.setState({ isSubmitting: false });
+            this.setState({isSubmitting: false});
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -72,7 +72,9 @@ export default class UserDetailsEditPageContainer extends Component {
         const isSubmitting = this.state.isSubmitting;
         return (
             <>
-                {this.state.error ? <NotFoundPage/> : <UserDetailsEditPage userDetails={userDetails} accessLevels={accessLevels} onSubmit={this.handleEdit} isSubmitting={isSubmitting} />}
+                {this.state.error ? <NotFoundPage/> :
+                    <UserDetailsEditPage userDetails={userDetails} accessLevels={accessLevels}
+                                         onSubmit={this.handleEdit} isSubmitting={isSubmitting}/>}
             </>
         );
     }

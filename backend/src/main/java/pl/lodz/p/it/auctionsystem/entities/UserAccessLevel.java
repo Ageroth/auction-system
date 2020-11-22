@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "user_access_level", uniqueConstraints = @UniqueConstraint(columnNames = {"access_level_id", "user_id"}))
@@ -22,11 +23,13 @@ public class UserAccessLevel extends BaseEntity {
     
     @JoinColumn(name = "access_level_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
+    @NotNull
     private AccessLevel accessLevel;
     
     @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
+    @NotNull
     private User user;
     
     public UserAccessLevel(User user, AccessLevel accessLevel) {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Descriptions, Checkbox, Button, Spin } from 'antd';
+import {Button, Checkbox, Descriptions, Spin} from 'antd';
 import AppLayout from '../../components/AppLayout';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from "react-router-dom";
+import {useTranslation} from 'react-i18next';
+import {useHistory} from "react-router-dom";
 import 'antd/dist/antd.css';
 import './UserDetailsPage.css'
 
@@ -33,27 +33,31 @@ const UserDetailsPage = (props) => {
                 <div className="user-details-page-wrapper">
                     <Descriptions className="table" title={t('text.userDetails')} column={1} bordered>
                         <Descriptions.Item label={t('userLabels.username')}> {userDetails.username} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.firstName')}> {userDetails.firstName} </Descriptions.Item>
+                        <Descriptions.Item
+                            label={t('userLabels.firstName')}> {userDetails.firstName} </Descriptions.Item>
                         <Descriptions.Item label={t('userLabels.lastName')}> {userDetails.lastName} </Descriptions.Item>
                         <Descriptions.Item label={t('userLabels.email')}> {userDetails.email} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.phoneNumber')}> {userDetails.phoneNumber} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.activated')}> {userDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.created')}> {formatDate(userDetails.createdAt)} </Descriptions.Item>
+                        <Descriptions.Item
+                            label={t('userLabels.phoneNumber')}> {userDetails.phoneNumber} </Descriptions.Item>
+                        <Descriptions.Item
+                            label={t('userLabels.activated')}> {userDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
+                        <Descriptions.Item
+                            label={t('userLabels.created')}> {formatDate(userDetails.createdAt)} </Descriptions.Item>
                         <Descriptions.Item label={t('userLabels.roles')}>
                             {userDetails.accessLevelIds.map(accessLevelId => {
                                 let value;
 
-                                if (accessLevelId === 1) 
+                                if (accessLevelId === 1)
                                     value = t('role.admin');
                                 else if (accessLevelId === 2)
                                     value = t('role.mod');
                                 else if (accessLevelId === 3)
-                                    value =  t('role.client')
+                                    value = t('role.client')
 
                                 return (
                                     <Checkbox key={value} indeterminate="true"> {value} </Checkbox>
                                 );
-                             })} 
+                            })}
                         </Descriptions.Item>
                     </Descriptions>
                     <div className="buttons">
@@ -62,7 +66,7 @@ const UserDetailsPage = (props) => {
                     </div>
                 </div>
             ) : (
-                    <Spin size="large" />
+                <Spin size="large"/>
             )}
         </AppLayout>
     );

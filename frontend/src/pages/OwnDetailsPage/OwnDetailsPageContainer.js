@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import OwnDetailsPage from './OwnDetailsPageComponent';
-import { toast } from 'react-toastify';
-import { getMyDetailsRequest } from '../../utils/api';
+import {toast} from 'react-toastify';
+import {getMyDetailsRequest} from '../../utils/api';
 
 export default class OwnDetailsPageContainer extends Component {
     state = {
         myDetails: null,
-    };  
+    };
 
     componentDidMount() {
         this.getMyDetails();
@@ -26,7 +26,7 @@ export default class OwnDetailsPageContainer extends Component {
 
     render() {
         return (
-            <OwnDetailsPage myDetails={this.state.myDetails} />
+            <OwnDetailsPage myDetails={this.state.myDetails}/>
         );
     }
 }

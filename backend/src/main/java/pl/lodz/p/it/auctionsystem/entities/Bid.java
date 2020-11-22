@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -23,15 +24,19 @@ public class Bid extends BaseEntity {
     
     @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false, nullable = false)
     @ManyToOne(optional = false)
+    @NotNull
     private User user;
     
     @JoinColumn(name = "auction_id", referencedColumnName = "id", updatable = false, nullable = false)
     @ManyToOne(optional = false)
+    @NotNull
     private Auction auction;
     
     @Column(name = "bid_date", nullable = false, updatable = false)
+    @NotNull
     private LocalDateTime bidDate;
     
     @Column(name = "price", nullable = false, updatable = false)
+    @NotNull
     private BigDecimal price;
 }

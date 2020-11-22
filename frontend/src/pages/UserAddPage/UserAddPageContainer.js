@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import UserAddPage from './UserAddPageComponent'
-import { toast } from 'react-toastify';
-import { getAllAccessLevelsRequest, addUserRequest } from '../../utils/api';
+import {toast} from 'react-toastify';
+import {addUserRequest, getAllAccessLevelsRequest} from '../../utils/api';
 
-export default class UserAddPageContainer extends Component { 
+export default class UserAddPageContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isSubmitting: false,
             accessLevels: []
-        };  
+        };
     }
 
     componentDidMount() {
@@ -18,7 +18,7 @@ export default class UserAddPageContainer extends Component {
 
     getAllAccessLevels = () => {
         getAllAccessLevelsRequest().then(res => {
-            this.setState({ accessLevels: res.data });
+            this.setState({accessLevels: res.data});
         }).catch(e => {
             toast.error(e.response.data.message, {
                 position: "bottom-right",
@@ -29,9 +29,9 @@ export default class UserAddPageContainer extends Component {
     }
 
     handleAdd = (payload) => {
-        this.setState({ isSubmitting: true });
+        this.setState({isSubmitting: true});
         addUserRequest(payload).then(res => {
-            this.setState({ isSubmitting: false });
+            this.setState({isSubmitting: false});
             toast.success(res.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -39,7 +39,7 @@ export default class UserAddPageContainer extends Component {
             });
             this.props.history.push('/users')
         }).catch(e => {
-            this.setState({ isSubmitting: false });
+            this.setState({isSubmitting: false});
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -47,10 +47,11 @@ export default class UserAddPageContainer extends Component {
             });
         })
     }
-    
+
     render() {
         return (
-            <UserAddPage accessLevels={this.state.accessLevels} onSubmit={this.handleAdd} isSubmitting={this.state.isSubmitting} />
+            <UserAddPage accessLevels={this.state.accessLevels} onSubmit={this.handleAdd}
+                         isSubmitting={this.state.isSubmitting}/>
         );
     }
 }

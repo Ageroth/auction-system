@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,15 +23,19 @@ public class Auction extends BaseEntity {
     
     @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false, nullable = false)
     @ManyToOne(optional = false)
+    @NotNull
     private User user;
     
     @JoinColumn(name = "item_id", referencedColumnName = "id", updatable = false, nullable = false)
     @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @NotNull
     private Item item;
     
     @Column(name = "start_date", nullable = false, updatable = false)
+    @NotNull
     private LocalDateTime startDate;
     
     @Column(name = "end_date", nullable = false, updatable = false)
+    @NotNull
     private LocalDateTime endDate;
 }
