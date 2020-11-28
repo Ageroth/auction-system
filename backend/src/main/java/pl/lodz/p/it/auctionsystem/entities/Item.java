@@ -24,6 +24,7 @@ public class Item extends BaseEntity {
     private Long id;
 
     @Column(name = "name", nullable = false, updatable = false, length = 32)
+    @Setter
     @NotNull
     private String name;
 
