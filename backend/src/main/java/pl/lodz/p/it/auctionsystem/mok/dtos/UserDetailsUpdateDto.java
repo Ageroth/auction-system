@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +32,6 @@ public class UserDetailsUpdateDto {
     @Pattern(regexp = "^[0-9]{9,10}$", message = "{validation.phoneNumber}")
     private String phoneNumber;
 
-    @NotNull(message = "{validation.notBlank}")
-    private List<Long> accessLevelIds = new ArrayList<>();
+    @NotEmpty(message = "{validation.notBlank}")
+    private List<Long> accessLevelIds;
 }

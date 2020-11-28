@@ -47,6 +47,6 @@ public class UserAddDto {
     @Pattern(regexp = "^[0-9]{9,10}$", message = "{validation.phoneNumber}")
     private String phoneNumber;
 
-    @NotNull(message = "{validation.notBlank}")
+    @NotEmpty(message = "{validation.notBlank}")
     private List<Long> accessLevelIds;
 }
