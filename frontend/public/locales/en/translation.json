@@ -85,6 +85,7 @@
     "users": "Users",
     "userDetails": "User details",
     "userAdd": "New user",
-    "activation": "Activation"
+    "activation": "Activation",
+    "auctions": "Auctions"
   }
 }

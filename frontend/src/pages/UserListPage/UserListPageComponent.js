@@ -75,12 +75,12 @@ const UserListPage = (props) => {
         {
             title: t('userLabels.username'),
             dataIndex: 'username',
-            key: 'username',
+            key: 'username'
         },
         {
             title: t('userLabels.email'),
             dataIndex: 'email',
-            key: 'email',
+            key: 'email'
         },
         {
             title: t('userLabels.created'),
@@ -117,7 +117,7 @@ const UserListPage = (props) => {
                         );
                     })}
                 </>
-            ),
+            )
         },
         {
             title: t('userLabels.activated'),
@@ -128,7 +128,7 @@ const UserListPage = (props) => {
                 {text: t('text.no'), value: false}
             ],
             filterMultiple: false,
-            render: activated => activated ? t('text.yes') : t('text.no'),
+            render: activated => activated ? t('text.yes') : t('text.no')
         }
     ];
 
