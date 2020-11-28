@@ -63,7 +63,7 @@ public class UserController {
     @PostMapping("/me")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignupDto signupDto) throws ApplicationException {
         User user = new User(signupDto.getUsername(), signupDto.getPassword(),
-                signupDto.getEmail(), signupDto.getFirstName(), signupDto.getLastName(),
+                signupDto.getEmail().toLowerCase(), signupDto.getFirstName(), signupDto.getLastName(),
                 signupDto.getPhoneNumber());
 
         User result = userService.registerUser(user);
@@ -137,7 +137,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> addUser(@Valid @RequestBody UserAddDto userAddDto) throws ApplicationException {
         User user = new User(userAddDto.getUsername(), userAddDto.getPassword(),
-                userAddDto.getEmail(), userAddDto.getFirstName(), userAddDto.getLastName(),
+                userAddDto.getEmail().toLowerCase(), userAddDto.getFirstName(), userAddDto.getLastName(),
                 userAddDto.getPhoneNumber());
 
         User result = userService.createUser(user, userAddDto.getAccessLevelIds());
@@ -171,7 +171,7 @@ public class UserController {
         List<User> users;
         List<UserDto> userDtos = new ArrayList<>();
         Pageable paging;
-        Page<User> usersPage;
+        Page<User> userPage;
 
         if (sortField != null && order != null)
             paging = PageRequest.of(page, pageSize, Sort.by(SortDirection.getSortDirection(order), sortField));
@@ -179,15 +179,15 @@ public class UserController {
             paging = PageRequest.of(page, pageSize);
 
         if (query == null && status == null)
-            usersPage = userService.getUsers(paging);
+            userPage = userService.getUsers(paging);
         else if (query != null && status == null)
-            usersPage = userService.getFilteredUsers(query, paging);
+            userPage = userService.getFilteredUsers(query, paging);
         else if (query == null) {
-            usersPage = userService.getFilteredUsers(status, paging);
+            userPage = userService.getFilteredUsers(status, paging);
         } else
-            usersPage = userService.getFilteredUsers(query, status, paging);
+            userPage = userService.getFilteredUsers(query, status, paging);
 
-        users = usersPage.getContent();
+        users = userPage.getContent();
 
         if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -208,8 +208,8 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
 
         response.put("users", userDtos);
-        response.put("currentPage", usersPage.getNumber());
-        response.put("totalItems", usersPage.getTotalElements());
+        response.put("currentPage", userPage.getNumber());
+        response.put("totalItems", userPage.getTotalElements());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

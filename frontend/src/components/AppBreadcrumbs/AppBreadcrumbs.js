@@ -21,10 +21,10 @@ const AppBreadcrumbs = () => {
         '/signup': t('pageName.signup'),
         '/password_reset': t('pageName.passwordReset'),
         '/activation': t('pageName.activation'),
+        '/auctions': t('pageName.auctions'),
     };
     const pathSnippets = history.location.pathname.split('/').filter(i => i);
     const nameSnippets = pathSnippets.map(path => isNaN(path) ? path : "details");
-    console.log(nameSnippets)
     const extraBreadcrumbItems = pathSnippets.map((_, index) => {
         const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
         const name = `/${nameSnippets.slice(0, index + 1).join('/')}`;

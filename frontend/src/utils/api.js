@@ -84,3 +84,11 @@ export function updateOwnDetailsRequest(payload) {
 export function getAllAccessLevelsRequest() {
     return axios.get('/access-levels');
 }
+
+export function getAuctionsRequest(values) {
+    return axios.get('/auctions', {
+        params: {
+            page: values.pagination.current - 1,
+        }
+    });
+}

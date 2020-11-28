@@ -19,7 +19,7 @@
     "required": "This field is required",
     "regex": {
       "password": "Must contain at least 8 characters including one uppercase, one lowercase, one number and one special case character",
-      "username": "May only contain letters and numbers",
+      "username": "May only contain alphanumeric characters",
       "name": "May only contain letters",
       "phoneNumber": "Invalid phone number",
       "email": "Invalid email format"
@@ -66,7 +66,7 @@
   },
   "role": {
     "admin": "Administrator",
-    "mod": "Moderator",
+    "man": "Manager",
     "client": "Client"
   },
   "navbarLink": {
@@ -85,6 +85,7 @@
     "users": "Users",
     "userDetails": "User details",
     "userAdd": "New user",
-    "activation": "Activation"
+    "activation": "Activation",
+    "auctions": "Auctions"
   }
 }

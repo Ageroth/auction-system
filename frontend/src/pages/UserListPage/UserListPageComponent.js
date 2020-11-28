@@ -8,7 +8,7 @@ import {SearchOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css'
 import './UserListPage.css'
 
-const {ADMINISTRATOR, MODERATOR, CLIENT} = allroles;
+const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 
 const UserListPage = (props) => {
     const {t} = useTranslation();
@@ -75,12 +75,12 @@ const UserListPage = (props) => {
         {
             title: t('userLabels.username'),
             dataIndex: 'username',
-            key: 'username',
+            key: 'username'
         },
         {
             title: t('userLabels.email'),
             dataIndex: 'email',
-            key: 'email',
+            key: 'email'
         },
         {
             title: t('userLabels.created'),
@@ -102,9 +102,9 @@ const UserListPage = (props) => {
                         if (userAccessLevelName === ADMINISTRATOR) {
                             color = 'volcano';
                             value = t('role.admin');
-                        } else if (userAccessLevelName === MODERATOR) {
+                        } else if (userAccessLevelName === MANAGER) {
                             color = 'green';
-                            value = t('role.mod');
+                            value = t('role.man');
                         } else if (userAccessLevelName === CLIENT) {
                             color = 'geekblue';
                             value = t('role.client');
@@ -117,7 +117,7 @@ const UserListPage = (props) => {
                         );
                     })}
                 </>
-            ),
+            )
         },
         {
             title: t('userLabels.activated'),
@@ -128,7 +128,7 @@ const UserListPage = (props) => {
                 {text: t('text.no'), value: false}
             ],
             filterMultiple: false,
-            render: activated => activated ? t('text.yes') : t('text.no'),
+            render: activated => activated ? t('text.yes') : t('text.no')
         }
     ];
 

@@ -13,8 +13,9 @@ import OwnDetailsPage from '../pages/OwnDetailsPage'
 import OwnPasswordChangePage from '../pages/OwnPasswordChangePage'
 import OwnDetailsEditPage from '../pages/OwnDetailsEditPage'
 import UserAddPage from '../pages/UserAddPage'
+import AuctionListPage from '../pages/AuctionListPage'
 
-const {ADMINISTRATOR, MODERATOR, CLIENT} = allroles;
+const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 
 export const routes = [
     {path: '/', component: HomePage, public: true},
@@ -31,5 +32,6 @@ export const routes = [
     {path: '/my_profile', component: OwnDetailsPage},
     {path: '/my_profile/password_change', component: OwnPasswordChangePage},
     {path: '/my_profile/edit', component: OwnDetailsEditPage},
+    {path: '/auctions', component: AuctionListPage, canAccess: [MANAGER, CLIENT]},
     {path: '*', component: NotFoundPage, public: true},
 ];

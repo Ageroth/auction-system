@@ -19,7 +19,7 @@
     "required": "To pole jest wymagane",
     "regex": {
       "password": "Musi zawierać conajmniej 8 znaków, w tym jedną małą literę, jedną dużą literę, jedną cyfrę i jeden znak specjalny",
-      "username": "Może jedynie zawierać litery i cyfry",
+      "username": "Może jedynie zawierać alfanumeryczne znaki",
       "name": "Może jedynie zawierać litery",
       "phoneNumber": "Nieprawidłowy numer telefonu",
       "email": "Nieprawidłowy format email"
@@ -66,7 +66,7 @@
   },
   "role": {
     "admin": "Administrator",
-    "mod": "Moderator",
+    "man": "Menadżer",
     "client": "Klient"
   },
   "navbarLink": {
@@ -85,6 +85,7 @@
     "users": "Użytkownicy",
     "userDetails": "Szczegóły użytkownika",
     "userAdd": "Nowy użytkownik",
-    "activation": "Aktywacja"
+    "activation": "Aktywacja",
+    "auctions": "Aukcje"
   }
 }

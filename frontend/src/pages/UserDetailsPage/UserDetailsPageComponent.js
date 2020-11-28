@@ -50,7 +50,7 @@ const UserDetailsPage = (props) => {
                                 if (accessLevelId === 1)
                                     value = t('role.admin');
                                 else if (accessLevelId === 2)
-                                    value = t('role.mod');
+                                    value = t('role.man');
                                 else if (accessLevelId === 3)
                                     value = t('role.client')
 

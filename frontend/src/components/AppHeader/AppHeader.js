@@ -10,7 +10,7 @@ import 'antd/dist/antd.css';
 import './AppHeader.css'
 
 const Header = Layout.Header;
-const {ADMINISTRATOR, MODERATOR, CLIENT} = allroles;
+const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 
 const AppHeader = () => {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
@@ -58,7 +58,7 @@ const AppHeader = () => {
                 )
                 break;
 
-            case MODERATOR:
+            case MANAGER:
                 break;
 
             case CLIENT:
@@ -92,8 +92,8 @@ const AppHeader = () => {
                         <Select defaultValue={currentRole} style={{width: 140}} onChange={handleRoleChange}>
                             {roles.includes(ADMINISTRATOR) ?
                                 <Select.Option value={ADMINISTRATOR}> {t('role.admin')} </Select.Option> : null}
-                            {roles.includes(MODERATOR) ?
-                                <Select.Option value={MODERATOR}> {t('role.mod')} </Select.Option> : null}
+                            {roles.includes(MANAGER) ?
+                                <Select.Option value={MANAGER}> {t('role.man')} </Select.Option> : null}
                             {roles.includes(CLIENT) ?
                                 <Select.Option value={CLIENT}> {t('role.client')} </Select.Option> : null}
                         </Select>

@@ -3,6 +3,7 @@ package pl.lodz.p.it.auctionsystem.mok.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.User;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
  * Interfejs definiujący dozwolone operacje na encji {@link User}.
  */
 @Repository
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
     
     /**
