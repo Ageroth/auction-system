@@ -7,7 +7,7 @@ import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css'
 import './UserAddPage.css'
 
-const {ADMINISTRATOR, MODERATOR, CLIENT} = allroles;
+const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 
 const UserAddPage = (props) => {
     const [visible, setVisible] = useState(false);
@@ -231,8 +231,8 @@ const UserAddPage = (props) => {
 
                                     if (accessLevel.name === ADMINISTRATOR)
                                         text = t('role.admin');
-                                    else if (accessLevel.name === MODERATOR)
-                                        text = t('role.mod');
+                                    else if (accessLevel.name === MANAGER)
+                                        text = t('role.man');
                                     else if (accessLevel.name === CLIENT)
                                         text = t('role.client')
 

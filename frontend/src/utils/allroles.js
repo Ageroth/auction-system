@@ -1,6 +1,6 @@
 const allroles = {
     ADMINISTRATOR: 'ADMINISTRATOR',
-    MODERATOR: 'MODERATOR',
+    MANAGER: 'MANAGER',
     CLIENT: 'CLIENT'
 };
 

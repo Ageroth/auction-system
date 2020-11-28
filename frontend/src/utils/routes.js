@@ -14,7 +14,7 @@ import OwnPasswordChangePage from '../pages/OwnPasswordChangePage'
 import OwnDetailsEditPage from '../pages/OwnDetailsEditPage'
 import UserAddPage from '../pages/UserAddPage'
 
-const {ADMINISTRATOR, MODERATOR, CLIENT} = allroles;
+const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 
 export const routes = [
     {path: '/', component: HomePage, public: true},

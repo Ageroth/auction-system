@@ -66,7 +66,7 @@
   },
   "role": {
     "admin": "Administrator",
-    "mod": "Moderator",
+    "man": "Menadżer",
     "client": "Klient"
   },
   "navbarLink": {

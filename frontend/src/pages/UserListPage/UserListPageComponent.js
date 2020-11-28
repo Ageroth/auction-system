@@ -8,7 +8,7 @@ import {SearchOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css'
 import './UserListPage.css'
 
-const {ADMINISTRATOR, MODERATOR, CLIENT} = allroles;
+const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 
 const UserListPage = (props) => {
     const {t} = useTranslation();
@@ -102,9 +102,9 @@ const UserListPage = (props) => {
                         if (userAccessLevelName === ADMINISTRATOR) {
                             color = 'volcano';
                             value = t('role.admin');
-                        } else if (userAccessLevelName === MODERATOR) {
+                        } else if (userAccessLevelName === MANAGER) {
                             color = 'green';
-                            value = t('role.mod');
+                            value = t('role.man');
                         } else if (userAccessLevelName === CLIENT) {
                             color = 'geekblue';
                             value = t('role.client');
