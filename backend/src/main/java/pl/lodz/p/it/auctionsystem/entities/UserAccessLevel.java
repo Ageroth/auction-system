@@ -25,8 +25,7 @@ public class UserAccessLevel extends BaseEntity {
     @ManyToOne(optional = false)
     @NotNull
     private AccessLevel accessLevel;
-    
-    @JsonIgnore
+
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     @NotNull

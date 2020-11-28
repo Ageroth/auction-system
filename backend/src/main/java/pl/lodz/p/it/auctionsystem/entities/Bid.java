@@ -32,9 +32,9 @@ public class Bid extends BaseEntity {
     @NotNull
     private Auction auction;
     
-    @Column(name = "bid_date", nullable = false, updatable = false)
+    @Column(name = "date", nullable = false, updatable = false)
     @NotNull
-    private LocalDateTime bidDate;
+    private LocalDateTime date;
     
     @Column(name = "price", nullable = false, updatable = false)
     @NotNull

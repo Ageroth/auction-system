@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "user")
 @SecondaryTable(name = "user_details", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"))
 @NoArgsConstructor
 @Getter
