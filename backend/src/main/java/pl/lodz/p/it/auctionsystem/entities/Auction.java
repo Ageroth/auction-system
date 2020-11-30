@@ -25,6 +25,19 @@ public class Auction extends BaseEntity {
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private Long id;
 
+    @Column(name = "starting_price", nullable = false)
+    @NotNull
+    @Setter
+    private BigDecimal startingPrice;
+
+    @Column(name = "start_date", nullable = false, updatable = false)
+    @NotNull
+    private LocalDateTime startDate;
+
+    @Column(name = "end_date", nullable = false, updatable = false)
+    @NotNull
+    private LocalDateTime endDate;
+
     @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false, nullable = false)
     @OneToOne(optional = false)
     @NotNull
@@ -36,19 +49,5 @@ public class Auction extends BaseEntity {
     private Item item;
 
     @OneToMany(mappedBy = "auction")
-    @NotNull
-    private Collection<Bid> bids = new ArrayList<>();
-
-    @Column(name = "opening_price", nullable = false)
-    @Setter
-    @NotNull
-    private BigDecimal openingPrice;
-
-    @Column(name = "start_date", nullable = false, updatable = false)
-    @NotNull
-    private LocalDateTime startDate;
-
-    @Column(name = "end_date", nullable = false, updatable = false)
-    @NotNull
-    private LocalDateTime endDate;
+    private final Collection<Bid> bids = new ArrayList<>();
 }

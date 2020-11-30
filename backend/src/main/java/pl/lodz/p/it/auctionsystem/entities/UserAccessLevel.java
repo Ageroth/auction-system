@@ -1,6 +1,5 @@
 package pl.lodz.p.it.auctionsystem.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,13 +13,13 @@ import javax.validation.constraints.NotNull;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class UserAccessLevel extends BaseEntity {
-    
+
     @Id
     @SequenceGenerator(name = "UserAccessLevelSeqGen", sequenceName = "user_access_level_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserAccessLevelSeqGen")
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private Long id;
-    
+
     @JoinColumn(name = "access_level_id", referencedColumnName = "id", nullable = false, updatable = false)
     @ManyToOne(optional = false)
     @NotNull
@@ -30,7 +29,7 @@ public class UserAccessLevel extends BaseEntity {
     @ManyToOne(optional = false)
     @NotNull
     private User user;
-    
+
     public UserAccessLevel(User user, AccessLevel accessLevel) {
         super();
         this.user = user;

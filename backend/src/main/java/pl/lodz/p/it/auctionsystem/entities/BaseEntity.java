@@ -12,14 +12,14 @@ import java.util.UUID;
 @Getter
 @EqualsAndHashCode
 public abstract class BaseEntity {
-    
+
     @Version
     @Column(name = "version", nullable = false)
     private Long version;
-    
+
     @Column(name = "business_key", nullable = false, unique = true, updatable = false)
-    private UUID businessKey;
-    
+    private final UUID businessKey;
+
     public BaseEntity() {
         this.businessKey = UUID.randomUUID();
     }

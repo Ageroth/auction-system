@@ -15,6 +15,14 @@
     "name": "Name",
     "roles": "Roles"
   },
+  "auctionLabels": {
+    "itemImage": "Item image",
+    "itemName": "Item name",
+    "itemDescription": "Item description",
+    "startingPrice": "Starting price",
+    "startDate": "Start date",
+    "duration": "Duration (days)"
+  },
   "validation": {
     "required": "This field is required",
     "regex": {
@@ -26,6 +34,7 @@
     },
     "max32chars": "Maximum 32 characters",
     "max64chars": "Maximum 64 characters",
+    "max4096chars": "Maximum 4096 characters",
     "usernameTaken": "Username is already taken",
     "emailTaken": "Email is already taken",
     "passwordMistmatch": "Password mismatch"
@@ -62,7 +71,8 @@
     "add": "Add",
     "areYouSure": "Are you sure?",
     "reset": "Reset",
-    "search": "Search"
+    "search": "Search",
+    "schedule": "Schedule the start"
   },
   "role": {
     "admin": "Administrator",
@@ -71,14 +81,14 @@
   },
   "navbarLink": {
     "users": "Users",
-    "addUser": "Add user",
+    "newUser": "New user",
     "yourAccount": "Your account"
   },
   "pageName": {
     "home": "Home",
     "login": "Login",
     "signup": "Signup",
-    "passwordReset": "Password reset", 
+    "passwordReset": "Password reset",
     "myProfile": "My profile",
     "edit": "Edit",
     "passwordChange": "Password change",

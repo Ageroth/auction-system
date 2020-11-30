@@ -15,6 +15,14 @@
     "name": "Imię i nazwisko",
     "roles": "Role"
   },
+  "auctionLabels": {
+    "itemImage": "Zdjęcie przedmiotu",
+    "itemName": "Nazwa przedmiotu",
+    "itemDescription": "Opis przedmiotu",
+    "startingPrice": "Cena wywoławcza",
+    "startDate": "Data rozpoczęcia",
+    "duration": "Czas trwania (dni)"
+  },
   "validation": {
     "required": "To pole jest wymagane",
     "regex": {
@@ -24,11 +32,12 @@
       "phoneNumber": "Nieprawidłowy numer telefonu",
       "email": "Nieprawidłowy format email"
     },
-    "max32chars": "Kaksymalnie 32 znaki",
-    "max64chars": "Kaksymalnie 64 znaki",
+    "max32chars": "Maksymalnie 32 znaki",
+    "max64chars": "Maksymalnie 64 znaki",
+    "max4096chars": "Maksymalnie 4096 znaki",
     "usernameTaken": "Nazwa użytkownika zajęta",
     "emailTaken": "Email zajęty",
-    "passwordMistmatch": "Hasło nie pasuje"
+    "passwordMistmatch": "Hasło nie jest takie same"
   },
   "message": {
     "title": {
@@ -62,7 +71,8 @@
     "add": "Dodaj",
     "areYouSure": "Jesteś pewny?",
     "reset": "Reset",
-    "search": "Szukaj"
+    "search": "Szukaj",
+    "schedule": "Zaplanuj rozpoczęcie"
   },
   "role": {
     "admin": "Administrator",
@@ -71,14 +81,14 @@
   },
   "navbarLink": {
     "users": "Użytkownicy",
-    "addUser": "Dodaj użytkownika",
-    "yourAccount": "Twoje konto",
+    "newUser": "Nowy użytkownik",
+    "yourAccount": "Twoje konto"
   },
   "pageName": {
     "home": "Strona główna",
     "login": "Logowanie",
     "signup": "Rejestracja",
-    "passwordReset": "Reset hasła", 
+    "passwordReset": "Reset hasła",
     "myProfile": "Mój profil",
     "edit": "Edycja",
     "passwordChange": "Zmiana hasła",
