@@ -4,11 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "item")
@@ -24,16 +23,18 @@ public class Item extends BaseEntity {
     private Long id;
 
     @Column(name = "name", nullable = false, updatable = false, length = 32)
-    @Setter
     @NotNull
+    @Setter
     private String name;
 
     @Column(name = "description", nullable = false, length = 4096)
-    @Setter
     @NotNull
+    @Setter
     private String description;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "item")
+    @Column(name = "image", nullable = false, updatable = false)
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
     @NotNull
-    Set<Image> images = new HashSet<>();
+    private byte[] image;
 }
