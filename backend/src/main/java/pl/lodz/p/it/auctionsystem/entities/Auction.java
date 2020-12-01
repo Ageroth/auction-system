@@ -50,4 +50,13 @@ public class Auction extends BaseEntity {
 
     @OneToMany(mappedBy = "auction")
     private final Collection<Bid> bids = new ArrayList<>();
+
+    public Auction(BigDecimal startingPrice, LocalDateTime startDate,
+                   LocalDateTime endDate, User user, Item item) {
+        this.startingPrice = startingPrice;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.user = user;
+        this.item = item;
+    }
 }

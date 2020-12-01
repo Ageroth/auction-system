@@ -17,9 +17,9 @@ import javax.persistence.Enumerated;
 @Getter
 @Setter
 public class AccessLevelDto {
-    
+
     private Long id;
-    
+
     @Enumerated(EnumType.STRING)
     private AccessLevelEnum name;
 }

@@ -18,14 +18,14 @@ import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.isActive;
  */
 @Component
 public class DeleteInactiveUserScheduler {
-    
+
     private static final Logger log = LoggerFactory.getLogger(DeleteInactiveUserScheduler.class);
-    
+
     private final UserRepository userRepository;
-    
+
     @Autowired
     public DeleteInactiveUserScheduler(UserRepository userRepository) {this.userRepository = userRepository;}
-    
+
     /**
      * Usuwa z bazy danych konta użytkowników. Konto jest usuwane jeżeli nie jest aktywne przez
      * ponad dobę licząc od daty utworzenia. Metoda jest wywoływana codziennie o godzinie 00:00.
@@ -34,7 +34,7 @@ public class DeleteInactiveUserScheduler {
     public void executeTask() {
         log.info("Checking database for inactive users");
         List<User> inactiveUsers = userRepository.findAll(isActive(false));
-        
+
         for (User user : inactiveUsers) {
             if (user.getCreatedAt().isBefore(LocalDateTime.now().minusDays(1))) userRepository.delete(user);
         }

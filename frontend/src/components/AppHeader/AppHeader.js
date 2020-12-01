@@ -52,7 +52,7 @@ const AppHeader = () => {
                             <Link className="menu-link" to={`/users`}> {t('navbarLink.users')} </Link>
                         </Menu.Item>
                         <Menu.Item className="menu-left-item" key="user-add" icon={<UserAddOutlined/>}>
-                            <Link className="menu-link" to={`/users/add`}> {t('navbarLink.addUser')} </Link>
+                            <Link className="menu-link" to={`/users/add`}> {t('navbarLink.newUser')} </Link>
                         </Menu.Item>
                     </>
                 )

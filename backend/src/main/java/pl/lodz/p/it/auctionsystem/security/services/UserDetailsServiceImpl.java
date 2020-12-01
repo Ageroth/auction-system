@@ -12,25 +12,25 @@ import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    
+
     private UserRepository userRepository;
-    
+
     private MessageService messageService;
-    
+
     @Autowired
     public void setUserRepository(UserRepository userRepository, MessageService messageService) {
         this.userRepository = userRepository;
         this.messageService = messageService;
     }
-    
+
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String message = messageService.getMessage("exception.userNotFound");
-        
+
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(message + ": " + username));
-        
+
         return UserDetailsImpl.build(user);
     }
 }

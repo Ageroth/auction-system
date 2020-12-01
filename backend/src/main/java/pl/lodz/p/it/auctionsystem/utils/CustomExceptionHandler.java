@@ -120,7 +120,8 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> handleInsufficientAuthentication() {
         String insufficientAuthenticationMessage = messageService.getMessage("exception.insufficientAuthentication");
 
-        return new ResponseEntity<>(new ApiResponseDto(false, insufficientAuthenticationMessage), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ApiResponseDto(false, insufficientAuthenticationMessage),
+                HttpStatus.UNAUTHORIZED);
     }
 
     /**

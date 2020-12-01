@@ -21,17 +21,17 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/access-levels")
 public class AccessLevelController {
-    
+
     private final AccessLevelService accessLevelService;
-    
+
     private final ModelMapper modelMapper;
-    
+
     @Autowired
     public AccessLevelController(AccessLevelService accessLevelService, ModelMapper modelMapper) {
         this.accessLevelService = accessLevelService;
         this.modelMapper = modelMapper;
     }
-    
+
     /**
      * Zwraca wszystkie poziomy dostępu.
      *
@@ -44,7 +44,7 @@ public class AccessLevelController {
                 .sorted(Comparator.comparing(AccessLevel::getId))
                 .map(accessLevel -> modelMapper.map(accessLevel, AccessLevelDto.class))
                 .collect(Collectors.toList());
-        
+
         return new ResponseEntity<>(accessLevelDtos, HttpStatus.OK);
     }
 }

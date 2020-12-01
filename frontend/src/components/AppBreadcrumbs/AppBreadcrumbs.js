@@ -22,6 +22,7 @@ const AppBreadcrumbs = () => {
         '/password_reset': t('pageName.passwordReset'),
         '/activation': t('pageName.activation'),
         '/auctions': t('pageName.auctions'),
+        '/auctions/add': t('pageName.auctionAdd'),
     };
     const pathSnippets = history.location.pathname.split('/').filter(i => i);
     const nameSnippets = pathSnippets.map(path => isNaN(path) ? path : "details");

@@ -7,16 +7,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
 import pl.lodz.p.it.auctionsystem.entities.Bid;
+import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
+import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
 import pl.lodz.p.it.auctionsystem.moa.services.AuctionService;
+import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
+import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
+import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.io.IOException;
+import java.net.URI;
 import java.util.*;
 
 @RestController
@@ -27,13 +37,39 @@ public class AuctionController {
 
     private final ModelMapper modelMapper;
 
+    private final MessageService messageService;
+
     @Value("${page.size}")
     private int pageSize;
 
     @Autowired
-    public AuctionController(AuctionService auctionService, ModelMapper modelMapper) {
+    public AuctionController(AuctionService auctionService, ModelMapper modelMapper, MessageService messageService) {
         this.auctionService = auctionService;
         this.modelMapper = modelMapper;
+        this.messageService = messageService;
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addAuction(@RequestPart("auction") @Valid AuctionAddDto auctionAddDto,
+                                        @RequestPart("file") @Valid @NotBlank MultipartFile file,
+                                        Authentication authentication) throws ApplicationException {
+        try {
+            auctionAddDto.setImage(file.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        auctionAddDto.setUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+
+        Long result = auctionService.addAuction(auctionAddDto);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/auctions/{auctionId}")
+                .buildAndExpand(result).toUri();
+
+        String message = messageService.getMessage("info.auctionAdded");
+
+        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
 
     @GetMapping

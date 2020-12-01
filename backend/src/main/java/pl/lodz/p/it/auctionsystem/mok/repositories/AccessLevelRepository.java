@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 public interface AccessLevelRepository extends JpaRepository<AccessLevel, Long> {
-    
+
     /**
      * Wyciąga z bazy danych encję {@link AccessLevel} o podanej nazwie.
      *

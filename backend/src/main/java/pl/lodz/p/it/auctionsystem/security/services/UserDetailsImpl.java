@@ -15,28 +15,28 @@ import java.util.stream.Collectors;
 @Getter
 @EqualsAndHashCode
 public class UserDetailsImpl implements UserDetails {
-    
+
     private static final String ROLE_PREFIX = "ROLE_";
-    
+
     private final Long id;
-    
+
     private final String username;
-    
+
     @JsonIgnore
     private final String password;
-    
+
     private final String email;
-    
+
     private final boolean enabled;
-    
+
     private final Collection<? extends GrantedAuthority> authorities;
-    
+
     private final String firstName;
-    
+
     private final String lastName;
-    
+
     private final String phoneNumber;
-    
+
     public UserDetailsImpl(Long id, String username, String password, String email, boolean activated,
                            Collection<? extends GrantedAuthority> authorities, String firstName, String lastName,
                            String phoneNumber) {
@@ -50,13 +50,13 @@ public class UserDetailsImpl implements UserDetails {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
     }
-    
-    
+
+
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getUserAccessLevels().stream()
                 .map(userAccessLevel -> new SimpleGrantedAuthority(ROLE_PREFIX + userAccessLevel.getAccessLevel().getName().name()))
                 .collect(Collectors.toList());
-        
+
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
@@ -68,17 +68,17 @@ public class UserDetailsImpl implements UserDetails {
                 user.getLastName(),
                 user.getPhoneNumber());
     }
-    
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-    
+
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-    
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;

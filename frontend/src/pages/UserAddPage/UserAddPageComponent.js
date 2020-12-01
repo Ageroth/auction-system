@@ -40,16 +40,16 @@ const UserAddPage = (props) => {
 
     const showPopconfirm = () => {
         setVisible(true);
-    };
+    }
 
     const handleCancel = () => {
         setVisible(false);
-    };
+    }
 
     const handleOk = () => {
         setVisible(false);
         form.submit();
-    };
+    }
 
     return (
         <AppLayout>

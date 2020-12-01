@@ -23,50 +23,50 @@ import java.io.IOException;
  */
 @Component
 public class JwtTokenAuthFilter extends OncePerRequestFilter {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenAuthFilter.class);
-    
+
     private final JwtTokenUtils jwtTokenUtils;
-    
+
     private final UserDetailsServiceImpl userDetailsService;
-    
+
     @Autowired
     public JwtTokenAuthFilter(JwtTokenUtils jwtTokenUtils, UserDetailsServiceImpl userDetailsService) {
         this.jwtTokenUtils = jwtTokenUtils;
         this.userDetailsService = userDetailsService;
     }
-    
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
             String jwt = getJwtFromRequest(request);
-            
+
             if (StringUtils.hasText(jwt) && jwtTokenUtils.validateToken(jwt)) {
                 String username = jwtTokenUtils.getUsernameFromToken(jwt);
-                
+
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                
+
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            
+
         } catch (Exception e) {
             logger.error("Could not set user authentication in security context", e);
         }
-        
+
         filterChain.doFilter(request, response);
     }
-    
+
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        
+
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        
+
         return null;
     }
 }

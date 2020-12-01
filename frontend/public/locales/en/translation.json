@@ -19,7 +19,7 @@
     "itemImage": "Item image",
     "itemName": "Item name",
     "itemDescription": "Item description",
-    "startingPrice": "Starting price",
+    "startingPrice": "Starting price (PLN)",
     "startDate": "Start date",
     "duration": "Duration (days)"
   },
@@ -37,7 +37,8 @@
     "max4096chars": "Maximum 4096 characters",
     "usernameTaken": "Username is already taken",
     "emailTaken": "Email is already taken",
-    "passwordMistmatch": "Password mismatch"
+    "passwordMismatch": "Password mismatch",
+    "invalidDate": "Cannot be a past date"
   },
   "message": {
     "title": {
@@ -96,6 +97,7 @@
     "userDetails": "User details",
     "userAdd": "New user",
     "activation": "Activation",
-    "auctions": "Auctions"
+    "auctions": "Auctions",
+    "auctionAdd": "New auction"
   }
 }

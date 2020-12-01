@@ -15,15 +15,15 @@ import java.util.Date;
  */
 @Component
 public class JwtTokenUtils {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtils.class);
-    
+
     @Value("${jwt.secret}")
     private String jwtSecret;
-    
+
     @Value("${jwt.expiration.ms}")
     private int jwtExpirationMs;
-    
+
     /**
      * Generuje żeton autoryzacyjny.
      *
@@ -32,7 +32,7 @@ public class JwtTokenUtils {
      */
     public String generateToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-        
+
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
@@ -40,11 +40,11 @@ public class JwtTokenUtils {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
-    
+
     public String getUsernameFromToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
-    
+
     /**
      * Waliduje żeton autoryzacyjny.
      *
@@ -66,7 +66,7 @@ public class JwtTokenUtils {
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
         }
-        
+
         return false;
     }
 }

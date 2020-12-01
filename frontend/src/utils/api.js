@@ -92,3 +92,7 @@ export function getAuctionsRequest(values) {
         }
     });
 }
+
+export function addAuctionRequest(payload) {
+    return axios.post('/auctions', payload);
+}

@@ -15,27 +15,27 @@ import javax.mail.internet.MimeMessage;
  */
 @Component
 public class MailService {
-    
+
     private JavaMailSender javaMailSender;
-    
+
     private MessageService messageService;
-    
+
     @Value("${base.url}")
     private String baseUrl;
-    
+
     @Value("${email}")
     private String email;
-    
+
     @Autowired
     public void setJavaMailSender(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
-    
+
     @Autowired
     public void setMessageService(MessageService messageService) {
         this.messageService = messageService;
     }
-    
+
     /**
      * Wysyła wiadomość o wskazanych parametrach.
      *
@@ -45,10 +45,10 @@ public class MailService {
      */
     private void sendMessage(String subject, String text, String to) {
         MimeMessage message = javaMailSender.createMimeMessage();
-        
+
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            
+
             helper.setFrom(email);
             helper.setTo(to);
             helper.setSubject(subject);
@@ -58,7 +58,7 @@ public class MailService {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Wysyła email dotyczący aktywacji konta.
      *
@@ -69,10 +69,10 @@ public class MailService {
         final String url = baseUrl + "/activation/" + user.getActivationCode();
         final String text = messageService.getMessage("email.text.accountActivation");
         final String to = user.getEmail();
-        
+
         sendMessage(subject, text + "\n" + url, to);
     }
-    
+
     /**
      * Wysyła email dotyczący resetu hasła.
      *
@@ -83,7 +83,7 @@ public class MailService {
         final String url = baseUrl + "/password_reset/" + user.getPasswordResetCode();
         final String text = messageService.getMessage("email.text.passwordReset");
         final String to = user.getEmail();
-        
+
         sendMessage(subject, text + "\n" + url, to);
     }
 }
