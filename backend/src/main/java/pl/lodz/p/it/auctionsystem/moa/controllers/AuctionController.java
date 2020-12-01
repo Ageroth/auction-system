@@ -7,16 +7,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
 import pl.lodz.p.it.auctionsystem.entities.Bid;
+import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
 import pl.lodz.p.it.auctionsystem.moa.services.AuctionService;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -34,6 +37,24 @@ public class AuctionController {
     public AuctionController(AuctionService auctionService, ModelMapper modelMapper) {
         this.auctionService = auctionService;
         this.modelMapper = modelMapper;
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addAuction(@RequestPart("auction") @Valid AuctionAddDto auctionAddDto,
+                                        @RequestPart("file") @Valid @NotBlank MultipartFile file) {
+        try {
+            byte[] lob = file.getBytes();
+            System.out.println(lob.length);
+            System.out.println(auctionAddDto.getItemName());
+            System.out.println(auctionAddDto.getItemDescription());
+            System.out.println(auctionAddDto.getStartingPrice());
+            System.out.println(auctionAddDto.getStartDate());
+            System.out.println(auctionAddDto.getDuration());
+        } catch (IOException e) {
+            System.out.println("File upload problem");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping

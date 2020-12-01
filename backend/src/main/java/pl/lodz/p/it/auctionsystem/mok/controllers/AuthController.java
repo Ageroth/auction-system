@@ -26,17 +26,17 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    
+
     private final AuthenticationManager authenticationManager;
-    
+
     private final JwtTokenUtils jwtTokenUtils;
-    
+
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, JwtTokenUtils jwtTokenUtils) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtils = jwtTokenUtils;
     }
-    
+
     /**
      * Uwierzytelnia użytkownika na podstawie przesłanych danych i zwraca odpowiedź.
      *
@@ -48,15 +48,15 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        
+
         String jwt = jwtTokenUtils.generateToken(authentication);
-        
+
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        
+
         List<String> accessLevels = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        
+
         return ResponseEntity.ok().body(new JwtTokenDto(jwt, userDetails.getUsername(), accessLevels));
     }
 }

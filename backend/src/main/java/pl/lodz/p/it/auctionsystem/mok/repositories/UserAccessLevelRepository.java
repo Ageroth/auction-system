@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
-import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ import java.util.Optional;
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 public interface UserAccessLevelRepository extends JpaRepository<UserAccessLevel, Long> {
-    
+
     /**
      * Sprawdza czy w bazie danych istnieje encja {@link UserAccessLevel} na podstawie id użytkownika i
      * przypisanego mu poziomu dostępu.
@@ -26,7 +25,7 @@ public interface UserAccessLevelRepository extends JpaRepository<UserAccessLevel
      * @return true jeśli istnieje, w przeciwnym wypadku false
      */
     boolean existsByUser_IdAndAccessLevel_Id(Long userId, Long accessLevelId);
-    
+
     /**
      * Zwraca wszystkie powiązania pomiędzy użytkownikiem o podanym id z poziomami dostępu.
      *
@@ -34,7 +33,7 @@ public interface UserAccessLevelRepository extends JpaRepository<UserAccessLevel
      * @return lista encji typu {@link UserAccessLevel}, które wiążą użytkownika z poziomem dostępu
      */
     List<UserAccessLevel> findByUser_Id(Long userId);
-    
+
     /**
      * Usuwa z bazy encję typu {@link UserAccessLevel} o podanym id.
      *
@@ -45,7 +44,7 @@ public interface UserAccessLevelRepository extends JpaRepository<UserAccessLevel
     /**
      * Zwraca poziom dostępu użytkownika na podstawie jego id oraz id poziomu dostępu.
      *
-     * @param userId id użytkownika
+     * @param userId        id użytkownika
      * @param accessLevelId id poziomu dostępu
      * @return obiekt encji typu {@link UserAccessLevel}, które wiążą użytkownika z poziomem dostępu
      */

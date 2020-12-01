@@ -11,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ApiResponseDto {
-    
+
     private Boolean success;
-    
+
     private String message;
 }

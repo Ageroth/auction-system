@@ -13,10 +13,10 @@ import java.util.List;
 @Getter
 @Setter
 public class JwtTokenDto {
-    
+
     private String token;
-    
+
     private String username;
-    
+
     private List<String> roles;
 }

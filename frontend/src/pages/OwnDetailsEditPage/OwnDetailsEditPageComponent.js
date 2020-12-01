@@ -19,16 +19,16 @@ const OwnDetailsEditPage = (props) => {
 
     const showPopconfirm = () => {
         setVisible(true);
-    };
+    }
 
     const handleCancel = () => {
         setVisible(false);
-    };
+    }
 
     const handleOk = () => {
         form.submit();
         setVisible(false);
-    };
+    }
 
     return (
         <AppLayout>

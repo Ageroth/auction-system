@@ -5,7 +5,7 @@ package pl.lodz.p.it.auctionsystem.exceptions;
  * posiada.
  */
 public class UserAccessLevelAlreadyExistsException extends ApplicationException {
-    
+
     public UserAccessLevelAlreadyExistsException(String message) {
         super(message);
     }

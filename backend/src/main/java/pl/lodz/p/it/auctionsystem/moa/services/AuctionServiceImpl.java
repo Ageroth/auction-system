@@ -22,7 +22,7 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public void addAuction(Auction auction) {
-
+        auctionRepository.save(auction);
     }
 
     @Override

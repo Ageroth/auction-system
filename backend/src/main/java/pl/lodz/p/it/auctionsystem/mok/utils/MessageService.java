@@ -11,10 +11,10 @@ import javax.annotation.Resource;
  */
 @Component
 public class MessageService {
-    
+
     @Resource
     private MessageSource messageSource;
-    
+
     /**
      * Internacjonalizuje wiadomość o podanym kodzie.
      *

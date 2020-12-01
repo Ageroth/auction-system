@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
-    
+
     /**
      * Sprawdza czy istnieje encja {@link User} o podanej nazwie użytkownika.
      *
@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @return true jeśli istnieje, w przeciwnym wypadku false
      */
     boolean existsByUsername(String username);
-    
+
     /**
      * Sprawdza czy istnieje encja {@link User} o podanym emailu.
      *
@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @return true jeśli istnieje, w przeciwnym wypadku false
      */
     boolean existsByEmailIgnoreCase(String email);
-    
+
     /**
      * Wyciąga z bazy danych encję {@link User} o podanej nazwie użytkownika.
      *
@@ -39,7 +39,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @return obiekt encji {@link User} opakowany w {@link Optional}
      */
     Optional<User> findByUsername(String username);
-    
+
     /**
      * Wyciąga z bazy danych encję {@link User} o podanym emailu.
      *
@@ -47,7 +47,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @return obiekt encji {@link User} opakowany w {@link Optional}
      */
     Optional<User> findByEmailIgnoreCase(String email);
-    
+
     /**
      * Wyciąga z bazy danych encję {@link User} o podanym kodzie aktywacyjnym.
      *
@@ -55,7 +55,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @return obiekt encji {@link User} opakowany w {@link Optional}
      */
     Optional<User> findByActivationCode(String activationCode);
-    
+
     /**
      * Wyciąga z bazy danych encję {@link User} o podanym kodzie resetującym hasło.
      *

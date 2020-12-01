@@ -42,7 +42,7 @@ export default class AuctionListPageContainer extends Component {
     render() {
         return (
             <AuctionListPage data={this.state.data} pagination={this.state.pagination} isLoading={this.state.isLoading}
-                          handleTableChange={this.getAuctions}/>
+                             handleTableChange={this.getAuctions}/>
         );
     }
 }

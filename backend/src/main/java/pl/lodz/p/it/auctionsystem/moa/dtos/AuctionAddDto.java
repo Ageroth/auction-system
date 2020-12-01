@@ -12,21 +12,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AuctionDto {
+public class AuctionAddDto {
 
-    private Long id;
-
-    private BigDecimal openingPrice;
-
-    private int bidsNumber;
-
-    private BigDecimal currentPrice;
+    private BigDecimal startingPrice;
 
     private LocalDateTime startDate;
 
-    private LocalDateTime endDate;
-
-    private String userUsername;
+    private int duration;
 
     private String itemName;
 
