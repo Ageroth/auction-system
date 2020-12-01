@@ -37,4 +37,10 @@ public class Item extends BaseEntity {
     @Type(type = "org.hibernate.type.BinaryType")
     @NotNull
     private byte[] image;
+
+    public Item(String name, String description, byte[] image) {
+        this.name = name;
+        this.description = description;
+        this.image = image;
+    }
 }

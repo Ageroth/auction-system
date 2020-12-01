@@ -23,4 +23,8 @@ public class AuctionAddDto {
     private String itemName;
 
     private String itemDescription;
+
+    private byte[] image;
+
+    private String username;
 }
