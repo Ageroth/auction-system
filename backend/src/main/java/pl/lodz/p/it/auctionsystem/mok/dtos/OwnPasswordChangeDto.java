@@ -18,6 +18,8 @@ import javax.validation.constraints.Size;
 @Setter
 public class OwnPasswordChangeDto {
 
+    private String username;
+
     @NotBlank(message = "{validation.notBlank}")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(){}:\";'<>?,./+=])(?=\\S+$).{8,}$", message =
             "{validation.password}")

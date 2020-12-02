@@ -18,6 +18,8 @@ import javax.validation.constraints.Size;
 @Setter
 public class OwnDetailsUpdateDto {
 
+    private String username;
+
     @NotBlank(message = "{validation.notBlank}")
     @Pattern(regexp = "^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżŻ]*$", message = "{validation.name}")
     @Size(max = 32, message = "{validation.max32chars}")

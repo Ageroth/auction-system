@@ -1,9 +1,12 @@
 package pl.lodz.p.it.auctionsystem.mok.services;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,16 +16,20 @@ import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
 import pl.lodz.p.it.auctionsystem.exceptions.*;
+import pl.lodz.p.it.auctionsystem.mok.dtos.*;
 import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
 import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
+import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
 import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Comparator;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.containsTextInName;
 import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.isActive;
@@ -41,26 +48,35 @@ public class UserServiceImpl implements UserService {
 
     private final MessageService messageService;
 
+    private final ModelMapper modelMapper;
+
     @Value("${password_reset_code.valid_time}")
     private Long passwordResetCodeValidTime;
 
+    @Value("${page.size}")
+    private int pageSize;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository, AccessLevelRepository accessLevelRepository,
-                           PasswordEncoder passwordEncoder, MailService mailService, MessageService messageService) {
+                           PasswordEncoder passwordEncoder, MailService mailService, MessageService messageService,
+                           ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.accessLevelRepository = accessLevelRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
         this.messageService = messageService;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public User createUser(User user, List<Long> accessLevelIds) throws ApplicationException {
-        User addedUser = addUser(user);
-        addedUser.setActivated(true);
+    public Long createUser(UserAddDto userAddDto) throws ApplicationException {
+        User user = addUser(new User(userAddDto.getUsername(), userAddDto.getPassword(),
+                userAddDto.getEmail().toLowerCase(), userAddDto.getFirstName(), userAddDto.getLastName(),
+                userAddDto.getPhoneNumber()));
+        user.setActivated(true);
 
-        for (Long accessLevelId : accessLevelIds) {
+        for (Long accessLevelId : userAddDto.getAccessLevelIds()) {
             String accessLevelNotFoundMessage = messageService.getMessage("exception.accessLevelNotFound");
             AccessLevel accessLevel =
                     accessLevelRepository.findById(accessLevelId).orElseThrow(() -> new EntityNotFoundException(accessLevelNotFoundMessage));
@@ -69,14 +85,16 @@ public class UserServiceImpl implements UserService {
             user.getUserAccessLevels().add(userAccessLevel);
         }
 
-        return userRepository.save(addedUser);
+        return userRepository.save(user).getId();
     }
 
     @Override
     @PreAuthorize("permitAll()")
-    public User registerUser(User user) throws ApplicationException {
-        User addedUser = addUser(user);
-        addedUser.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
+    public Long registerUser(SignupDto signupDto) throws ApplicationException {
+        User user = addUser(new User(signupDto.getUsername(), signupDto.getPassword(),
+                signupDto.getEmail().toLowerCase(), signupDto.getFirstName(), signupDto.getLastName(),
+                signupDto.getPhoneNumber()));
+        user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
 
         String clientAccessLevelNotFoundMessage = messageService.getMessage("exception.accessLevelNotFound");
         AccessLevel clientAccessLevel =
@@ -85,9 +103,9 @@ public class UserServiceImpl implements UserService {
 
         user.getUserAccessLevels().add(userAccessLevel);
 
-        mailService.sendAccountActivationMail(addedUser);
+        mailService.sendAccountActivationMail(user);
 
-        return userRepository.save(addedUser);
+        return userRepository.save(user).getId();
     }
 
     private User addUser(User user) throws ApplicationException {
@@ -110,43 +128,63 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public Page<User> getUsers(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public Page<UserDto> searchUsers(@Valid UserCriteria userCriteria) {
+        Pageable pageable;
+        Page<User> userPage;
+
+        if (userCriteria.getSortField() != null && userCriteria.getOrder() != null)
+            pageable = PageRequest.of(userCriteria.getPage(), pageSize,
+                    Sort.by(SortDirection.getSortDirection(userCriteria.getOrder()), userCriteria.getSortField()));
+        else
+            pageable = PageRequest.of(userCriteria.getPage(), pageSize);
+
+        if (userCriteria.getQuery() == null && userCriteria.getStatus() == null)
+            userPage = userRepository.findAll(pageable);
+        else if (userCriteria.getQuery() != null && userCriteria.getStatus() == null)
+            userPage = userRepository.findAll(containsTextInName(userCriteria.getQuery()), pageable);
+        else if (userCriteria.getQuery() == null) {
+            userPage = userRepository.findAll(isActive(userCriteria.getStatus()), pageable);
+        } else
+            userPage =
+                    userRepository.findAll(containsTextInName(userCriteria.getQuery()).and(isActive(userCriteria.getStatus())), pageable);
+
+        return userPage.map(user -> {
+            UserDto userDto = modelMapper.map(user, UserDto.class);
+
+            userDto.setUserAccessLevelNames(user.getUserAccessLevels().stream()
+                    .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
+                    .collect(Collectors.toList()));
+
+            userDto.getUserAccessLevelNames().sort((Comparator.comparingInt(o -> AccessLevelEnum.valueOf((String) o).ordinal())).reversed());
+
+            return modelMapper.map(user, UserDto.class);
+        });
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public Page<User> getFilteredUsers(String query, boolean status, Pageable pageable) {
-        return userRepository.findAll(containsTextInName(query).and(isActive(status)), pageable);
-    }
-
-    @Override
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public Page<User> getFilteredUsers(String query, Pageable pageable) {
-        return userRepository.findAll(containsTextInName(query), pageable);
-    }
-
-    @Override
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public Page<User> getFilteredUsers(boolean status, Pageable pageable) {
-        return userRepository.findAll(isActive(status), pageable);
-    }
-
-    @Override
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public User getUserById(Long userId) throws ApplicationException {
+    public UserDetailsDto getUserById(Long userId) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
 
-        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+
+        UserDetailsDto userDetailsDto = modelMapper.map(user, UserDetailsDto.class);
+
+        userDetailsDto.setAccessLevelIds(user.getUserAccessLevels().stream()
+                .map(userAccessLevel -> userAccessLevel.getAccessLevel().getId())
+                .collect(Collectors.toList()));
+
+        return userDetailsDto;
     }
 
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public User getCurrentUser(Authentication authentication) throws ApplicationException {
-        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+    public OwnDetailsDto getUserByUsername(String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
+        User user =
+                userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+        return modelMapper.map(user, OwnDetailsDto.class);
     }
 
     @Override
@@ -186,33 +224,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public void updateCurrentUserDetails(User user, Authentication authentication) throws ApplicationException {
-        String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+    public void updateDetailsByUsername(OwnDetailsUpdateDto ownDetailsUpdateDto, String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
-        User userFromRepository =
+        User user =
                 userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        userFromRepository.setFirstName(user.getFirstName());
-        userFromRepository.setLastName(user.getLastName());
-        userFromRepository.setPhoneNumber(user.getPhoneNumber());
+        user.setFirstName(ownDetailsUpdateDto.getFirstName());
+        user.setLastName(ownDetailsUpdateDto.getLastName());
+        user.setPhoneNumber(ownDetailsUpdateDto.getPhoneNumber());
     }
 
     @Override
     @PreAuthorize("permitAll()")
-    public void sendPasswordResetEmail(String email) throws ApplicationException {
+    public void sendPasswordResetEmail(PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.emailInvalid");
         User userFromRepository =
-                userRepository.findByEmailIgnoreCase(email).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepository.findByEmailIgnoreCase(passwordResetEmailDto.getEmail()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordResetCode = UUID.randomUUID().toString().replace("-", "");
 
         userFromRepository.setPasswordResetCode(passwordResetCode);
         userFromRepository.setPasswordResetCodeAddDate(LocalDateTime.now());
+
         mailService.sendPasswordResetEmail(userFromRepository);
     }
 
     @Override
     @PreAuthorize("permitAll()")
-    public void resetPassword(String passwordResetCode, String newPassword) throws ApplicationException {
+    public void resetPassword(String passwordResetCode, PasswordResetDto passwordResetDto) throws ApplicationException {
         String passwordResetCodeInvalidMessage = messageService.getMessage("exception.passwordResetCodeInvalid");
         User userFromRepository =
                 userRepository.findByPasswordResetCode(passwordResetCode).orElseThrow(() -> new
@@ -226,7 +264,7 @@ public class UserServiceImpl implements UserService {
             throw new PasswordResetCodeExpiredException(passwordResetCodeExpiredMessage);
         }
 
-        String passwordHash = passwordEncoder.encode(newPassword);
+        String passwordHash = passwordEncoder.encode(passwordResetDto.getNewPassword());
 
         userFromRepository.setPassword(passwordHash);
         userFromRepository.setPasswordResetCode(null);

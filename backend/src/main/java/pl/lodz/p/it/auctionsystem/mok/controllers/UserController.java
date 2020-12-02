@@ -2,11 +2,7 @@ package pl.lodz.p.it.auctionsystem.mok.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,14 +13,13 @@ import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.dtos.*;
 import pl.lodz.p.it.auctionsystem.mok.services.UserAccessLevelService;
 import pl.lodz.p.it.auctionsystem.mok.services.UserService;
-import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
-import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
+import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Kontroler obsługujący operacje związane z użytkownikami.
@@ -40,9 +35,6 @@ public class UserController {
     private final ModelMapper modelMapper;
 
     private final MessageService messageService;
-
-    @Value("${page.size}")
-    private int pageSize;
 
     @Autowired
     public UserController(UserService userService, UserAccessLevelService userAccessLevelService,
@@ -62,16 +54,10 @@ public class UserController {
      */
     @PostMapping("/me")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignupDto signupDto) throws ApplicationException {
-        User user = new User(signupDto.getUsername(), signupDto.getPassword(),
-                signupDto.getEmail().toLowerCase(), signupDto.getFirstName(), signupDto.getLastName(),
-                signupDto.getPhoneNumber());
-
-        User result = userService.registerUser(user);
-
+        Long userId = userService.registerUser(signupDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{userId}")
-                .buildAndExpand(result.getId()).toUri();
-
+                .buildAndExpand(userId).toUri();
         String message = messageService.getMessage("info.userRegistered");
 
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
@@ -102,7 +88,7 @@ public class UserController {
      */
     @PostMapping("/me/password-reset")
     public ResponseEntity<?> sendPasswordResetEmail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
-        userService.sendPasswordResetEmail(passwordResetEmailDto.getEmail());
+        userService.sendPasswordResetEmail(passwordResetEmailDto);
 
         String message = messageService.getMessage("info.passwordResetLinkSent");
 
@@ -120,7 +106,7 @@ public class UserController {
     @PostMapping("/me/password-reset/{passwordResetCode}")
     public ResponseEntity<?> resetPassword(@PathVariable(value = "passwordResetCode") String passwordResetCode,
                                            @Valid @RequestBody PasswordResetDto passwordResetDto) throws ApplicationException {
-        userService.resetPassword(passwordResetCode, passwordResetDto.getNewPassword());
+        userService.resetPassword(passwordResetCode, passwordResetDto);
 
         String message = messageService.getMessage("info.passwordReset");
 
@@ -136,15 +122,11 @@ public class UserController {
      */
     @PostMapping
     public ResponseEntity<?> addUser(@Valid @RequestBody UserAddDto userAddDto) throws ApplicationException {
-        User user = new User(userAddDto.getUsername(), userAddDto.getPassword(),
-                userAddDto.getEmail().toLowerCase(), userAddDto.getFirstName(), userAddDto.getLastName(),
-                userAddDto.getPhoneNumber());
-
-        User result = userService.createUser(user, userAddDto.getAccessLevelIds());
+        Long userId = userService.createUser(userAddDto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{userId}")
-                .buildAndExpand(result.getId()).toUri();
+                .buildAndExpand(userId).toUri();
 
         String message = messageService.getMessage("info.userAdded");
 
@@ -152,66 +134,27 @@ public class UserController {
     }
 
     /**
-     * Pobiera listę użytkowników.
+     * Wyszukuje użytkowników spełniających dane kryteria.
      *
-     * @param page   numer strony do zwrócenia
-     * @param order  porządek w jakim posortowani mają być użytkownicy
-     * @param query  fraza wykorzystywana do wyszukania
-     * @param status status aktywacji konta do filtrowania
+     * @param userCriteria obiekt typu {@link UserCriteria}
      * @return HTTP status 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
      * użytkowników oraz liczbą wszystkich stron
      */
     @GetMapping
-    public ResponseEntity<?> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(required = false) String sortField,
-            @RequestParam(required = false) String order,
-            @RequestParam(required = false) String query,
-            @RequestParam(required = false) Boolean status) {
-        List<User> users;
-        List<UserDto> userDtos = new ArrayList<>();
-        Pageable paging;
-        Page<User> userPage;
+    public ResponseEntity<?> searchUsers(UserCriteria userCriteria) {
+        Page<UserDto> userDtoPage = userService.searchUsers(userCriteria);
 
-        if (sortField != null && order != null)
-            paging = PageRequest.of(page, pageSize, Sort.by(SortDirection.getSortDirection(order), sortField));
-        else
-            paging = PageRequest.of(page, pageSize);
-
-        if (query == null && status == null)
-            userPage = userService.getUsers(paging);
-        else if (query != null && status == null)
-            userPage = userService.getFilteredUsers(query, paging);
-        else if (query == null) {
-            userPage = userService.getFilteredUsers(status, paging);
-        } else
-            userPage = userService.getFilteredUsers(query, status, paging);
-
-        users = userPage.getContent();
-
-        if (users.isEmpty()) {
+        if (userDtoPage.getContent().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("users", userDtoPage.getContent());
+            response.put("currentPage", userDtoPage.getNumber());
+            response.put("totalItems", userDtoPage.getTotalElements());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-
-        for (User user : users) {
-            UserDto userDto = modelMapper.map(user, UserDto.class);
-
-            userDto.setUserAccessLevelNames(user.getUserAccessLevels().stream()
-                    .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
-                    .collect(Collectors.toList()));
-
-            userDto.getUserAccessLevelNames().sort((Comparator.comparingInt(o -> AccessLevelEnum.valueOf((String) o).ordinal())).reversed());
-
-            userDtos.add(userDto);
-        }
-
-        Map<String, Object> response = new HashMap<>();
-
-        response.put("users", userDtos);
-        response.put("currentPage", userPage.getNumber());
-        response.put("totalItems", userPage.getTotalElements());
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
@@ -246,8 +189,8 @@ public class UserController {
      */
     @GetMapping("/me")
     public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
-        User user = userService.getCurrentUser(authentication);
-        OwnDetailsDto ownDetailsDto = modelMapper.map(user, OwnDetailsDto.class);
+        OwnDetailsDto ownDetailsDto =
+                userService.getUserByUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
 
         return new ResponseEntity<>(ownDetailsDto, HttpStatus.OK);
     }
@@ -263,9 +206,9 @@ public class UserController {
     @PutMapping("/me/details")
     public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnDetailsUpdateDto ownDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
-        User user = modelMapper.map(ownDetailsUpdateDto, User.class);
+        String currentUserUsername = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
 
-        userService.updateCurrentUserDetails(user, authentication);
+        userService.updateDetailsByUsername(ownDetailsUpdateDto, currentUserUsername);
 
         String message = messageService.getMessage("info.yourDetailsUpdated");
 
@@ -295,17 +238,12 @@ public class UserController {
      * Zwraca szczegóły konta użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return HTTP status 200 z obiektem typu {@link UserDto}
+     * @return HTTP status 200 z obiektem typu {@link UserDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserDetails(@PathVariable(value = "userId") Long userId) throws ApplicationException {
-        User user = userService.getUserById(userId);
-        UserDetailsDto userDetailsDto = modelMapper.map(user, UserDetailsDto.class);
-
-        userDetailsDto.setAccessLevelIds(user.getUserAccessLevels().stream()
-                .map(userAccessLevel -> userAccessLevel.getAccessLevel().getId())
-                .collect(Collectors.toList()));
+        UserDetailsDto userDetailsDto = userService.getUserById(userId);
 
         return new ResponseEntity<>(userDetailsDto, HttpStatus.OK);
     }
