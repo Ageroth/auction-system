@@ -1,18 +1,14 @@
 package pl.lodz.p.it.auctionsystem.mok.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.*;
 import java.util.List;
 
 /**
- * DTO wykorzystywane przy dodawaniu użytkownika.
+ * DTO zawierające dane konta użytkownika, wykorzystywane przy jego dodawaniu.
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class UserAddDto {

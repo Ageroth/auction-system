@@ -1,8 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
@@ -10,10 +8,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
- * DTO zawierające nowe oraz stare hasło potrzebne do weryfikacji.
+ * DTO zawierające nowe oraz stare hasło, wykorzystywane przy jego zmianie.
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class OwnPasswordChangeDto {

@@ -1,6 +1,7 @@
 import React from 'react';
 import {useHistory} from "react-router-dom";
 import {Button, Descriptions, Spin} from 'antd';
+import moment from 'moment';
 import AppLayout from '../../components/AppLayout';
 import {useTranslation} from 'react-i18next';
 import 'antd/dist/antd.css';
@@ -10,10 +11,6 @@ const OwnDetailsPage = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
     const myDetails = props.myDetails;
-
-    const formatDate = (date) => {
-        return new Date(date).toLocaleString([]);
-    }
 
     const handleEditClick = () => {
         const currentLocation = history.location.pathname;
@@ -41,7 +38,7 @@ const OwnDetailsPage = (props) => {
                         <Descriptions.Item
                             label={t('userLabels.activated')}> {myDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
                         <Descriptions.Item
-                            label={t('userLabels.created')}> {formatDate(myDetails.createdAt)} </Descriptions.Item>
+                            label={t('userLabels.created')}> {moment(myDetails.createdAt).format('DD-MM-YYYY HH:MM')} </Descriptions.Item>
                     </Descriptions>
                     <div className="buttons">
                         <Button type="primary" onClick={handleEditClick}> {t('text.edit')} </Button>

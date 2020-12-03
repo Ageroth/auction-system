@@ -1,13 +1,10 @@
 package pl.lodz.p.it.auctionsystem.mok.services;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
-
-import java.util.List;
+import pl.lodz.p.it.auctionsystem.mok.dtos.*;
 
 /**
  * Interfejs definiujący dozwolone operacje na obiektach typu {@link User}
@@ -16,75 +13,48 @@ import java.util.List;
 public interface UserService {
 
     /**
-     * Dodanie nowego użytkownika przez administratora.
+     * Rejestruje użytkownika.
      *
-     * @param user           użytkownik do dodania
-     * @param accessLevelIds id poziomów dostępu jakie ma otrzymać dodawany użytkownik
+     * @param signupDto obiekt typu {@link SignupDto}
+     * @return id nowo utworzonego obiektu
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    User createUser(User user, List<Long> accessLevelIds) throws ApplicationException;
+    Long registerUser(SignupDto signupDto) throws ApplicationException;
 
     /**
-     * Samodzielna rejestracja przez użytkownika.
+     * Tworzy użytkownika.
      *
-     * @param user rejestrujący się użytkownik
+     * @param userAddDto obiekt typu {@link UserAddDto}
+     * @return id nowo utworzonego obiektu
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    User registerUser(User user) throws ApplicationException;
+    Long addUser(UserAddDto userAddDto) throws ApplicationException;
 
     /**
-     * Zwraca użytkowników.
+     * Zwraca użytkownika o podanej nazwie użytkownika.
      *
-     * @param pageable obiekt typu {@link Pageable}
-     * @return obiekt typu {@link Page} z użytkownikami
+     * @param username nazwa użytkownika
+     * @return obiekt typu {@link OwnAccountDetailsDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    Page<User> getUsers(Pageable pageable);
+    OwnAccountDetailsDto getUserByUsername(String username) throws ApplicationException;
 
     /**
-     * Zwraca przefiltrowanych użytkowników.
+     * Zwraca użytkowników spełniających zadane kryteria.
      *
-     * @param query    fraza wykorzystywana do wyszukania
-     * @param status   status aktywacji konta do filtrowania
-     * @param pageable obiekt typu {@link Pageable}
-     * @return obiekt typu {@link Page} z użytkownikami
+     * @param userCriteria obiekt typu {@link UserCriteria}
+     * @return obiekt typu {@link Page<UserDto>}
      */
-    Page<User> getFilteredUsers(String query, boolean status, Pageable pageable);
-
-    /**
-     * Zwraca przefiltrowanych użytkowników.
-     *
-     * @param query    fraza wykorzystywana do wyszukania
-     * @param pageable obiekt typu {@link Pageable}
-     * @return obiekt typu {@link Page} z użytkownikami
-     */
-    Page<User> getFilteredUsers(String query, Pageable pageable);
-
-    /**
-     * Zwraca przefiltrowanych użytkowników.
-     *
-     * @param status   status aktywacji konta do filtrowania
-     * @param pageable obiekt typu {@link Pageable}
-     * @return obiekt typu {@link Page} z użytkownikami
-     */
-    Page<User> getFilteredUsers(boolean status, Pageable pageable);
+    Page<UserDto> searchUsers(UserCriteria userCriteria);
 
     /**
      * Zwraca użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return użytkownik o podanym userId
+     * @return obiekt typu {@link UserAccountDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    User getUserById(Long userId) throws ApplicationException;
-
-    /**
-     * Zwraca aktualnie zalogowanego użytkownika.
-     *
-     * @param authentication obiekt typu {@link Authentication}
-     * @return aktualnie zalogowany użytkownik
-     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
-     */
-    User getCurrentUser(Authentication authentication) throws ApplicationException;
+    UserAccountDetailsDto getUserById(Long userId) throws ApplicationException;
 
     /**
      * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie użytkownika.
@@ -92,7 +62,7 @@ public interface UserService {
      * @param username nazwa użytkownika
      * @return true/false w zależności od istnienia użytkownika w bazie
      */
-    Boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
     /**
      * Sprawdza czy w bazie istnieje użytkownik o podanym adresie email.
@@ -100,7 +70,7 @@ public interface UserService {
      * @param email adres email
      * @return true/false w zależności od istnienia użytkownika w bazie
      */
-    Boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
 
     /**
      * Aktywuje konto użytkownika o przypisanym kodzie aktywacyjnym.
@@ -111,56 +81,55 @@ public interface UserService {
     void activateUser(String activationCode) throws ApplicationException;
 
     /**
-     * Umożliwia aktualizację danych personalnych użytkownika o podanym id.
-     *
-     * @param userId id użytkownika
-     * @param user   obiekt przechowujący nowe dane personalne
-     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
-     */
-    void updateUserDetailsByUserId(Long userId, User user) throws ApplicationException;
-
-    /**
-     * Umożliwia aktualizację danych personalnych aktualnie zalogowanego użytkownika.
-     *
-     * @param user           obiekt przechowujący nowe dane personalne
-     * @param authentication obiekt typu {@link Authentication}
-     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
-     */
-    void updateCurrentUserDetails(User user, Authentication authentication) throws ApplicationException;
-
-    /**
      * Wysyła na podany email wiadomość z odnośnikiem, pod którym można zresetować zapomniane hasło.
      *
-     * @param email adres email użytkownika powiązany z kontem
+     * @param passwordResetEmailDto obiekt typu {@link PasswordResetEmailDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void sendPasswordResetEmail(String email) throws ApplicationException;
+    void sendPasswordResetEmail(PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException;
 
     /**
      * Umożliwia zmianę zapomnianego hasła.
      *
      * @param passwordResetCode kod resetujący hasło
-     * @param newPassword       nowe hasło
+     * @param passwordResetDto  obiekt typu {@link PasswordResetDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void resetPassword(String passwordResetCode, String newPassword) throws ApplicationException;
+    void resetPassword(String passwordResetCode, PasswordResetDto passwordResetDto) throws ApplicationException;
 
     /**
-     * Zmienia hasło aktualnie zalogowanego użytkownika.
+     * Umożliwia aktualizację danych personalnych użytkownika o podanej nazwie.
      *
-     * @param newPassword     nowe hasło
-     * @param currentPassword obecne hasło
-     * @param authentication  obiekt typu {@link Authentication}
+     * @param username                   nazwa użytkownika
+     * @param ownAccountDetailsUpdateDto obiekt typu {@link OwnAccountDetailsUpdateDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void changePassword(String newPassword, String currentPassword, Authentication authentication) throws ApplicationException;
+    void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto) throws ApplicationException;
+
+    /**
+     * Aktualizuje dane personalne użytkownika o podanym id.
+     *
+     * @param userId                      id użytkownika
+     * @param userAccountDetailsUpdateDto obiekt typu {@link UserAccountDetailsUpdateDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void updateUserDetailsById(Long userId, UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException;
+
+    /**
+     * Zmienia hasło użytkownika o podanej nazwie.
+     *
+     * @param username             nazwa użytkownika
+     * @param ownPasswordChangeDto obiekt typu {@link OwnPasswordChangeDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void changePasswordByUsername(String username, OwnPasswordChangeDto ownPasswordChangeDto) throws ApplicationException;
 
     /**
      * Zmienia hasło użytkownika o podanym id.
      *
-     * @param userId      id użytkownika
-     * @param newPassword nowe hasło
+     * @param userId                id użytkownika
+     * @param userPasswordChangeDto obiekt typu {@link UserPasswordChangeDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void changePassword(Long userId, String newPassword) throws ApplicationException;
+    void changePasswordById(Long userId, UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException;
 }

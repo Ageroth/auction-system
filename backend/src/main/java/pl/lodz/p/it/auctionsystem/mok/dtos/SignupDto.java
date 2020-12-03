@@ -1,8 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
@@ -11,10 +9,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
- * DTO wykorzystywane przy rejestracji użytkownika.
+ * DTO zawierające dane użytkownika, wykorzystywane przy jego rejestracji.
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class SignupDto {

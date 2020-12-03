@@ -21,7 +21,7 @@ export default class UserDetailsPageContainer extends Component {
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).then((res) => {
             this.setState({userDetails: res.data});
-        }).catch((e) => {
+        }).catch(e => {
             this.setState({error: true});
             toast.error(e.response.data.message, {
                 position: "bottom-right",

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import UserListPage from './UserListPageComponent'
 import {toast} from 'react-toastify';
-import {getUsersRequest} from '../../utils/api';
+import {searchUsersRequest} from '../../utils/api';
 
 export default class UserListPageContainer extends Component {
     state = {
@@ -20,7 +20,7 @@ export default class UserListPageContainer extends Component {
     getUsers = (params = {}) => {
         this.setState({isLoading: true});
 
-        getUsersRequest(params).then(res => {
+        searchUsersRequest(params).then(res => {
             this.setState({
                 isLoading: false,
                 data: res.data.users,
@@ -29,7 +29,7 @@ export default class UserListPageContainer extends Component {
                     total: res.data.totalItems,
                 }
             });
-        }).catch((e) => {
+        }).catch(e => {
             this.setState({isLoading: false})
             toast.error(e.response.data.message, {
                 position: "bottom-right",

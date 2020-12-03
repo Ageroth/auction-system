@@ -1,8 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
@@ -10,10 +8,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
- * DTO wykorzystywane przy resetowaniu hasła, zawierające nowe hasło.
+ * DTO zawierające nowe hasło, wykorzystywane przy jego resecie.
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class PasswordResetDto {

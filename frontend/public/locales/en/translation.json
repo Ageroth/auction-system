@@ -43,12 +43,12 @@
   "message": {
     "title": {
       "activationFailed": "Invalid activation link",
-      "activationSucceded": "Your account has been activated successfully",
+      "activationSucceeded": "Your account has been activated successfully",
       "passwordResetEmailSent": "Email was sent"
     },
     "content": {
       "activationFailed": "Provided activation link is either invalid or expired.",
-      "activationSucceded": "You may now log in.",
+      "activationSucceeded": "You may now log in.",
       "passwordResetEmailSent": "Check your email for a link to reset your password. The link is valid for 15 minutes.",
       "activationEmailSent": "Check your email for a link to activate your account. This link is valid for 24 hours."
     }

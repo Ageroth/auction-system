@@ -1,30 +1,23 @@
 package pl.lodz.p.it.auctionsystem.mok.controllers;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.dtos.*;
 import pl.lodz.p.it.auctionsystem.mok.services.UserAccessLevelService;
 import pl.lodz.p.it.auctionsystem.mok.services.UserService;
-import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
-import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
+import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Kontroler obsługujący operacje związane z użytkownikami.
@@ -37,19 +30,13 @@ public class UserController {
 
     private final UserAccessLevelService userAccessLevelService;
 
-    private final ModelMapper modelMapper;
-
     private final MessageService messageService;
-
-    @Value("${page.size}")
-    private int pageSize;
 
     @Autowired
     public UserController(UserService userService, UserAccessLevelService userAccessLevelService,
-                          ModelMapper modelMapper, MessageService messageService) {
+                          MessageService messageService) {
         this.userService = userService;
         this.userAccessLevelService = userAccessLevelService;
-        this.modelMapper = modelMapper;
         this.messageService = messageService;
     }
 
@@ -57,31 +44,121 @@ public class UserController {
      * Odpowiada za samodzielną rejestrację użytkownika.
      *
      * @param signupDto obiekt typu {@link SignupDto}
-     * @return HTTP status 201 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 201 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignupDto signupDto) throws ApplicationException {
-        User user = new User(signupDto.getUsername(), signupDto.getPassword(),
-                signupDto.getEmail().toLowerCase(), signupDto.getFirstName(), signupDto.getLastName(),
-                signupDto.getPhoneNumber());
-
-        User result = userService.registerUser(user);
-
+        Long userId = userService.registerUser(signupDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{userId}")
-                .buildAndExpand(result.getId()).toUri();
-
+                .buildAndExpand(userId).toUri();
         String message = messageService.getMessage("info.userRegistered");
 
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
 
     /**
+     * Dodaje nowego użytkownika.
+     *
+     * @param userAddDto obiekt typu {@link UserAddDto}
+     * @return Kod odpowiedzi HTTP 201 z obiektem typu {@link ApiResponseDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @PostMapping
+    public ResponseEntity<?> addUser(@Valid @RequestBody UserAddDto userAddDto) throws ApplicationException {
+        Long userId = userService.addUser(userAddDto);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{userId}")
+                .buildAndExpand(userId).toUri();
+
+        String message = messageService.getMessage("info.userAdded");
+
+        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+    }
+
+    /**
+     * Zwraca szczegóły naszego konta.
+     *
+     * @param authentication obiekt typu {@link Authentication}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link OwnAccountDetailsDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @GetMapping("/me")
+    public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
+        OwnAccountDetailsDto ownAccountDetailsDto =
+                userService.getUserByUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+
+        return new ResponseEntity<>(ownAccountDetailsDto, HttpStatus.OK);
+    }
+
+    /**
+     * Wyszukuje użytkowników spełniających dane kryteria.
+     *
+     * @param userCriteria obiekt typu {@link UserCriteria}
+     * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
+     * użytkowników oraz liczbą wszystkich stron
+     */
+    @GetMapping
+    public ResponseEntity<?> searchUsers(UserCriteria userCriteria) {
+        Page<UserDto> userDtoPage = userService.searchUsers(userCriteria);
+
+        if (userDtoPage.getContent().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("users", userDtoPage.getContent());
+            response.put("currentPage", userDtoPage.getNumber());
+            response.put("totalItems", userDtoPage.getTotalElements());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Zwraca szczegóły konta użytkownika o podanym id.
+     *
+     * @param userId id użytkownika
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link UserAccountDetailsDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserDetails(@PathVariable(value = "userId") Long userId) throws ApplicationException {
+        UserAccountDetailsDto userAccountDetailsDto = userService.getUserById(userId);
+
+        return new ResponseEntity<>(userAccountDetailsDto, HttpStatus.OK);
+    }
+
+    /**
+     * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie.
+     *
+     * @param username nazwa użytkownika
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link UserIdentityAvailabilityDto}
+     */
+    @GetMapping("/username-availability")
+    public ResponseEntity<?> checkUsernameAvailability(@RequestParam(value = "username") String username) {
+        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByUsername(username)),
+                HttpStatus.OK);
+    }
+
+    /**
+     * Sprawdza czy w bazie istnieje użytkownik o podanym adresie email.
+     *
+     * @param email adres email
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link UserIdentityAvailabilityDto}
+     */
+    @GetMapping("/email-availability")
+    public ResponseEntity<?> checkEmailAvailability(@RequestParam(value = "email") String email) {
+        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByEmail(email)), HttpStatus.OK);
+    }
+
+    /**
      * Aktywuje konto użytkownika o przypisanym kodzie aktywacyjnym.
      *
      * @param activationCode kod aktywacyjny przypisany do konta użytkownika
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/activation/{activationCode}")
@@ -97,12 +174,12 @@ public class UserController {
      * Wysyła użytkownikowi link umożliwiający mu przywrócenie konta w przypadku zapomnienia hasła.
      *
      * @param passwordResetEmailDto obiekt typu {@link PasswordResetEmailDto}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/password-reset")
     public ResponseEntity<?> sendPasswordResetEmail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
-        userService.sendPasswordResetEmail(passwordResetEmailDto.getEmail());
+        userService.sendPasswordResetEmail(passwordResetEmailDto);
 
         String message = messageService.getMessage("info.passwordResetLinkSent");
 
@@ -110,17 +187,17 @@ public class UserController {
     }
 
     /**
-     * Zmienia hasło konta o podanym kodzie zmiany hasła.
+     * Zmienia hasło konta o podanym kodzie resetu hasła.
      *
-     * @param passwordResetCode kod zmiany hasła przypisany do użytkownika
+     * @param passwordResetCode kod resetu hasła przypisany do użytkownika
      * @param passwordResetDto  obiekt typu {@link PasswordResetDto}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/password-reset/{passwordResetCode}")
     public ResponseEntity<?> resetPassword(@PathVariable(value = "passwordResetCode") String passwordResetCode,
                                            @Valid @RequestBody PasswordResetDto passwordResetDto) throws ApplicationException {
-        userService.resetPassword(passwordResetCode, passwordResetDto.getNewPassword());
+        userService.resetPassword(passwordResetCode, passwordResetDto);
 
         String message = messageService.getMessage("info.passwordReset");
 
@@ -128,144 +205,19 @@ public class UserController {
     }
 
     /**
-     * Dodaje nowego użytkownika.
-     *
-     * @param userAddDto obiekt typu {@link UserAddDto}
-     * @return HTTP status 201 z obiektem typu {@link ApiResponseDto}
-     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
-     */
-    @PostMapping
-    public ResponseEntity<?> addUser(@Valid @RequestBody UserAddDto userAddDto) throws ApplicationException {
-        User user = new User(userAddDto.getUsername(), userAddDto.getPassword(),
-                userAddDto.getEmail().toLowerCase(), userAddDto.getFirstName(), userAddDto.getLastName(),
-                userAddDto.getPhoneNumber());
-
-        User result = userService.createUser(user, userAddDto.getAccessLevelIds());
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/users/{userId}")
-                .buildAndExpand(result.getId()).toUri();
-
-        String message = messageService.getMessage("info.userAdded");
-
-        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
-    }
-
-    /**
-     * Pobiera listę użytkowników.
-     *
-     * @param page   numer strony do zwrócenia
-     * @param order  porządek w jakim posortowani mają być użytkownicy
-     * @param query  fraza wykorzystywana do wyszukania
-     * @param status status aktywacji konta do filtrowania
-     * @return HTTP status 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
-     * użytkowników oraz liczbą wszystkich stron
-     */
-    @GetMapping
-    public ResponseEntity<?> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(required = false) String sortField,
-            @RequestParam(required = false) String order,
-            @RequestParam(required = false) String query,
-            @RequestParam(required = false) Boolean status) {
-        List<User> users;
-        List<UserDto> userDtos = new ArrayList<>();
-        Pageable paging;
-        Page<User> userPage;
-
-        if (sortField != null && order != null)
-            paging = PageRequest.of(page, pageSize, Sort.by(SortDirection.getSortDirection(order), sortField));
-        else
-            paging = PageRequest.of(page, pageSize);
-
-        if (query == null && status == null)
-            userPage = userService.getUsers(paging);
-        else if (query != null && status == null)
-            userPage = userService.getFilteredUsers(query, paging);
-        else if (query == null) {
-            userPage = userService.getFilteredUsers(status, paging);
-        } else
-            userPage = userService.getFilteredUsers(query, status, paging);
-
-        users = userPage.getContent();
-
-        if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        for (User user : users) {
-            UserDto userDto = modelMapper.map(user, UserDto.class);
-
-            userDto.setUserAccessLevelNames(user.getUserAccessLevels().stream()
-                    .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
-                    .collect(Collectors.toList()));
-
-            userDto.getUserAccessLevelNames().sort((Comparator.comparingInt(o -> AccessLevelEnum.valueOf((String) o).ordinal())).reversed());
-
-            userDtos.add(userDto);
-        }
-
-        Map<String, Object> response = new HashMap<>();
-
-        response.put("users", userDtos);
-        response.put("currentPage", userPage.getNumber());
-        response.put("totalItems", userPage.getTotalElements());
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    /**
-     * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie użytkownika.
-     *
-     * @param username nazwa użytkownika
-     * @return HTTP status 200 z obiektem typu {@link UserIdentityAvailabilityDto}
-     */
-    @GetMapping("/username-availability")
-    public ResponseEntity<?> checkUsernameAvailability(@RequestParam(value = "username") String username) {
-        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByUsername(username)),
-                HttpStatus.OK);
-    }
-
-    /**
-     * Sprawdza czy w bazie istnieje użytkownik o podanym adresie email.
-     *
-     * @param email adres email
-     * @return HTTP status 200 z obiektem typu {@link UserIdentityAvailabilityDto}
-     */
-    @GetMapping("/email-availability")
-    public ResponseEntity<?> checkEmailAvailability(@RequestParam(value = "email") String email) {
-        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByEmail(email)), HttpStatus.OK);
-    }
-
-    /**
-     * Zwraca szczegóły naszego konta.
-     *
-     * @param authentication obiekt typu {@link Authentication}
-     * @return HTTP status 200 z obiektem typu {@link OwnDetailsDto}
-     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
-     */
-    @GetMapping("/me")
-    public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
-        User user = userService.getCurrentUser(authentication);
-        OwnDetailsDto ownDetailsDto = modelMapper.map(user, OwnDetailsDto.class);
-
-        return new ResponseEntity<>(ownDetailsDto, HttpStatus.OK);
-    }
-
-    /**
      * Aktualizuje nasze dane personalne.
      *
-     * @param ownDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
-     * @param authentication      obiekt typu {@link Authentication}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @param ownAccountDetailsUpdateDto obiekt typu {@link UserAccountDetailsUpdateDto}
+     * @param authentication             obiekt typu {@link Authentication}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PutMapping("/me/details")
-    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnDetailsUpdateDto ownDetailsUpdateDto,
+    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
-        User user = modelMapper.map(ownDetailsUpdateDto, User.class);
+        String currentUserUsername = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
 
-        userService.updateCurrentUserDetails(user, authentication);
+        userService.updateDetailsByUsername(currentUserUsername, ownAccountDetailsUpdateDto);
 
         String message = messageService.getMessage("info.yourDetailsUpdated");
 
@@ -277,14 +229,15 @@ public class UserController {
      *
      * @param ownPasswordChangeDto obiekt typu {@link OwnPasswordChangeDto}
      * @param authentication       obiekt typu {@link Authentication}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/me/password")
     public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
                                                Authentication authentication) throws ApplicationException {
-        userService.changePassword(ownPasswordChangeDto.getNewPassword(),
-                ownPasswordChangeDto.getCurrentPassword(), authentication);
+        String currentUserUsername = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+
+        userService.changePasswordByUsername(currentUserUsername, ownPasswordChangeDto);
 
         String message = messageService.getMessage("info.yourPasswordChanged");
 
@@ -292,39 +245,18 @@ public class UserController {
     }
 
     /**
-     * Zwraca szczegóły konta użytkownika o podanym id.
+     * Aktualizuje dane personalne oraz role użytkownika o podanym id.
      *
-     * @param userId id użytkownika
-     * @return HTTP status 200 z obiektem typu {@link UserDto}
-     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
-     */
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserDetails(@PathVariable(value = "userId") Long userId) throws ApplicationException {
-        User user = userService.getUserById(userId);
-        UserDetailsDto userDetailsDto = modelMapper.map(user, UserDetailsDto.class);
-
-        userDetailsDto.setAccessLevelIds(user.getUserAccessLevels().stream()
-                .map(userAccessLevel -> userAccessLevel.getAccessLevel().getId())
-                .collect(Collectors.toList()));
-
-        return new ResponseEntity<>(userDetailsDto, HttpStatus.OK);
-    }
-
-    /**
-     * Aktualizuje dane personalne użytkownika o podanym id oraz jego role.
-     *
-     * @param userId               id użytkownika
-     * @param userDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @param userId                      id użytkownika
+     * @param userAccountDetailsUpdateDto obiekt typu {@link UserAccountDetailsUpdateDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PutMapping("/{userId}/details")
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
-                                               @Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto) throws ApplicationException {
-        User user = modelMapper.map(userDetailsUpdateDto, User.class);
-
-        userService.updateUserDetailsByUserId(userId, user);
-        userAccessLevelService.modifyUserAccessLevels(userId, userDetailsUpdateDto.getAccessLevelIds());
+                                               @Valid @RequestBody UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException {
+        userService.updateUserDetailsById(userId, userAccountDetailsUpdateDto);
+        userAccessLevelService.modifyUserAccessLevels(userId, userAccountDetailsUpdateDto.getAccessLevelIds());
 
         String message = messageService.getMessage("info.userDetailsUpdated");
 
@@ -336,13 +268,13 @@ public class UserController {
      *
      * @param userId                id użytkownika
      * @param userPasswordChangeDto obiekt typu {@link UserPasswordChangeDto}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/{userId}/password")
     public ResponseEntity<?> changeUserPassword(@PathVariable(value = "userId") Long userId,
                                                 @Valid @RequestBody UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException {
-        userService.changePassword(userId, userPasswordChangeDto.getNewPassword());
+        userService.changePasswordById(userId, userPasswordChangeDto);
 
         String message = messageService.getMessage("info.userPasswordChanged");
 

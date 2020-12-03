@@ -1,8 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
@@ -10,10 +8,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
- * DTO wykorzystywane przy wysyłaniu łącza do resetu hasła.
+ * DTO zawierające email, wykorzystywane przy wysyłaniu łącza do resetu hasła.
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class PasswordResetEmailDto {

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO reprezentujące odpowiedź api.
+ * DTO zawierające odpowiedź API.
  */
 @AllArgsConstructor
 @Getter

@@ -18,8 +18,9 @@ class SignupPageContainer extends Component {
         return signUpRequest(payload).then(() => {
             this.setState({isSubmitting: false});
             this.props.history.push("/login");
-        }).catch(() => {
+        }).catch(e => {
             this.setState({isSubmitting: false});
+            throw e;
         });
     }
 

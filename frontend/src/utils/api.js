@@ -36,7 +36,7 @@ export function resetPasswordRequest(value, payload) {
     return axios.post(`/users/me/password-reset/${value}`, JSON.stringify(payload));
 }
 
-export function getUsersRequest(values) {
+export function searchUsersRequest(values) {
     let activationStatus;
     let searchQuery;
     values.activated ? activationStatus = values.activated[0] : activationStatus = null;

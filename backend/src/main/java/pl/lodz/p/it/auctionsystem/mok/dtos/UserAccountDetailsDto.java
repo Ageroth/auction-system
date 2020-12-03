@@ -1,20 +1,17 @@
 package pl.lodz.p.it.auctionsystem.mok.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * DTO z danymi wykorzystywane do wyświetlania własnych szczegółów.
+ * DTO zawierające szczegóły konta użytkownika, wykorzystywane do ich wyświetlenia.
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-public class OwnDetailsDto {
+public class UserAccountDetailsDto {
 
     private String username;
 
@@ -23,6 +20,8 @@ public class OwnDetailsDto {
     private boolean activated;
 
     private LocalDateTime createdAt;
+
+    private List<Long> accessLevelIds;
 
     private String firstName;
 

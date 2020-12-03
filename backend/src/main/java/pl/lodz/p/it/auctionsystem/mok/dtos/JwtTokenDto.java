@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.List;
 
 /**
- * DTO zawierające token uwierzytelniający użytkownika, nazwę użytkownika oraz jego poziomy dostępu.
+ * DTO zawierające token uwierzytelniający użytkownika, jego nazwę oraz poziomy dostępu.
  */
 @AllArgsConstructor
 @Getter
