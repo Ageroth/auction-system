@@ -23,7 +23,6 @@ import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.UUID;
@@ -70,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("permitAll()")
     public Long registerUser(SignupDto signupDto) throws ApplicationException {
         User user = createUser(new User(signupDto.getUsername(), signupDto.getPassword(),
-                signupDto.getEmail().toLowerCase(), signupDto.getFirstName(), signupDto.getLastName(),
+                signupDto.getEmail(), signupDto.getFirstName(), signupDto.getLastName(),
                 signupDto.getPhoneNumber()));
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
 
@@ -90,7 +89,7 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public Long addUser(UserAddDto userAddDto) throws ApplicationException {
         User user = createUser(new User(userAddDto.getUsername(), userAddDto.getPassword(),
-                userAddDto.getEmail().toLowerCase(), userAddDto.getFirstName(), userAddDto.getLastName(),
+                userAddDto.getEmail(), userAddDto.getFirstName(), userAddDto.getLastName(),
                 userAddDto.getPhoneNumber()));
         user.setActivated(true);
 
@@ -111,14 +110,13 @@ public class UserServiceImpl implements UserService {
     public OwnDetailsDto getUserByUsername(String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
-
+                userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         return modelMapper.map(user, OwnDetailsDto.class);
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public Page<UserDto> searchUsers(@Valid UserCriteria userCriteria) {
+    public Page<UserDto> searchUsers(UserCriteria userCriteria) {
         Pageable pageable;
         Page<User> userPage;
 
@@ -147,7 +145,7 @@ public class UserServiceImpl implements UserService {
 
             userDto.getUserAccessLevelNames().sort((Comparator.comparingInt(o -> AccessLevelEnum.valueOf((String) o).ordinal())).reversed());
 
-            return modelMapper.map(user, UserDto.class);
+            return userDto;
         });
     }
 
@@ -232,7 +230,7 @@ public class UserServiceImpl implements UserService {
     public void updateDetailsByUsername(String username, OwnDetailsUpdateDto ownDetailsUpdateDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
         user.setFirstName(ownDetailsUpdateDto.getFirstName());
         user.setLastName(ownDetailsUpdateDto.getLastName());
@@ -256,7 +254,7 @@ public class UserServiceImpl implements UserService {
     public void changePasswordByUsername(String username, OwnPasswordChangeDto ownPasswordChangeDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
         if (!passwordEncoder.matches(ownPasswordChangeDto.getCurrentPassword(), user.getPassword())) {
             String passwordIncorrectMessage = messageService.getMessage("exception.passwordIncorrect");

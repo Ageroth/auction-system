@@ -11,7 +11,6 @@ import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
 import pl.lodz.p.it.auctionsystem.moa.repositories.AuctionRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
@@ -40,7 +39,7 @@ public class AuctionServiceImpl implements AuctionService {
     public Long addAuction(AuctionAddDto auctionAddDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepository.findByUsername(auctionAddDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepository.findByUsernameIgnoreCase(auctionAddDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         Item item = new Item(auctionAddDto.getItemName(), auctionAddDto.getItemDescription(), auctionAddDto.getImage());
         LocalDateTime endDate = auctionAddDto.getStartDate().plusDays(auctionAddDto.getDuration());
         Auction auction = new Auction(auctionAddDto.getStartingPrice(), auctionAddDto.getStartDate(), endDate, user, item);

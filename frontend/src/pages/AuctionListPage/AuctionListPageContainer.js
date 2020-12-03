@@ -29,7 +29,7 @@ export default class AuctionListPageContainer extends Component {
                     total: res.data.totalItems,
                 }
             });
-        }).catch((e) => {
+        }).catch(e => {
             this.setState({isLoading: false})
             toast.error(e.response.data.message, {
                 position: "bottom-right",

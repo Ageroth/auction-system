@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     boolean existsByUsername(String username);
 
     /**
-     * Sprawdza czy istnieje encja {@link User} o podanym emailu.
+     * Sprawdza czy istnieje encja {@link User} o podanym emailu ignorując wielkość znaków.
      *
      * @param email email użytkownika
      * @return true jeśli istnieje, w przeciwnym wypadku false
@@ -33,15 +33,15 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     boolean existsByEmailIgnoreCase(String email);
 
     /**
-     * Wyciąga z bazy danych encję {@link User} o podanej nazwie użytkownika.
+     * Pobiera z bazy danych encję {@link User} o podanej nazwie użytkownika ignorując wielkość znaków.
      *
      * @param username nazwa użytkownika
      * @return obiekt encji {@link User} opakowany w {@link Optional}
      */
-    Optional<User> findByUsername(String username);
+    Optional<User> findByUsernameIgnoreCase(String username);
 
     /**
-     * Wyciąga z bazy danych encję {@link User} o podanym emailu.
+     * Pobiera z bazy danych encję {@link User} o podanym emailu.
      *
      * @param email email użytkownika
      * @return obiekt encji {@link User} opakowany w {@link Optional}
@@ -49,7 +49,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Optional<User> findByEmailIgnoreCase(String email);
 
     /**
-     * Wyciąga z bazy danych encję {@link User} o podanym kodzie aktywacyjnym.
+     * Pobiera z bazy danych encję {@link User} o podanym kodzie aktywacyjnym.
      *
      * @param activationCode kod aktywacyjny użytkownika
      * @return obiekt encji {@link User} opakowany w {@link Optional}
@@ -57,7 +57,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Optional<User> findByActivationCode(String activationCode);
 
     /**
-     * Wyciąga z bazy danych encję {@link User} o podanym kodzie resetującym hasło.
+     * Pobiera z bazy danych encję {@link User} o podanym kodzie resetującym hasło.
      *
      * @param passwordResetCode kod resetujący hasło użytkownika
      * @return obiekt encji {@link User} opakowany w {@link Optional}

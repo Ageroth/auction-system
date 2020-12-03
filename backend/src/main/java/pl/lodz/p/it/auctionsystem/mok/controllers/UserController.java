@@ -44,7 +44,7 @@ public class UserController {
      * Odpowiada za samodzielną rejestrację użytkownika.
      *
      * @param signupDto obiekt typu {@link SignupDto}
-     * @return HTTP status 201 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 201 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me")
@@ -62,7 +62,7 @@ public class UserController {
      * Dodaje nowego użytkownika.
      *
      * @param userAddDto obiekt typu {@link UserAddDto}
-     * @return HTTP status 201 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 201 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping
@@ -82,7 +82,7 @@ public class UserController {
      * Zwraca szczegóły naszego konta.
      *
      * @param authentication obiekt typu {@link Authentication}
-     * @return HTTP status 200 z obiektem typu {@link OwnDetailsDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link OwnDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/me")
@@ -97,11 +97,18 @@ public class UserController {
      * Wyszukuje użytkowników spełniających dane kryteria.
      *
      * @param userCriteria obiekt typu {@link UserCriteria}
-     * @return HTTP status 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
+     * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
      * użytkowników oraz liczbą wszystkich stron
      */
     @GetMapping
     public ResponseEntity<?> searchUsers(UserCriteria userCriteria) {
+        System.out.println("HERE");
+        System.out.println(userCriteria.getOrder());
+        System.out.println(userCriteria.getPage());
+        System.out.println(userCriteria.getQuery());
+        System.out.println(userCriteria.getSortField());
+        System.out.println(userCriteria.getStatus());
+
         Page<UserDto> userDtoPage = userService.searchUsers(userCriteria);
 
         if (userDtoPage.getContent().isEmpty()) {
@@ -121,7 +128,7 @@ public class UserController {
      * Zwraca szczegóły konta użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return HTTP status 200 z obiektem typu {@link UserDetailsDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link UserDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/{userId}")
@@ -135,7 +142,7 @@ public class UserController {
      * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie.
      *
      * @param username nazwa użytkownika
-     * @return HTTP status 200 z obiektem typu {@link UserIdentityAvailabilityDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link UserIdentityAvailabilityDto}
      */
     @GetMapping("/username-availability")
     public ResponseEntity<?> checkUsernameAvailability(@RequestParam(value = "username") String username) {
@@ -147,7 +154,7 @@ public class UserController {
      * Sprawdza czy w bazie istnieje użytkownik o podanym adresie email.
      *
      * @param email adres email
-     * @return HTTP status 200 z obiektem typu {@link UserIdentityAvailabilityDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link UserIdentityAvailabilityDto}
      */
     @GetMapping("/email-availability")
     public ResponseEntity<?> checkEmailAvailability(@RequestParam(value = "email") String email) {
@@ -158,7 +165,7 @@ public class UserController {
      * Aktywuje konto użytkownika o przypisanym kodzie aktywacyjnym.
      *
      * @param activationCode kod aktywacyjny przypisany do konta użytkownika
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/activation/{activationCode}")
@@ -174,7 +181,7 @@ public class UserController {
      * Wysyła użytkownikowi link umożliwiający mu przywrócenie konta w przypadku zapomnienia hasła.
      *
      * @param passwordResetEmailDto obiekt typu {@link PasswordResetEmailDto}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/password-reset")
@@ -191,7 +198,7 @@ public class UserController {
      *
      * @param passwordResetCode kod resetu hasła przypisany do użytkownika
      * @param passwordResetDto  obiekt typu {@link PasswordResetDto}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PostMapping("/me/password-reset/{passwordResetCode}")
@@ -209,7 +216,7 @@ public class UserController {
      *
      * @param ownDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
      * @param authentication      obiekt typu {@link Authentication}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PutMapping("/me/details")
@@ -229,7 +236,7 @@ public class UserController {
      *
      * @param ownPasswordChangeDto obiekt typu {@link OwnPasswordChangeDto}
      * @param authentication       obiekt typu {@link Authentication}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/me/password")
@@ -249,7 +256,7 @@ public class UserController {
      *
      * @param userId               id użytkownika
      * @param userDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PutMapping("/{userId}/details")
@@ -268,7 +275,7 @@ public class UserController {
      *
      * @param userId                id użytkownika
      * @param userPasswordChangeDto obiekt typu {@link UserPasswordChangeDto}
-     * @return HTTP status 200 z obiektem typu {@link ApiResponseDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/{userId}/password")

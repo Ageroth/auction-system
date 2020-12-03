@@ -35,7 +35,7 @@ public class AccessLevelController {
     /**
      * Zwraca wszystkie poziomy dostępu.
      *
-     * @return HTTP Status 200 z listą poziomów dostępu
+     * @return Kod odpowiedzi HTTP 200 z listą poziomów dostępu
      */
     @GetMapping
     public ResponseEntity<?> getAllAccessLevels() {

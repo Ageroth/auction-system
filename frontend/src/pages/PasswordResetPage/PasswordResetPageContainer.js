@@ -41,7 +41,7 @@ class PasswordResetPageContainer extends Component {
                 closeOnClick: true
             });
             this.props.history.push("/login");
-        }).catch((e) => {
+        }).catch(e => {
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,

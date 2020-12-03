@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import {Button, Input, Space, Table, Tag} from 'antd';
+import moment from 'moment';
 import AppLayout from '../../components/AppLayout'
 import {useTranslation} from 'react-i18next';
 import allroles from '../../utils/allroles'
@@ -13,10 +14,6 @@ const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 const UserListPage = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
-
-    const formatDate = (date) => {
-        return new Date(date).toLocaleString([]);
-    }
 
     const getColumnSearchProps = () => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -66,7 +63,6 @@ const UserListPage = (props) => {
             title: t('userLabels.name'),
             dataIndex: 'lastName',
             key: 'lastName',
-            width: '20%',
             sorter: true,
             ...getColumnSearchProps(),
             render: (text, record) => <Link style={{color: "#1890ff"}}
@@ -87,7 +83,7 @@ const UserListPage = (props) => {
             dataIndex: 'createdAt',
             key: 'createdAt',
             sorter: true,
-            render: createdAt => `${formatDate(createdAt)}`
+            render: createdAt => `${moment(createdAt).format('DD/MM/YYYY HH:MM')}`
         },
         {
             title: t('userLabels.roles'),
