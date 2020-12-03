@@ -82,15 +82,15 @@ public class UserController {
      * Zwraca szczegóły naszego konta.
      *
      * @param authentication obiekt typu {@link Authentication}
-     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link OwnDetailsDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link OwnAccountDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/me")
     public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
-        OwnDetailsDto ownDetailsDto =
+        OwnAccountDetailsDto ownAccountDetailsDto =
                 userService.getUserByUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
 
-        return new ResponseEntity<>(ownDetailsDto, HttpStatus.OK);
+        return new ResponseEntity<>(ownAccountDetailsDto, HttpStatus.OK);
     }
 
     /**
@@ -102,13 +102,6 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<?> searchUsers(UserCriteria userCriteria) {
-        System.out.println("HERE");
-        System.out.println(userCriteria.getOrder());
-        System.out.println(userCriteria.getPage());
-        System.out.println(userCriteria.getQuery());
-        System.out.println(userCriteria.getSortField());
-        System.out.println(userCriteria.getStatus());
-
         Page<UserDto> userDtoPage = userService.searchUsers(userCriteria);
 
         if (userDtoPage.getContent().isEmpty()) {
@@ -128,14 +121,14 @@ public class UserController {
      * Zwraca szczegóły konta użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link UserDetailsDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link UserAccountDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserDetails(@PathVariable(value = "userId") Long userId) throws ApplicationException {
-        UserDetailsDto userDetailsDto = userService.getUserById(userId);
+        UserAccountDetailsDto userAccountDetailsDto = userService.getUserById(userId);
 
-        return new ResponseEntity<>(userDetailsDto, HttpStatus.OK);
+        return new ResponseEntity<>(userAccountDetailsDto, HttpStatus.OK);
     }
 
     /**
@@ -214,17 +207,17 @@ public class UserController {
     /**
      * Aktualizuje nasze dane personalne.
      *
-     * @param ownDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
-     * @param authentication      obiekt typu {@link Authentication}
+     * @param ownAccountDetailsUpdateDto obiekt typu {@link UserAccountDetailsUpdateDto}
+     * @param authentication             obiekt typu {@link Authentication}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PutMapping("/me/details")
-    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnDetailsUpdateDto ownDetailsUpdateDto,
+    public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
         String currentUserUsername = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
 
-        userService.updateDetailsByUsername(currentUserUsername, ownDetailsUpdateDto);
+        userService.updateDetailsByUsername(currentUserUsername, ownAccountDetailsUpdateDto);
 
         String message = messageService.getMessage("info.yourDetailsUpdated");
 
@@ -254,16 +247,16 @@ public class UserController {
     /**
      * Aktualizuje dane personalne oraz role użytkownika o podanym id.
      *
-     * @param userId               id użytkownika
-     * @param userDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
+     * @param userId                      id użytkownika
+     * @param userAccountDetailsUpdateDto obiekt typu {@link UserAccountDetailsUpdateDto}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PutMapping("/{userId}/details")
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
-                                               @Valid @RequestBody UserDetailsUpdateDto userDetailsUpdateDto) throws ApplicationException {
-        userService.updateUserDetailsById(userId, userDetailsUpdateDto);
-        userAccessLevelService.modifyUserAccessLevels(userId, userDetailsUpdateDto.getAccessLevelIds());
+                                               @Valid @RequestBody UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException {
+        userService.updateUserDetailsById(userId, userAccountDetailsUpdateDto);
+        userAccessLevelService.modifyUserAccessLevels(userId, userAccountDetailsUpdateDto.getAccessLevelIds());
 
         String message = messageService.getMessage("info.userDetailsUpdated");
 

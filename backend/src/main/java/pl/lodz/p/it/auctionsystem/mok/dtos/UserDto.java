@@ -1,18 +1,14 @@
 package pl.lodz.p.it.auctionsystem.mok.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * DTO z danymi wykorzystywane do wyświetlania listy użytkowników.
+ * DTO ze szczegółami kont użytkowników, wykorzystywane do wyświetlania ich listy.
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class UserDto {

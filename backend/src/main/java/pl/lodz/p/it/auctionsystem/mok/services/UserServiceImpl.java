@@ -107,11 +107,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public OwnDetailsDto getUserByUsername(String username) throws ApplicationException {
+    public OwnAccountDetailsDto getUserByUsername(String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
-        return modelMapper.map(user, OwnDetailsDto.class);
+        return modelMapper.map(user, OwnAccountDetailsDto.class);
     }
 
     @Override
@@ -151,18 +151,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public UserDetailsDto getUserById(Long userId) throws ApplicationException {
+    public UserAccountDetailsDto getUserById(Long userId) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
 
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        UserDetailsDto userDetailsDto = modelMapper.map(user, UserDetailsDto.class);
+        UserAccountDetailsDto userAccountDetailsDto = modelMapper.map(user, UserAccountDetailsDto.class);
 
-        userDetailsDto.setAccessLevelIds(user.getUserAccessLevels().stream()
+        userAccountDetailsDto.setAccessLevelIds(user.getUserAccessLevels().stream()
                 .map(userAccessLevel -> userAccessLevel.getAccessLevel().getId())
                 .collect(Collectors.toList()));
 
-        return userDetailsDto;
+        return userAccountDetailsDto;
     }
 
     @Override
@@ -227,26 +227,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public void updateDetailsByUsername(String username, OwnDetailsUpdateDto ownDetailsUpdateDto) throws ApplicationException {
+    public void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        user.setFirstName(ownDetailsUpdateDto.getFirstName());
-        user.setLastName(ownDetailsUpdateDto.getLastName());
-        user.setPhoneNumber(ownDetailsUpdateDto.getPhoneNumber());
+        user.setFirstName(ownAccountDetailsUpdateDto.getFirstName());
+        user.setLastName(ownAccountDetailsUpdateDto.getLastName());
+        user.setPhoneNumber(ownAccountDetailsUpdateDto.getPhoneNumber());
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public void updateUserDetailsById(Long userId, UserDetailsUpdateDto userDetailsUpdateDto) throws ApplicationException {
+    public void updateUserDetailsById(Long userId, UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        user.setFirstName(userDetailsUpdateDto.getFirstName());
-        user.setLastName(userDetailsUpdateDto.getLastName());
-        user.setPhoneNumber(userDetailsUpdateDto.getPhoneNumber());
+        user.setFirstName(userAccountDetailsUpdateDto.getFirstName());
+        user.setLastName(userAccountDetailsUpdateDto.getLastName());
+        user.setPhoneNumber(userAccountDetailsUpdateDto.getPhoneNumber());
     }
 
     @Override

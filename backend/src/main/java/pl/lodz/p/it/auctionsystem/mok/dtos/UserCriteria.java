@@ -1,15 +1,11 @@
 package pl.lodz.p.it.auctionsystem.mok.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
  * DTO wykorzystywane przy przesyłaniu parametrów do sortowania, filtrowania i stronnicowania.
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class UserCriteria {

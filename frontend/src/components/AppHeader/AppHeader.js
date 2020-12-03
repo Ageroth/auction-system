@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {Dropdown, Layout, Menu, Select} from 'antd';
+import {Avatar, Dropdown, Layout, Menu, Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux'
 import {changeCurrentRole, logOut} from '../../actions/userActions';
 import {useTranslation} from 'react-i18next';
@@ -85,7 +85,14 @@ const AppHeader = () => {
                     {navigationBar()}
                     <Menu.Item className="menu-right-item" key="dropdown">
                         <Dropdown classname="dropdown" overlay={dropdownMenu}>
-                            <p style={{color: "white"}}> {username} </p>
+                            <Avatar
+                                style={{
+                                    color: '#001529',
+                                    backgroundColor: "white",
+                                }}
+                            >
+                                {username.toUpperCase()}
+                            </Avatar>
                         </Dropdown>
                     </Menu.Item>
                     <Menu.Item className="menu-right-item" key="select" disabled="true">

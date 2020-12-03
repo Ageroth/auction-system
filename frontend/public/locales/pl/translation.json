@@ -42,13 +42,13 @@
   },
   "message": {
     "title": {
-      "activationFailed": "Nieprawidłowy link aktywacyjny",
-      "activationSucceded": "Twoje konto zostało pomyślnie aktywowane",
+      "activationFailed": "Nieprawidłowe łącze aktywacyjne",
+      "activationSucceeded": "Twoje konto zostało pomyślnie aktywowane",
       "passwordResetEmailSent": "Email został wysłany"
     },
     "content": {
       "activationFailed": "Użyty link aktywacyjny jest albo nieprawidłowy, albo nieważny.",
-      "activationSucceded": "Możesz się teraz zalogować.",
+      "activationSucceeded": "Możesz się teraz zalogować.",
       "passwordResetEmailSent": "Na podany adres email został wysłany link do resetu hasła. Link jest ważny przez 15 minut.",
       "activationEmailSent": "Na podany adres email został wysłany link do aktywacji konta. Link jest ważny przez 24 godziny."
     }

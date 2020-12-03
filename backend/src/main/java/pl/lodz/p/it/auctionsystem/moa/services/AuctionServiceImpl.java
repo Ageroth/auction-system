@@ -42,7 +42,8 @@ public class AuctionServiceImpl implements AuctionService {
                 userRepository.findByUsernameIgnoreCase(auctionAddDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         Item item = new Item(auctionAddDto.getItemName(), auctionAddDto.getItemDescription(), auctionAddDto.getImage());
         LocalDateTime endDate = auctionAddDto.getStartDate().plusDays(auctionAddDto.getDuration());
-        Auction auction = new Auction(auctionAddDto.getStartingPrice(), auctionAddDto.getStartDate(), endDate, user, item);
+        Auction auction = new Auction(auctionAddDto.getStartingPrice(), auctionAddDto.getStartDate(), endDate, user,
+                item);
 
         return auctionRepository.save(auction).getId();
     }

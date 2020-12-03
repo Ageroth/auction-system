@@ -83,7 +83,7 @@ const UserListPage = (props) => {
             dataIndex: 'createdAt',
             key: 'createdAt',
             sorter: true,
-            render: createdAt => `${moment(createdAt).format('DD/MM/YYYY HH:MM')}`
+            render: createdAt => `${moment(createdAt).format('DD-MM-YYYY HH:MM')}`
         },
         {
             title: t('userLabels.roles'),

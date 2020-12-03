@@ -34,16 +34,16 @@ public interface UserService {
      * Zwraca użytkownika o podanej nazwie użytkownika.
      *
      * @param username nazwa użytkownika
-     * @return obiekt typu {@link OwnDetailsDto}
+     * @return obiekt typu {@link OwnAccountDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    OwnDetailsDto getUserByUsername(String username) throws ApplicationException;
+    OwnAccountDetailsDto getUserByUsername(String username) throws ApplicationException;
 
     /**
      * Zwraca użytkowników spełniających zadane kryteria.
      *
      * @param userCriteria obiekt typu {@link UserCriteria}
-     * @return obiekt typu {@link Page<UserDto>} z użytkownikami
+     * @return obiekt typu {@link Page<UserDto>}
      */
     Page<UserDto> searchUsers(UserCriteria userCriteria);
 
@@ -51,10 +51,10 @@ public interface UserService {
      * Zwraca użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return obiekt typu {@link UserDetailsDto}
+     * @return obiekt typu {@link UserAccountDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    UserDetailsDto getUserById(Long userId) throws ApplicationException;
+    UserAccountDetailsDto getUserById(Long userId) throws ApplicationException;
 
     /**
      * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie użytkownika.
@@ -100,20 +100,20 @@ public interface UserService {
     /**
      * Umożliwia aktualizację danych personalnych użytkownika o podanej nazwie.
      *
-     * @param username            nazwa użytkownika
-     * @param ownDetailsUpdateDto obiekt typu {@link OwnDetailsUpdateDto}
+     * @param username                   nazwa użytkownika
+     * @param ownAccountDetailsUpdateDto obiekt typu {@link OwnAccountDetailsUpdateDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateDetailsByUsername(String username, OwnDetailsUpdateDto ownDetailsUpdateDto) throws ApplicationException;
+    void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto) throws ApplicationException;
 
     /**
      * Aktualizuje dane personalne użytkownika o podanym id.
      *
-     * @param userId               id użytkownika
-     * @param userDetailsUpdateDto obiekt typu {@link UserDetailsUpdateDto}
+     * @param userId                      id użytkownika
+     * @param userAccountDetailsUpdateDto obiekt typu {@link UserAccountDetailsUpdateDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateUserDetailsById(Long userId, UserDetailsUpdateDto userDetailsUpdateDto) throws ApplicationException;
+    void updateUserDetailsById(Long userId, UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException;
 
     /**
      * Zmienia hasło użytkownika o podanej nazwie.

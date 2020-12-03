@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button, Checkbox, Descriptions, Spin} from 'antd';
+import moment from 'moment';
 import AppLayout from '../../components/AppLayout';
 import {useTranslation} from 'react-i18next';
 import {useHistory} from "react-router-dom";
@@ -10,10 +11,6 @@ const UserDetailsPage = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
     const userDetails = props.userDetails;
-
-    const formatDate = (date) => {
-        return new Date(date).toLocaleString([]);
-    }
 
     const handleEditClick = () => {
         const currentLocation = history.location.pathname;
@@ -42,7 +39,7 @@ const UserDetailsPage = (props) => {
                         <Descriptions.Item
                             label={t('userLabels.activated')}> {userDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
                         <Descriptions.Item
-                            label={t('userLabels.created')}> {formatDate(userDetails.createdAt)} </Descriptions.Item>
+                            label={t('userLabels.created')}> {moment(userDetails.createdAt).format('DD-MM-YYYY HH:MM')} </Descriptions.Item>
                         <Descriptions.Item label={t('userLabels.roles')}>
                             {userDetails.accessLevelIds.map(accessLevelId => {
                                 let value;
