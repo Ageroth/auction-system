@@ -207,7 +207,7 @@ const UserAddPage = (props) => {
                                     validator(rule, value) {
                                         if (!value || getFieldValue('password') === value) {
                                             return Promise.resolve()
-                                        } else return Promise.reject(t('validation.passwordMistmatch'))
+                                        } else return Promise.reject(t('validation.passwordMismatch'))
                                     }
                                 })
                             ]}
