@@ -47,7 +47,7 @@
       "passwordResetEmailSent": "Email został wysłany"
     },
     "content": {
-      "activationFailed": "Użyty link aktywacyjny jest albo nieprawidłowy, albo nieważny.",
+      "activationFailed": "Użyte łącze aktywacyjne jest albo nieprawidłowe, albo nieważne.",
       "activationSucceeded": "Możesz się teraz zalogować.",
       "passwordResetEmailSent": "Na podany adres email został wysłany link do resetu hasła. Link jest ważny przez 15 minut.",
       "activationEmailSent": "Na podany adres email został wysłany link do aktywacji konta. Link jest ważny przez 24 godziny."
