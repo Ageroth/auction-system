@@ -16,7 +16,7 @@ public class AuctionDto {
 
     private Long id;
 
-    private BigDecimal openingPrice;
+    private BigDecimal startingPrice;
 
     private int bidsNumber;
 

@@ -77,7 +77,7 @@ public class User extends BaseEntity {
     @Setter
     private String phoneNumber;
 
-    public User(String username, String password, String email, String firstName, String lastName, String phoneNumber) {
+    public User(String username, String password, String email, String firstName, String lastName, String phoneNumber, LocalDateTime createdAt) {
         super();
         this.username = username;
         this.password = password;
@@ -86,6 +86,6 @@ public class User extends BaseEntity {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = createdAt;
     }
 }

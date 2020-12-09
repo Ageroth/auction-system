@@ -16,6 +16,7 @@ import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
 import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
@@ -41,8 +42,16 @@ public class AuctionServiceImpl implements AuctionService {
         User user =
                 userRepository.findByUsernameIgnoreCase(auctionAddDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         Item item = new Item(auctionAddDto.getItemName(), auctionAddDto.getItemDescription(), auctionAddDto.getImage());
-        LocalDateTime endDate = auctionAddDto.getStartDate().plusDays(auctionAddDto.getDuration());
-        Auction auction = new Auction(auctionAddDto.getStartingPrice(), auctionAddDto.getStartDate(), endDate, user,
+        LocalDateTime startDate;
+
+        if (auctionAddDto.getStartDate() == null)
+            startDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        else
+            startDate = auctionAddDto.getStartDate().truncatedTo(ChronoUnit.MINUTES);
+
+        LocalDateTime endDate = startDate.plusDays(auctionAddDto.getDuration());
+
+        Auction auction = new Auction(auctionAddDto.getStartingPrice(), startDate, endDate, user,
                 item);
 
         return auctionRepository.save(auction).getId();
