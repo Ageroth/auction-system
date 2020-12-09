@@ -70,7 +70,8 @@ public class UserServiceImpl implements UserService {
     public Long registerUser(SignupDto signupDto) throws ApplicationException {
         User user = createUser(new User(signupDto.getUsername(), signupDto.getPassword(),
                 signupDto.getEmail(), signupDto.getFirstName(), signupDto.getLastName(),
-                signupDto.getPhoneNumber()));
+                signupDto.getPhoneNumber(), LocalDateTime.now()));
+
         user.setActivationCode(UUID.randomUUID().toString().replace("-", ""));
 
         String clientAccessLevelNotFoundMessage = messageService.getMessage("exception.accessLevelNotFound");
@@ -90,7 +91,8 @@ public class UserServiceImpl implements UserService {
     public Long addUser(UserAddDto userAddDto) throws ApplicationException {
         User user = createUser(new User(userAddDto.getUsername(), userAddDto.getPassword(),
                 userAddDto.getEmail(), userAddDto.getFirstName(), userAddDto.getLastName(),
-                userAddDto.getPhoneNumber()));
+                userAddDto.getPhoneNumber(), LocalDateTime.now()));
+
         user.setActivated(true);
 
         for (Long accessLevelId : userAddDto.getAccessLevelIds()) {
@@ -111,12 +113,13 @@ public class UserServiceImpl implements UserService {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+
         return modelMapper.map(user, OwnAccountDetailsDto.class);
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public Page<UserDto> searchUsers(UserCriteria userCriteria) {
+    public Page<UserDto> getUsers(UserCriteria userCriteria) {
         Pageable pageable;
         Page<User> userPage;
 

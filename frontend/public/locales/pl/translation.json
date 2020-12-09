@@ -38,7 +38,7 @@
     "usernameTaken": "Nazwa użytkownika zajęta",
     "emailTaken": "Email zajęty",
     "passwordMismatch": "Hasło nie jest takie same",
-    "invalidDate": "Cannot be a past date"
+    "invalidDate": "Nie może być datą przeszłą"
   },
   "message": {
     "title": {
@@ -83,7 +83,9 @@
   "navbarLink": {
     "users": "Użytkownicy",
     "newUser": "Nowy użytkownik",
-    "yourAccount": "Twoje konto"
+    "yourAccount": "Twoje konto",
+    "auctions": "Aukcje",
+    "newAuction": "Nowa aukcja"
   },
   "pageName": {
     "home": "Strona główna",

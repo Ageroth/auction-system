@@ -4,13 +4,10 @@ import AppLayout from '../../components/AppLayout'
 import {useTranslation} from 'react-i18next';
 import 'antd/dist/antd.css'
 import './AuctionListPage.css'
+import moment from "moment";
 
 const AuctionListPage = (props) => {
     const {t} = useTranslation();
-
-    const formatDate = (date) => {
-        return new Date(date).toLocaleString([]);
-    }
 
     const columns = [
         {
@@ -32,19 +29,19 @@ const AuctionListPage = (props) => {
             title: 'Current price',
             dataIndex: 'price',
             key: 'price',
-            render: (text, record) => record.currentPrice ? record.currentPrice : record.openingPrice
+            render: (text, record) => record.currentPrice ? `${record.currentPrice} PLN` : `${record.startingPrice} PLN`
         },
         {
             title: 'Start date',
             dataIndex: 'startDate',
             key: 'startDate',
-            render: startDate => `${formatDate(startDate)}`
+            render: startDate => `${moment(startDate).format('DD-MM-YYYY HH:mm')}`
         },
         {
             title: 'End date',
             dataIndex: 'endDate',
             key: 'endDate',
-            render: endDate => `${formatDate(endDate)}`
+            render: endDate => `${moment(endDate).format('DD-MM-YYYY HH:mm')}`
         },
         {
             title: 'Bids number',

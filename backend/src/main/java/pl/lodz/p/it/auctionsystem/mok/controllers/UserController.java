@@ -94,15 +94,15 @@ public class UserController {
     }
 
     /**
-     * Wyszukuje użytkowników spełniających dane kryteria.
+     * Zwraca użytkowników spełniających dane kryteria.
      *
      * @param userCriteria obiekt typu {@link UserCriteria}
      * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
      * użytkowników oraz liczbą wszystkich stron
      */
     @GetMapping
-    public ResponseEntity<?> searchUsers(UserCriteria userCriteria) {
-        Page<UserDto> userDtoPage = userService.searchUsers(userCriteria);
+    public ResponseEntity<?> getUsers(UserCriteria userCriteria) {
+        Page<UserDto> userDtoPage = userService.getUsers(userCriteria);
 
         if (userDtoPage.getContent().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -161,7 +161,7 @@ public class UserController {
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @PostMapping("/me/activation/{activationCode}")
+    @PatchMapping("/me/activation/{activationCode}")
     public ResponseEntity<?> activateUser(@PathVariable(value = "activationCode") String activationCode) throws ApplicationException {
         userService.activateUser(activationCode);
 
@@ -177,7 +177,7 @@ public class UserController {
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @PostMapping("/me/password-reset")
+    @PatchMapping("/me/password-reset")
     public ResponseEntity<?> sendPasswordResetEmail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
         userService.sendPasswordResetEmail(passwordResetEmailDto);
 
@@ -194,7 +194,7 @@ public class UserController {
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @PostMapping("/me/password-reset/{passwordResetCode}")
+    @PatchMapping("/me/password-reset/{passwordResetCode}")
     public ResponseEntity<?> resetPassword(@PathVariable(value = "passwordResetCode") String passwordResetCode,
                                            @Valid @RequestBody PasswordResetDto passwordResetDto) throws ApplicationException {
         userService.resetPassword(passwordResetCode, passwordResetDto);

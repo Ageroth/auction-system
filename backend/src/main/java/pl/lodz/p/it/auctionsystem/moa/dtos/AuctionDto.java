@@ -1,34 +1,32 @@
 package pl.lodz.p.it.auctionsystem.moa.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class AuctionDto {
 
     private Long id;
 
-    private BigDecimal openingPrice;
-
-    private int bidsNumber;
-
-    private BigDecimal currentPrice;
+    private BigDecimal startingPrice;
 
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
+
+    private int bidsNumber;
+
+    private BigDecimal currentPrice;
 
     private String userUsername;
 
     private String itemName;
 
     private String itemDescription;
+
+    private byte[] itemImage;
 }

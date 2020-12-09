@@ -4,7 +4,7 @@ import {Avatar, Dropdown, Layout, Menu, Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux'
 import {changeCurrentRole, logOut} from '../../actions/userActions';
 import {useTranslation} from 'react-i18next';
-import {HomeOutlined, TeamOutlined, UserAddOutlined} from '@ant-design/icons';
+import {HomeOutlined, PlusOutlined, TeamOutlined, UnorderedListOutlined, UserAddOutlined} from '@ant-design/icons';
 import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
 import './AppHeader.css'
@@ -59,6 +59,16 @@ const AppHeader = () => {
                 break;
 
             case MANAGER:
+                items = (
+                    <>
+                        <Menu.Item className="menu-left-item" key="auctions" icon={<UnorderedListOutlined/>}>
+                            <Link className="menu-link" to={`/auctions`}> {t('navbarLink.auctions')} </Link>
+                        </Menu.Item>
+                        <Menu.Item className="menu-left-item" key="user-add" icon={<PlusOutlined/>}>
+                            <Link className="menu-link" to={`/auctions/add`}> {t('navbarLink.newAuction')} </Link>
+                        </Menu.Item>
+                    </>
+                )
                 break;
 
             case CLIENT:

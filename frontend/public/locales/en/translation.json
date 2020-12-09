@@ -83,7 +83,9 @@
   "navbarLink": {
     "users": "Users",
     "newUser": "New user",
-    "yourAccount": "Your account"
+    "yourAccount": "Your account",
+    "auctions": "Auctions",
+    "newAuction": "New auction"
   },
   "pageName": {
     "home": "Home",

@@ -102,7 +102,7 @@ const AuctionAddPage = (props) => {
             "itemName": values.itemName,
             "itemDescription": values.itemDescription,
             "startingPrice": values.startingPrice,
-            "startDate": values.startDate,
+            "startDate": moment(values.startDate).utc(true),
             "duration": values.duration
         })], {
             type: "application/json"
