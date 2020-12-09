@@ -11,7 +11,9 @@ const AppLayout = ({children}) => {
     return (
         <Layout className="app-layout">
             <AppHeader/>
-            <AppBreadcrumbs/>
+            <div className="app-breadcrumbs">
+                <AppBreadcrumbs/>
+            </div>
             <div className="app-content">
                 {children}
             </div>

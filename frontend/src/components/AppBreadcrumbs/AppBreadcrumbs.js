@@ -1,57 +1,49 @@
 import React from 'react';
-import {Link, useHistory} from 'react-router-dom';
-import {Breadcrumb} from 'antd';
+import {Link} from 'react-router-dom'
+import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
 import {useTranslation} from 'react-i18next';
 import 'antd/dist/antd.css';
 import './AppBreadcrumbs.css'
 
-const AppBreadcrumbs = () => {
+const routes = [
+    {path: '/', breadcrumb: 'pageName.home'},
+    {path: '/login', breadcrumb: null},
+    {path: '/signup', breadcrumb: null},
+    {path: '/users', breadcrumb: 'pageName.users'},
+    {path: '/users/add', breadcrumb: 'pageName.userAdd'},
+    {path: '/users/:id/edit', breadcrumb: 'pageName.edit'},
+    {path: '/users/:id/password_change', breadcrumb: 'pageName.passwordChange'},
+    {path: '/users/:id', breadcrumb: 'pageName.userDetails'},
+    {path: '/my_profile/edit', breadcrumb: 'pageName.edit'},
+    {path: '/my_profile/password_change', breadcrumb: 'pageName.passwordChange'},
+    {path: '/my_profile', breadcrumb: 'pageName.myProfile'},
+    {path: '/password_reset', breadcrumb: null},
+    {path: '/password_reset/:resetPasswordCode', breadcrumb: 'pageName.passwordReset'},
+    {path: '/activation', breadcrumb: null},
+    {path: '/activation/:activationCode', breadcrumb: null},
+    {path: '/auctions', breadcrumb: 'pageName.auctions'},
+    {path: '/auctions/add', breadcrumb: 'pageName.auctionAdd'},
+];
+
+const AppBreadcrumbs = ({breadcrumbs}) => {
     const {t} = useTranslation();
-    const history = useHistory();
-    const breadcrumbNameMap = {
-        '/users': t('pageName.users'),
-        '/users/add': t('pageName.userAdd'),
-        '/users/details': t('pageName.userDetails'),
-        '/users/details/edit': t('pageName.edit'),
-        '/users/details/password_change': t('pageName.passwordChange'),
-        '/my_profile': t('pageName.myProfile'),
-        '/my_profile/edit': t('pageName.edit'),
-        '/my_profile/password_change': t('pageName.passwordChange'),
-        '/login': t('pageName.login'),
-        '/signup': t('pageName.signup'),
-        '/password_reset': t('pageName.passwordReset'),
-        '/activation': t('pageName.activation'),
-        '/auctions': t('pageName.auctions'),
-        '/auctions/add': t('pageName.auctionAdd'),
-    };
-    const pathSnippets = history.location.pathname.split('/').filter(i => i);
-    const nameSnippets = pathSnippets.map(path => isNaN(path) ? path : "details");
-    const extraBreadcrumbItems = pathSnippets.map((_, index) => {
-        const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
-        const name = `/${nameSnippets.slice(0, index + 1).join('/')}`;
-
-        return (
-            <Breadcrumb.Item key={url}>
-                <Link to={url}>{breadcrumbNameMap[name]}</Link>
-            </Breadcrumb.Item>
-        );
-    });
-
-    let breadcrumbItems;
-
-    extraBreadcrumbItems.length > 0 ? (
-        breadcrumbItems = [
-            <Breadcrumb.Item key="home">
-                <Link to="/"> {t('pageName.home')} </Link>
-            </Breadcrumb.Item>
-        ].concat(extraBreadcrumbItems)
-    ) : (
-        breadcrumbItems = null
-    )
 
     return (
-        <Breadcrumb className="app-breadcrumbs" separator=">">{breadcrumbItems}</Breadcrumb>
+        <>
+            {breadcrumbs.length > 1 ?
+                (
+                    <div className="breadcrumbs-wrapper">
+                        {breadcrumbs.map(({breadcrumb, match}, index) => (
+                            <div className="bc" key={match.url}>
+                                <Link to={match.url || ""}>{t(breadcrumb.props.children)}</Link>
+                                {index < breadcrumbs.length - 1 ? ">" : null}
+                            </div>
+                        ))}
+                    </div>
+                ) : null
+            }
+        </>
     );
-}
+};
 
-export default AppBreadcrumbs;
+export default withBreadcrumbs(routes)(AppBreadcrumbs);

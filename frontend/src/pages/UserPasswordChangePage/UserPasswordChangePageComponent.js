@@ -63,7 +63,7 @@ const UserPasswordChangePage = (props) => {
                             ({getFieldValue}) => ({
                                 validator(rule, value) {
                                     if (!value || getFieldValue('newPassword') === value) return Promise.resolve();
-                                    else return Promise.reject(t('validation.passwordMistmatch'));
+                                    else return Promise.reject(t('validation.passwordMismatch'));
                                 }
                             })
                         ]}
