@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import UserListPage from './UserListPageComponent'
 import {toast} from 'react-toastify';
-import {searchUsersRequest} from '../../utils/api';
+import {getUsersRequest} from '../../utils/api';
 
 export default class UserListPageContainer extends Component {
     state = {
@@ -20,7 +20,7 @@ export default class UserListPageContainer extends Component {
     getUsers = (params = {}) => {
         this.setState({isLoading: true});
 
-        searchUsersRequest(params).then(res => {
+        getUsersRequest(params).then(res => {
             this.setState({
                 isLoading: false,
                 data: res.data.users,

@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
+import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
 
 @Service
 public interface AuctionService {
 
     Long addAuction(AuctionAddDto auctionAddDto) throws ApplicationException;
 
-    Page<Auction> getAuctions(Pageable pageable);
+    Page<AuctionDto> getAuctions(int page);
 }

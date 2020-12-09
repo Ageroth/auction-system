@@ -45,7 +45,7 @@ public interface UserService {
      * @param userCriteria obiekt typu {@link UserCriteria}
      * @return obiekt typu {@link Page<UserDto>}
      */
-    Page<UserDto> searchUsers(UserCriteria userCriteria);
+    Page<UserDto> getUsers(UserCriteria userCriteria);
 
     /**
      * Zwraca użytkownika o podanym id.

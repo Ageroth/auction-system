@@ -94,15 +94,15 @@ public class UserController {
     }
 
     /**
-     * Wyszukuje użytkowników spełniających dane kryteria.
+     * Pobiera użytkowników spełniających dane kryteria.
      *
      * @param userCriteria obiekt typu {@link UserCriteria}
      * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
      * użytkowników oraz liczbą wszystkich stron
      */
     @GetMapping
-    public ResponseEntity<?> searchUsers(UserCriteria userCriteria) {
-        Page<UserDto> userDtoPage = userService.searchUsers(userCriteria);
+    public ResponseEntity<?> getUsers(UserCriteria userCriteria) {
+        Page<UserDto> userDtoPage = userService.getUsers(userCriteria);
 
         if (userDtoPage.getContent().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

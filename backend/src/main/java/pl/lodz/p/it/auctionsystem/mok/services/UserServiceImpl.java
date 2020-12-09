@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public Page<UserDto> searchUsers(UserCriteria userCriteria) {
+    public Page<UserDto> getUsers(UserCriteria userCriteria) {
         Pageable pageable;
         Page<User> userPage;
 
