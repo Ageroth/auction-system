@@ -25,15 +25,15 @@ export function checkEmailAvailabilityRequest(value) {
 }
 
 export function activateUserRequest(value) {
-    return axios.post(`/users/me/activation/${value}`);
+    return axios.patch(`/users/me/activation/${value}`);
 }
 
 export function sendPasswordResetEmailRequest(payload) {
-    return axios.post('/users/me/password-reset', JSON.stringify(payload));
+    return axios.patch('/users/me/password-reset', JSON.stringify(payload));
 }
 
 export function resetPasswordRequest(value, payload) {
-    return axios.post(`/users/me/password-reset/${value}`, JSON.stringify(payload));
+    return axios.patch(`/users/me/password-reset/${value}`, JSON.stringify(payload));
 }
 
 export function searchUsersRequest(values) {
