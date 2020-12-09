@@ -94,7 +94,7 @@ public class UserController {
     }
 
     /**
-     * Pobiera użytkowników spełniających dane kryteria.
+     * Zwraca użytkowników spełniających dane kryteria.
      *
      * @param userCriteria obiekt typu {@link UserCriteria}
      * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością

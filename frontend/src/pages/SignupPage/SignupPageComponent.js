@@ -2,7 +2,6 @@ import React from 'react'
 import {Button, Form, Input} from 'antd'
 import {Link} from 'react-router-dom';
 import {checkEmailAvailabilityRequest, checkUsernameAvailabilityRequest} from '../../utils/api'
-import {toast} from 'react-toastify';
 import {useTranslation} from 'react-i18next';
 import AppLayout from '../../components/AppLayout'
 import 'antd/dist/antd.css'
@@ -17,20 +16,7 @@ const SignupPage = (props) => {
     const onFinish = (values) => {
         const payload = Object.assign({}, values);
         delete payload.confirmPassword;
-
-        props.onSubmit(payload).then(() => {
-            toast.success(t('message.content.activationEmailSent'), {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
-        }).catch(e => {
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
-        });
+        props.onSubmit(payload);
     }
 
     const validateUsernameAvailability = async (rule, value) => {
