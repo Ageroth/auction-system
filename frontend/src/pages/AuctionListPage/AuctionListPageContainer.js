@@ -5,7 +5,7 @@ import {getAuctionsRequest} from '../../utils/api';
 
 export default class AuctionListPageContainer extends Component {
     state = {
-        data: [],
+        auctions: [],
         pagination: {
             current: 1,
         },
@@ -23,7 +23,7 @@ export default class AuctionListPageContainer extends Component {
         getAuctionsRequest(params).then(res => {
             this.setState({
                 isLoading: false,
-                data: res.data.auctions,
+                auctions: res.data.auctions,
                 pagination: {
                     ...params.pagination,
                     total: res.data.totalItems,
@@ -41,7 +41,8 @@ export default class AuctionListPageContainer extends Component {
 
     render() {
         return (
-            <AuctionListPage data={this.state.data} pagination={this.state.pagination} isLoading={this.state.isLoading}
+            <AuctionListPage auctions={this.state.auctions} pagination={this.state.pagination}
+                             isLoading={this.state.isLoading}
                              handleTableChange={this.getAuctions}/>
         );
     }

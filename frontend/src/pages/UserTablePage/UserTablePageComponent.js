@@ -7,11 +7,11 @@ import {useTranslation} from 'react-i18next';
 import allroles from '../../utils/allroles'
 import {SearchOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css'
-import './UserListPage.css'
+import './UserTablePage.css'
 
 const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 
-const UserListPage = (props) => {
+const UserTablePage = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
 
@@ -143,7 +143,7 @@ const UserListPage = (props) => {
                 <Table
                     columns={columns}
                     rowKey={record => record.id}
-                    dataSource={props.data}
+                    dataSource={props.users}
                     pagination={props.pagination}
                     loading={props.isLoading}
                     onChange={handleTableChange}
@@ -155,4 +155,4 @@ const UserListPage = (props) => {
     );
 }
 
-export default UserListPage;
+export default UserTablePage;
