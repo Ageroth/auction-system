@@ -69,7 +69,7 @@ const AuctionTablePage = (props) => {
             key: 'itemName',
             ...getColumnSearchProps(),
             render: (text, record) => <Link style={{color: "#1890ff"}}
-                                            to={`/auctions/${record.id}`}>{record.itemName}</Link>,
+                                            to={`/auctions/${record.id}`}>{record.itemName}</Link>
         },
         {
             title: t('auctionLabels.itemDescription'),
