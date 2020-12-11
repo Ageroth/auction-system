@@ -25,7 +25,6 @@ const AuctionAddPage = (props) => {
     const [imageUrl, setImageUrl] = useState();
     const [scheduleItemVisible, setScheduleItemVisible] = useState(false);
     const [visible, setVisible] = useState(false);
-    const [selectedDate, setSelectedDate] = useState();
 
     const handleChange = (info) => {
         if (info.file.status === 'uploading') {
@@ -75,7 +74,6 @@ const AuctionAddPage = (props) => {
                     format="DD/MM/YYYY HH:mm"
                     disabledDate={disabledDate}
                     showTime={{format: 'HH:mm'}}
-                    onChange={d => setSelectedDate(d)}
                 />
             </Form.Item>
         </>

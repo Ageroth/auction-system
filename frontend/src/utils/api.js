@@ -86,9 +86,16 @@ export function getAllAccessLevelsRequest() {
 }
 
 export function getAuctionsRequest(values) {
+    let searchQuery;
+    values.itemName ? searchQuery = values.itemName[0] : searchQuery = null;
+
     return axios.get('/auctions', {
         params: {
             page: values.pagination.current - 1,
+            status: null,
+            sortField: values.sortField,
+            order: values.order,
+            query: searchQuery
         }
     });
 }

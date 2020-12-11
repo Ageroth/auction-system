@@ -1,17 +1,14 @@
 import React from 'react';
 import {Link, useHistory} from 'react-router-dom';
-import {Button, Input, Space, Table, Tag} from 'antd';
-import moment from 'moment';
+import {Button, Image, Input, Space, Table} from 'antd';
 import AppLayout from '../../components/AppLayout'
 import {useTranslation} from 'react-i18next';
-import allroles from '../../utils/allroles'
+import moment from "moment";
 import {SearchOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css'
-import './UserTablePage.css'
+import './AuctionTablePage.css'
 
-const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
-
-const UserTablePage = (props) => {
+const AuctionTablePage = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
 
@@ -60,71 +57,67 @@ const UserTablePage = (props) => {
 
     const columns = [
         {
-            title: t('userLabels.name'),
-            dataIndex: 'lastName',
-            key: 'lastName',
-            sorter: true,
+            title: t('auctionLabels.itemImage'),
+            dataIndex: 'itemImage',
+            key: 'itemImage',
+            render: itemImage => <Image width={200} src={"data:image/png;base64," + itemImage}
+                                        alt={itemImage}/>
+        },
+        {
+            title: t('auctionLabels.itemName'),
+            dataIndex: 'itemName',
+            key: 'itemName',
             ...getColumnSearchProps(),
             render: (text, record) => <Link style={{color: "#1890ff"}}
-                                            to={`/users/${record.id}`}> {record.firstName} {record.lastName} </Link>
+                                            to={`/auctions/${record.id}`}>{record.itemName}</Link>,
         },
         {
-            title: t('userLabels.username'),
-            dataIndex: 'username',
-            key: 'username'
+            title: t('auctionLabels.itemDescription'),
+            dataIndex: 'itemDescription',
+            key: 'itemDescription'
         },
         {
-            title: t('userLabels.email'),
-            dataIndex: 'email',
-            key: 'email'
+            title: t('auctionLabels.currentPrice'),
+            dataIndex: 'currentPrice',
+            key: 'currentPrice',
+            render: (text, record) => record.currentPrice ? `${record.currentPrice} PLN` : `${record.startingPrice} PLN`
         },
         {
-            title: t('userLabels.created'),
-            dataIndex: 'createdAt',
-            key: 'createdAt',
+            title: t('auctionLabels.bidsNumber'),
+            dataIndex: 'bidsNumber',
+            key: 'bidsNumber'
+        },
+        {
+            title: t('auctionLabels.startDate'),
+            dataIndex: 'startDate',
+            key: 'startDate',
             sorter: true,
-            render: createdAt => `${moment(createdAt).format('DD-MM-YYYY HH:mm')}`
+            defaultSortOrder: 'ascend',
+            render: startDate => `${moment(startDate).format('DD-MM-YYYY HH:mm')}`
         },
         {
-            title: t('userLabels.roles'),
-            key: 'userAccessLevelNames',
-            dataIndex: 'userAccessLevelNames',
-            render: userAccessLevelNames => (
-                <>
-                    {userAccessLevelNames.map(userAccessLevelName => {
-                        let color;
-                        let value;
-
-                        if (userAccessLevelName === ADMINISTRATOR) {
-                            color = 'volcano';
-                            value = t('role.admin');
-                        } else if (userAccessLevelName === MANAGER) {
-                            color = 'green';
-                            value = t('role.man');
-                        } else if (userAccessLevelName === CLIENT) {
-                            color = 'geekblue';
-                            value = t('role.client');
-                        }
-
-                        return (
-                            <Tag color={color} key={userAccessLevelName}>
-                                {value.toUpperCase()}
-                            </Tag>
-                        );
-                    })}
-                </>
-            )
+            title: t('auctionLabels.endDate'),
+            dataIndex: 'endDate',
+            key: 'endDate',
+            sorter: true,
+            render: endDate => `${moment(endDate).format('DD-MM-YYYY HH:mm')}`
         },
         {
-            title: t('userLabels.activated'),
-            dataIndex: 'activated',
-            key: 'activated',
+            title: t('auctionLabels.status'),
+            dataIndex: 'status',
+            key: 'status',
             filters: [
-                {text: t('text.yes'), value: true},
-                {text: t('text.no'), value: false}
+                {text: 'Live', value: 'Live'},
+                {text: 'Upcoming', value: 'Upcoming'},
+                {text: 'Finished', value: 'Finished'}
             ],
-            filterMultiple: false,
-            render: activated => activated ? t('text.yes') : t('text.no')
+            filterMultiple: true,
+            render: (text, record) => (
+                record.startDate < moment().format() && record.endDate > moment().format() ? 'Live' :
+                    (
+                        record.startDate > moment().format() ? 'Upcoming' : 'Finished'
+                    )
+            )
         }
     ];
 
@@ -139,11 +132,11 @@ const UserTablePage = (props) => {
 
     return (
         <AppLayout>
-            <div className="user-table-wrapper">
+            <div className="auction-table-wrapper">
                 <Table
                     columns={columns}
                     rowKey={record => record.id}
-                    dataSource={props.users}
+                    dataSource={props.auctions}
                     pagination={props.pagination}
                     loading={props.isLoading}
                     onChange={handleTableChange}
@@ -155,4 +148,4 @@ const UserTablePage = (props) => {
     );
 }
 
-export default UserTablePage;
+export default AuctionTablePage;

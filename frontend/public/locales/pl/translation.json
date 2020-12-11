@@ -16,12 +16,19 @@
     "roles": "Role"
   },
   "auctionLabels": {
-    "itemImage": "Zdjęcie przedmiotu",
-    "itemName": "Nazwa przedmiotu",
-    "itemDescription": "Opis przedmiotu",
+    "itemImage": "Zdjęcie",
+    "itemName": "Nazwa",
+    "itemDescription": "Opis",
     "startingPrice": "Cena wywoławcza (PLN)",
     "startDate": "Data rozpoczęcia",
-    "duration": "Czas trwania (dni)"
+    "duration": "Czas trwania (dni)",
+    "endDate": "Data zakończenia",
+    "bidsNumber": "Liczba ofert",
+    "currentPrice": "Aktualna cena",
+    "status": "Status",
+    "Live": "Trwa",
+    "Upcoming": "Nadchodząca",
+    "Finished": "Skończona"
   },
   "validation": {
     "required": "To pole jest wymagane",

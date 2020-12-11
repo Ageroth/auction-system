@@ -16,12 +16,19 @@
     "roles": "Roles"
   },
   "auctionLabels": {
-    "itemImage": "Item image",
-    "itemName": "Item name",
-    "itemDescription": "Item description",
+    "itemImage": "Image",
+    "itemName": "Name",
+    "itemDescription": "Description",
     "startingPrice": "Starting price (PLN)",
     "startDate": "Start date",
-    "duration": "Duration (days)"
+    "duration": "Duration (days)",
+    "endDate": "End date",
+    "bidsNumber": "Bids number",
+    "currentPrice": "Current price",
+    "status": "Status",
+    "Live": "Live",
+    "Upcoming": "Upcoming",
+    "Finished": "Finished"
   },
   "validation": {
     "required": "This field is required",

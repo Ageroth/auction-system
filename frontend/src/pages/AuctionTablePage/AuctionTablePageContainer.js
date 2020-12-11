@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import AuctionListPage from './AuctionListPageComponent'
+import AuctionListPage from './AuctionTablePageComponent'
 import {toast} from 'react-toastify';
 import {getAuctionsRequest} from '../../utils/api';
 
-export default class AuctionListPageContainer extends Component {
+export default class AuctionTablePageContainer extends Component {
     state = {
         auctions: [],
         pagination: {

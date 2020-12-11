@@ -13,7 +13,7 @@ import OwnDetailsPage from '../pages/OwnDetailsPage'
 import OwnPasswordChangePage from '../pages/OwnPasswordChangePage'
 import OwnDetailsEditPage from '../pages/OwnDetailsEditPage'
 import UserAddPage from '../pages/UserAddPage'
-import AuctionListPage from '../pages/AuctionListPage'
+import AuctionTablePage from '../pages/AuctionTablePage'
 import AuctionAddPage from '../pages/AuctionAddPage'
 
 const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
@@ -33,7 +33,7 @@ export const routes = [
     {path: '/my_profile', component: OwnDetailsPage},
     {path: '/my_profile/password_change', component: OwnPasswordChangePage},
     {path: '/my_profile/edit', component: OwnDetailsEditPage},
-    {path: '/auctions', component: AuctionListPage, canAccess: [MANAGER, CLIENT]},
+    {path: '/auctions', component: AuctionTablePage, canAccess: [MANAGER, CLIENT]},
     {path: '/auctions/add', component: AuctionAddPage, canAccess: [MANAGER]},
     {path: '*', component: NotFoundPage, public: true},
 ];
