@@ -7,13 +7,14 @@ export default class UserTablePageContainer extends Component {
     state = {
         users: [],
         pagination: {
-            current: 1,
+            page: 1,
         },
         isLoading: false
     };
 
     componentDidMount() {
         const {pagination} = this.state;
+
         this.getUsers({pagination});
     }
 
@@ -41,8 +42,7 @@ export default class UserTablePageContainer extends Component {
 
     render() {
         return (
-            <UserTablePage users={this.state.users} pagination={this.state.pagination} isLoading={this.state.isLoading}
-                           handleTableChange={this.getUsers}/>
+            <UserTablePage handleTableChange={this.getUsers} {...this.state}/>
         );
     }
 }

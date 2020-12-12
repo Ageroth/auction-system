@@ -11,6 +11,7 @@ import './AuctionTablePage.css'
 const AuctionTablePage = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
+    const {auctions, pagination, isLoading} = props;
 
     const getColumnSearchProps = () => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -107,21 +108,28 @@ const AuctionTablePage = (props) => {
             dataIndex: 'status',
             key: 'status',
             filters: [
-                {text: 'Current', value: 'CURRENT'},
-                {text: 'Finished', value: 'FINISHED'}
+                {text: t('auctionLabels.current'), value: 'CURRENT'},
+                {text: t('auctionLabels.finished'), value: 'FINISHED'}
             ],
             filterMultiple: false,
-            defaultFilteredValue: 'CURRENT',
-            render: (text, record) => record.endDate > moment().format() ? 'Current' : 'Finished'
+            defaultFilteredValue: ['CURRENT'],
+            render: (text, record) => record.endDate > moment().format() ? t('auctionLabels.current') : t('auctionLabels.finished')
         }
     ];
 
     const handleTableChange = (pagination, filters, sorter) => {
+        let auctionStatus;
+        let searchQuery;
+
+        filters.status ? auctionStatus = filters.status[0] : auctionStatus = null;
+        filters.itemName ? searchQuery = filters.itemName[0] : searchQuery = null;
+
         props.handleTableChange({
+            pagination,
             sortField: sorter.field,
             order: sorter.order,
-            pagination,
-            ...filters
+            status: auctionStatus,
+            query: searchQuery
         })
     };
 
@@ -131,9 +139,9 @@ const AuctionTablePage = (props) => {
                 <Table
                     columns={columns}
                     rowKey={record => record.id}
-                    dataSource={props.auctions}
-                    pagination={props.pagination}
-                    loading={props.isLoading}
+                    dataSource={auctions}
+                    pagination={pagination}
+                    loading={isLoading}
                     onChange={handleTableChange}
                     bordered
                 />

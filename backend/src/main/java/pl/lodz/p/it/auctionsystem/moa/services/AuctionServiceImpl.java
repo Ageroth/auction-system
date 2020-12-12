@@ -70,8 +70,7 @@ public class AuctionServiceImpl implements AuctionService {
 
         LocalDateTime endDate = startDate.plusDays(auctionAddDto.getDuration());
 
-        Auction auction = new Auction(auctionAddDto.getStartingPrice(), startDate, endDate, user,
-                item);
+        Auction auction = new Auction(auctionAddDto.getStartingPrice(), startDate, endDate, user, item);
 
         return auctionRepository.save(auction).getId();
     }
@@ -86,21 +85,17 @@ public class AuctionServiceImpl implements AuctionService {
                     Sort.by(SortDirection.getSortDirection(auctionCriteria.getOrder()),
                             auctionCriteria.getSortField()));
         else
-            pageable = PageRequest.of(auctionCriteria.getPage(), pageSize,
-                    Sort.by(Sort.Direction.ASC, "startDate"));
+            pageable = PageRequest.of(auctionCriteria.getPage(), pageSize);
 
         if (auctionCriteria.getQuery() == null && auctionCriteria.getStatus() == null)
             auctionPage = auctionRepository.findAll(pageable);
         else if (auctionCriteria.getQuery() != null && auctionCriteria.getStatus() == null)
             auctionPage = auctionRepository.findAll(containsTextInName(auctionCriteria.getQuery()), pageable);
-        else
+        else if (auctionCriteria.getQuery() == null) {
             auctionPage = auctionRepository.findAll(hasStatus(auctionCriteria.getStatus()), pageable);
-//        else if (auctionCriteria.getQuery() == null) {
-//            auctionPage = auctionRepository.findAll(isActive(auctionCriteria.getStatus()), pageable);
-//        } else
-//            auctionPage =
-//                    auctionRepository.findAll(containsTextInName(auctionCriteria.getQuery()).and(isActive
-//                    (auctionCriteria.getStatus())), pageable);
+        } else
+            auctionPage =
+                    auctionRepository.findAll(containsTextInName(auctionCriteria.getQuery()).and(hasStatus(auctionCriteria.getStatus())), pageable);
 
         return auctionPage.map(auction -> {
             AuctionDto auctionDto = modelMapper.map(auction, AuctionDto.class);

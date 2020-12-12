@@ -26,9 +26,8 @@
     "bidsNumber": "Bids number",
     "currentPrice": "Current price",
     "status": "Status",
-    "Live": "Live",
-    "Upcoming": "Upcoming",
-    "Finished": "Finished"
+    "current": "Current",
+    "finished": "Finished"
   },
   "validation": {
     "required": "This field is required",

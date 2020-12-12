@@ -14,6 +14,7 @@ const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 const UserTablePage = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
+    const {users, pagination, isLoading} = props;
 
     const getColumnSearchProps = () => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -129,11 +130,18 @@ const UserTablePage = (props) => {
     ];
 
     const handleTableChange = (pagination, filters, sorter) => {
+        let activationStatus;
+        let searchQuery;
+
+        filters.activated ? activationStatus = filters.activated[0] : activationStatus = null;
+        filters.lastName ? searchQuery = filters.lastName[0] : searchQuery = null;
+
         props.handleTableChange({
+            pagination,
             sortField: sorter.field,
             order: sorter.order,
-            pagination,
-            ...filters
+            status: activationStatus,
+            query: searchQuery
         })
     };
 
@@ -143,9 +151,9 @@ const UserTablePage = (props) => {
                 <Table
                     columns={columns}
                     rowKey={record => record.id}
-                    dataSource={props.users}
-                    pagination={props.pagination}
-                    loading={props.isLoading}
+                    dataSource={users}
+                    pagination={pagination}
+                    loading={isLoading}
                     onChange={handleTableChange}
                     bordered
                 />

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import AuctionListPage from './AuctionTablePageComponent'
+import AuctionTablePage from './AuctionTablePageComponent'
 import {toast} from 'react-toastify';
 import {getAuctionsRequest} from '../../utils/api';
 
@@ -7,14 +7,18 @@ export default class AuctionTablePageContainer extends Component {
     state = {
         auctions: [],
         pagination: {
-            current: 1,
+            page: 1,
         },
         isLoading: false
     };
 
     componentDidMount() {
+        const status = "CURRENT";
+        const sortField = "startDate";
+        const order = "ascend";
         const {pagination} = this.state;
-        this.getAuctions({pagination});
+
+        this.getAuctions({pagination, status, sortField, order});
     }
 
     getAuctions = (params = {}) => {
@@ -41,9 +45,7 @@ export default class AuctionTablePageContainer extends Component {
 
     render() {
         return (
-            <AuctionListPage auctions={this.state.auctions} pagination={this.state.pagination}
-                             isLoading={this.state.isLoading}
-                             handleTableChange={this.getAuctions}/>
+            <AuctionTablePage handleTableChange={this.getAuctions} {...this.state}/>
         );
     }
 }
