@@ -41,7 +41,7 @@ export function getUsersRequest(values) {
 
     return axios.get('/users', {
         params: {
-            page: pagination.page - 1,
+            page: pagination.current - 1,
             ...valuesCopy
         }
     });
@@ -81,10 +81,10 @@ export function getAllAccessLevelsRequest() {
 
 export function getAuctionsRequest(values) {
     const {pagination, ...valuesCopy} = values;
-    console.log(values)
+
     return axios.get('/auctions', {
         params: {
-            page: pagination.page - 1,
+            page: pagination.current - 1,
             ...valuesCopy
         }
     });

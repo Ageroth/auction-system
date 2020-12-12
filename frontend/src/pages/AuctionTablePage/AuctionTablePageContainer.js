@@ -7,7 +7,7 @@ export default class AuctionTablePageContainer extends Component {
     state = {
         auctions: [],
         pagination: {
-            page: 1,
+            current: 1,
         },
         isLoading: false
     };

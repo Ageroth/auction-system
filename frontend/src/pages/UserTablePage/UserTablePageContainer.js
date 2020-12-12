@@ -7,7 +7,7 @@ export default class UserTablePageContainer extends Component {
     state = {
         users: [],
         pagination: {
-            page: 1,
+            current: 1,
         },
         isLoading: false
     };
