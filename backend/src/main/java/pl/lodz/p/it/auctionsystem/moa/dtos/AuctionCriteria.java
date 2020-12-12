@@ -2,6 +2,7 @@ package pl.lodz.p.it.auctionsystem.moa.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
+import pl.lodz.p.it.auctionsystem.moa.utils.AuctionStatusEnum;
 
 @Getter
 @Setter
@@ -15,5 +16,5 @@ public class AuctionCriteria {
 
     private String query;
 
-    private Boolean status;
+    private AuctionStatusEnum status;
 }

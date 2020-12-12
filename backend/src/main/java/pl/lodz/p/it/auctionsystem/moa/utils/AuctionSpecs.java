@@ -3,6 +3,8 @@ package pl.lodz.p.it.auctionsystem.moa.utils;
 import org.springframework.data.jpa.domain.Specification;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
 
+import java.time.LocalDateTime;
+
 public class AuctionSpecs {
 
     /**
@@ -17,8 +19,19 @@ public class AuctionSpecs {
 
         String finalText = text.toLowerCase();
 
-        return (root, query, builder) -> builder.or(
-                builder.like(builder.lower(root.get("item").get("name")), finalText)
-        );
+        return (root, query, builder) -> builder.like(builder.lower(root.get("item").get("name")), finalText);
+    }
+
+    /**
+     * Służy do znalezienia encji {@link Auction} o danym statusie.
+     *
+     * @param auctionStatusEnum poszukiwany status
+     * @return obiekt typu {@link Specification<Auction>}
+     */
+    public static Specification<Auction> hasStatus(AuctionStatusEnum auctionStatusEnum) {
+        if (auctionStatusEnum.equals(AuctionStatusEnum.FINISHED))
+            return (root, query, builder) -> builder.lessThan(root.get("endDate"), LocalDateTime.now());
+        else
+            return (root, query, builder) -> builder.greaterThan(root.get("endDate"), LocalDateTime.now());
     }
 }

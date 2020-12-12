@@ -107,17 +107,12 @@ const AuctionTablePage = (props) => {
             dataIndex: 'status',
             key: 'status',
             filters: [
-                {text: 'Live', value: 'Live'},
-                {text: 'Upcoming', value: 'Upcoming'},
-                {text: 'Finished', value: 'Finished'}
+                {text: 'Current', value: 'CURRENT'},
+                {text: 'Finished', value: 'FINISHED'}
             ],
-            filterMultiple: true,
-            render: (text, record) => (
-                record.startDate < moment().format() && record.endDate > moment().format() ? 'Live' :
-                    (
-                        record.startDate > moment().format() ? 'Upcoming' : 'Finished'
-                    )
-            )
+            filterMultiple: false,
+            defaultFilteredValue: 'CURRENT',
+            render: (text, record) => record.endDate > moment().format() ? 'Current' : 'Finished'
         }
     ];
 
@@ -142,7 +137,7 @@ const AuctionTablePage = (props) => {
                     onChange={handleTableChange}
                     bordered
                 />
-                <Button type="primary" onClick={handleAdd}> {t('text.add')} </Button>
+                <Button className="auction-table-button" type="primary" onClick={handleAdd}> {t('text.add')} </Button>
             </div>
         </AppLayout>
     );

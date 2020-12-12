@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.Optional;
 
 import static pl.lodz.p.it.auctionsystem.moa.utils.AuctionSpecs.containsTextInName;
+import static pl.lodz.p.it.auctionsystem.moa.utils.AuctionSpecs.hasStatus;
 
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
@@ -92,6 +93,8 @@ public class AuctionServiceImpl implements AuctionService {
             auctionPage = auctionRepository.findAll(pageable);
         else if (auctionCriteria.getQuery() != null && auctionCriteria.getStatus() == null)
             auctionPage = auctionRepository.findAll(containsTextInName(auctionCriteria.getQuery()), pageable);
+        else
+            auctionPage = auctionRepository.findAll(hasStatus(auctionCriteria.getStatus()), pageable);
 //        else if (auctionCriteria.getQuery() == null) {
 //            auctionPage = auctionRepository.findAll(isActive(auctionCriteria.getStatus()), pageable);
 //        } else

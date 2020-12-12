@@ -86,13 +86,16 @@ export function getAllAccessLevelsRequest() {
 }
 
 export function getAuctionsRequest(values) {
+    console.log(values)
+    let auctionStatus;
     let searchQuery;
+    values.status ? auctionStatus = values.status[0] : auctionStatus = null;
     values.itemName ? searchQuery = values.itemName[0] : searchQuery = null;
 
     return axios.get('/auctions', {
         params: {
             page: values.pagination.current - 1,
-            status: null,
+            status: auctionStatus,
             sortField: values.sortField,
             order: values.order,
             query: searchQuery

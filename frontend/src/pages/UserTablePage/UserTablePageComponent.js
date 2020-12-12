@@ -149,7 +149,7 @@ const UserTablePage = (props) => {
                     onChange={handleTableChange}
                     bordered
                 />
-                <Button type="primary" onClick={handleAdd}> {t('text.add')} </Button>
+                <Button className="user-table-button" type="primary" onClick={handleAdd}> {t('text.add')} </Button>
             </div>
         </AppLayout>
     );
