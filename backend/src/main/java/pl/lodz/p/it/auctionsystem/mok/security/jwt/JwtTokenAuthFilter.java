@@ -1,4 +1,4 @@
-package pl.lodz.p.it.auctionsystem.security.jwt;
+package pl.lodz.p.it.auctionsystem.mok.security.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pl.lodz.p.it.auctionsystem.security.services.UserDetailsServiceImpl;
+import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsServiceImpl;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

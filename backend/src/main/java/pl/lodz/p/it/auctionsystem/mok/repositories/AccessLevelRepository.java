@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
-import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
+import pl.lodz.p.it.auctionsystem.utils.AccessLevelEnum;
 
 import java.util.Optional;
 

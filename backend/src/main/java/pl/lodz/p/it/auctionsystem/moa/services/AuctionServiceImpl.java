@@ -19,9 +19,9 @@ import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionCriteria;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
 import pl.lodz.p.it.auctionsystem.moa.repositories.AuctionRepository;
-import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
-import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
-import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
+import pl.lodz.p.it.auctionsystem.moa.repositories.UserRepositoryMoa;
+import pl.lodz.p.it.auctionsystem.utils.MessageService;
+import pl.lodz.p.it.auctionsystem.utils.SortDirection;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -37,7 +37,7 @@ public class AuctionServiceImpl implements AuctionService {
 
     private final AuctionRepository auctionRepository;
 
-    private final UserRepository userRepository;
+    private final UserRepositoryMoa userRepositoryMoa;
 
     private final MessageService messageService;
 
@@ -47,10 +47,10 @@ public class AuctionServiceImpl implements AuctionService {
     private int pageSize;
 
     @Autowired
-    public AuctionServiceImpl(AuctionRepository auctionRepository, UserRepository userRepository,
+    public AuctionServiceImpl(AuctionRepository auctionRepository, UserRepositoryMoa userRepositoryMoa,
                               MessageService messageService, ModelMapper modelMapper) {
         this.auctionRepository = auctionRepository;
-        this.userRepository = userRepository;
+        this.userRepositoryMoa = userRepositoryMoa;
         this.messageService = messageService;
         this.modelMapper = modelMapper;
     }
@@ -59,7 +59,7 @@ public class AuctionServiceImpl implements AuctionService {
     public Long addAuction(AuctionAddDto auctionAddDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepository.findByUsernameIgnoreCase(auctionAddDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMoa.findByUsernameIgnoreCase(auctionAddDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         Item item = new Item(auctionAddDto.getItemName(), auctionAddDto.getItemDescription(), auctionAddDto.getImage());
         LocalDateTime startDate;
 

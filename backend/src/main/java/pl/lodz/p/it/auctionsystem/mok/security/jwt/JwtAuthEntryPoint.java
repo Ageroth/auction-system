@@ -1,4 +1,4 @@
-package pl.lodz.p.it.auctionsystem.security.jwt;
+package pl.lodz.p.it.auctionsystem.mok.security.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

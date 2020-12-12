@@ -3,7 +3,7 @@ package pl.lodz.p.it.auctionsystem.entities;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
+import pl.lodz.p.it.auctionsystem.utils.AccessLevelEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

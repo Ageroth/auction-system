@@ -15,8 +15,8 @@ import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionCriteria;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
 import pl.lodz.p.it.auctionsystem.moa.services.AuctionService;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
-import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
-import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
+import pl.lodz.p.it.auctionsystem.utils.MessageService;
+import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
