@@ -12,9 +12,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionCriteria;
+import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDetailsDto;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
 import pl.lodz.p.it.auctionsystem.moa.services.AuctionService;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
+import pl.lodz.p.it.auctionsystem.mok.dtos.UserAccountDetailsDto;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
 
@@ -77,5 +79,19 @@ public class AuctionController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
+    }
+
+    /**
+     * Zwraca szczegóły aukcji o podanym id.
+     *
+     * @param auctionId id aukcji
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link AuctionDetailsDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @GetMapping("/{auctionId}")
+    public ResponseEntity<?> getAuctionDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
+        AuctionDetailsDto auctionDetailsDto = auctionService.getAuctionById(auctionId);
+
+        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
     }
 }

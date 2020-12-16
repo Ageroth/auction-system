@@ -17,6 +17,7 @@ import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionCriteria;
+import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDetailsDto;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
 import pl.lodz.p.it.auctionsystem.moa.repositories.AuctionRepository;
 import pl.lodz.p.it.auctionsystem.moa.repositories.UserRepositoryMoa;
@@ -106,5 +107,15 @@ public class AuctionServiceImpl implements AuctionService {
 
             return auctionDto;
         });
+    }
+
+    @Override
+    public AuctionDetailsDto getAuctionById(Long auctionId) throws ApplicationException {
+        String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
+
+        Auction auction =
+                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+
+        return modelMapper.map(auction, AuctionDetailsDto.class);
     }
 }
