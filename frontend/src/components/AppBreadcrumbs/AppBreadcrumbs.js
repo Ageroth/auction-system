@@ -22,6 +22,7 @@ const routes = [
     {path: '/activation', breadcrumb: null},
     {path: '/activation/:activationCode', breadcrumb: null},
     {path: '/auctions', breadcrumb: 'pageName.auctions'},
+    {path: '/auctions/:auctionId', breadcrumb: 'pageName.auctionDetails'},
     {path: '/auctions/add', breadcrumb: 'pageName.auctionAdd'},
 ];
 
@@ -35,8 +36,9 @@ const AppBreadcrumbs = ({breadcrumbs}) => {
                     <div className="breadcrumbs-wrapper">
                         {breadcrumbs.map(({breadcrumb, match}, index) => (
                             <div className="bc" key={match.url}>
-                                <Link to={match.url || ""}>{t(breadcrumb.props.children)}</Link>
-                                {index < breadcrumbs.length - 1 ? ">" : null}
+                                <Link to={match.url || ""}>{' '} {t(breadcrumb.props.children)}</Link>
+                                {index < breadcrumbs.length - 1 ? " >" : null}
+                                &nbsp;
                             </div>
                         ))}
                     </div>

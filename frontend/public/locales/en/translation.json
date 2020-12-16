@@ -106,6 +106,7 @@
     "userAdd": "New user",
     "activation": "Activation",
     "auctions": "Auctions",
-    "auctionAdd": "New auction"
+    "auctionAdd": "New auction",
+    "auctionDetails": "Auction details"
   }
 }

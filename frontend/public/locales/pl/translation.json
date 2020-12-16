@@ -106,6 +106,7 @@
     "userAdd": "Nowy użytkownik",
     "activation": "Aktywacja",
     "auctions": "Aukcje",
-    "auctionAdd": "Nowa aukcja"
+    "auctionAdd": "Nowa aukcja",
+    "auctionDetails": "Szczegóły aukcji"
   }
 }

@@ -56,8 +56,3 @@ const AuctionCard = (props) => {
 };
 
 export default AuctionCard;
-
-{/*<h1></h1>*/
-}
-{/*<h1></h1>*/
-}
