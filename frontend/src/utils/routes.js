@@ -35,7 +35,7 @@ export const routes = [
     {path: '/my_profile/password_change', component: OwnPasswordChangePage},
     {path: '/my_profile/edit', component: OwnDetailsEditPage},
     {path: '/auctions', component: AuctionTablePage, canAccess: [MANAGER, CLIENT]},
-    {path: '/auctions/:auctionId', component: AuctionDetailsPage, canAccess: [MANAGER, CLIENT]},
     {path: '/auctions/add', component: AuctionAddPage, canAccess: [MANAGER]},
+    {path: '/auctions/:auctionId', component: AuctionDetailsPage, canAccess: [MANAGER, CLIENT]},
     {path: '*', component: NotFoundPage, public: true},
 ];

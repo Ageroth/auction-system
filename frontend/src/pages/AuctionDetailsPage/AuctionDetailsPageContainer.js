@@ -21,7 +21,6 @@ export default class AuctionDetailsPageContainer extends Component {
     getAuctionDetails = () => {
         getAuctionDetailsRequest(this.state.auctionId).then((res) => {
             this.setState({auctionDetails: res.data});
-            console.log(this.state.auctionDetails)
         }).catch(e => {
             this.setState({error: true});
             toast.error(e.response.data.message, {

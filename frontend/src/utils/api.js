@@ -90,6 +90,10 @@ export function getAuctionsRequest(values) {
     });
 }
 
+export function getAuctionDetailsRequest(value) {
+    return axios.get(`/auctions/${value}`);
+}
+
 export function addAuctionRequest(payload) {
     return axios.post('/auctions', payload);
 }

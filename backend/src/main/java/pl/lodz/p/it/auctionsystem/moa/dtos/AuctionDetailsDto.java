@@ -17,6 +17,8 @@ public class AuctionDetailsDto {
 
     private LocalDateTime endDate;
 
+    private String userUsername;
+
     private String itemName;
 
     private String itemDescription;
