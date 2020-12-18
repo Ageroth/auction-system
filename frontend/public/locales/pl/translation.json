@@ -79,7 +79,17 @@
     "areYouSure": "Jesteś pewny?",
     "reset": "Reset",
     "search": "Szukaj",
-    "schedule": "Zaplanuj rozpoczęcie"
+    "schedule": "Zaplanuj rozpoczęcie",
+    "today": "Dzisiaj",
+    "tomorrow": "Jutro",
+    "days": "dni",
+    "toStart": "Do rozpoczęcia",
+    "timeLeft": "Pozostały czas",
+    "ended": "Zakończona",
+    "placeBid": "Licytuj",
+    "seller": "Sprzedawca",
+    "bidHistory": "Historia ofert",
+    "bid": "zaoferował"
   },
   "role": {
     "admin": "Administrator",

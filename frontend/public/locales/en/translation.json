@@ -24,7 +24,7 @@
     "duration": "Duration (days)",
     "endDate": "End date",
     "bidsNumber": "Bids number",
-    "currentPrice": "Current price",
+    "currentPrice": "Current bid",
     "status": "Status",
     "current": "Current",
     "finished": "Finished"
@@ -79,7 +79,17 @@
     "areYouSure": "Are you sure?",
     "reset": "Reset",
     "search": "Search",
-    "schedule": "Schedule the start"
+    "schedule": "Schedule the start",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "days": "days",
+    "toStart": "To start",
+    "timeLeft": "Time left",
+    "ended": "Ended",
+    "placeBid": "Place a bid",
+    "seller": "Seller",
+    "bidHistory": "Bid history",
+    "bid": "bid"
   },
   "role": {
     "admin": "Administrator",

@@ -50,7 +50,7 @@ const AuctionDetailsPage = (props) => {
                 <>
                     <Countdown value={date}/>
                     <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
-                    <span>Today {moment(date).format('h:mm')}</span>
+                    <span>{t('text.today')} {moment(date).format('h:mm')}</span>
                 </>
             );
         else if (date.startOf('day').isSame(today.add(1, 'day').startOf('day')))
@@ -58,13 +58,13 @@ const AuctionDetailsPage = (props) => {
                 <>
                     <Countdown value={date}/>
                     <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
-                    <span>Tomorrow {moment(date).format('h:mm')}</span>
+                    <span>{t('text.tomorrow')} {moment(date).format('h:mm')}</span>
                 </>
             );
         else
             return (
                 <>
-                    <span>{difference} days</span>
+                    <span>{difference} {t('text.days')}</span>
                     <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
                     <span>{moment(date).format('dddd, DD MMMM YYYY, HH:mm')}</span>
                 </>
@@ -79,21 +79,21 @@ const AuctionDetailsPage = (props) => {
         if (startDate > today)
             return (
                 <>
-                    <span style={{marginRight: '0.5em'}}>To start:</span>
+                    <span style={{marginRight: '0.5em'}}>{t('text.toStart')}:</span>
                     {getDate(startDate)}
                 </>
             );
         else if (endDate >= today && startDate <= today)
             return (
                 <>
-                    <span style={{marginRight: '0.5em'}}>Time left:</span>
+                    <span style={{marginRight: '0.5em'}}>{t('text.timeLeft')}:</span>
                     {getDate(endDate)}
                 </>
             );
         else
             return (
                 <>
-                    <span style={{marginRight: '0.5em'}}>Ended:</span>
+                    <span style={{marginRight: '0.5em'}}>{t('text.ended')}:</span>
                     {moment(endDate).format('dddd, DD MMMM YYYY, HH:mm')}
                 </>
             );
@@ -107,7 +107,7 @@ const AuctionDetailsPage = (props) => {
                     <div className="extra">
                         <Button type="primary" block
                                 disabled={auctionDetails.userUsername !== username || moment().format() < auctionDetails.startDate}>
-                            Edit
+                            {t('text.edit')}
                         </Button>
                     </div>
                 </>
@@ -127,7 +127,7 @@ const AuctionDetailsPage = (props) => {
                         <div style={{marginLeft: '10px'}}>
                             <Button type="primary" block
                                     disabled={auctionDetails.userUsername === username || moment().format() > auctionDetails.endDate}>
-                                Place a bid
+                                {t('text.placeBid')}
                             </Button>
                         </div>
                     </div>
@@ -150,7 +150,7 @@ const AuctionDetailsPage = (props) => {
                         <div className="details">
                             <div className="main">
                                 <h1 style={{fontWeight: "bold"}}>{auctionDetails.itemName}</h1>
-                                <span>Seller: {auctionDetails.userUsername}</span>
+                                <span>{t('text.seller')}: {auctionDetails.userUsername}</span>
                             </div>
                             <hr className="divider"/>
                             <div className="countdown">
@@ -159,7 +159,7 @@ const AuctionDetailsPage = (props) => {
                             <hr className="divider"/>
                             <div className="bids">
                                 <div className="current-bid">
-                                    <span style={{color: "#767676"}}>Current bid</span>
+                                    <span style={{color: "#767676"}}>{t('auctionLabels.currentPrice')}</span>
                                     <span style={{fontSize: '24px'}}>
                                         <span>
                                             <strong>
@@ -174,7 +174,7 @@ const AuctionDetailsPage = (props) => {
                                 <div className="bid-number">
                                     <span>
                                         <p style={{color: "#767676", marginBottom: 0}}>
-                                            {auctionDetails.bids.length} bids
+                                            {t('auctionLabels.bidsNumber')}: {auctionDetails.bids.length}
                                         </p>
                                     </span>
                                 </div>
@@ -184,17 +184,17 @@ const AuctionDetailsPage = (props) => {
                     </div>
                     <div className="additional-info">
                         <Tabs defaultActiveKey="1">
-                            <TabPane tab="Description" key="1">
+                            <TabPane tab={t('auctionLabels.itemDescription')} key="1">
                                 <div className="description">
                                     <span>{auctionDetails.itemDescription}</span>
                                 </div>
                             </TabPane>
-                            <TabPane tab="Bid history" key="2">
+                            <TabPane tab={t('text.bidHistory')} key="2">
                                 <div className="history">
                                     <Timeline>
                                         {auctionDetails.bids.reverse().map(bid => {
                                             return (
-                                                <Timeline.Item>{moment(bid.date).format('dddd, DD MMMM YYYY, HH:mm')} - {bid.userUsername} placed {bid.price} PLN</Timeline.Item>
+                                                <Timeline.Item>{moment(bid.date).format('dddd, DD MMMM YYYY, HH:mm')} - {bid.userUsername} {t('text.bid')} {bid.price} PLN</Timeline.Item>
                                             );
                                         })}
                                     </Timeline>
