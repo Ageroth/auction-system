@@ -7,6 +7,7 @@ import {useHistory} from "react-router-dom";
 import {useSelector} from "react-redux";
 import moment from "moment";
 import 'moment/locale/pl'
+import 'moment/locale/en-gb'
 import 'antd/dist/antd.css';
 import './AuctionDetailsPage.css'
 
@@ -39,26 +40,28 @@ const AuctionDetailsPage = (props) => {
 
     const getDate = (date) => {
         const today = moment();
-        const difference = date.diff(today, 'day');
-
+        const dateDay = moment(date).startOf('day');
+        const difference = dateDay.diff(today.startOf('day'), 'day');
 
         if (i18n.language === 'pl')
             moment.locale('pl');
+        else
+            moment.locale('en-gb');
 
-        if (date.startOf('day').isSame(today.startOf('day')))
+        if (dateDay.isSame(today.startOf('day')))
             return (
                 <>
                     <Countdown value={date}/>
                     <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
-                    <span>{t('text.today')} {moment(date).format('h:mm')}</span>
+                    <span>{t('text.today')} {date.format('H:mm')}</span>
                 </>
             );
-        else if (date.startOf('day').isSame(today.add(1, 'day').startOf('day')))
+        else if (dateDay.isSame(today.add(1, 'day').startOf('day')))
             return (
                 <>
                     <Countdown value={date}/>
                     <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
-                    <span>{t('text.tomorrow')} {moment(date).format('h:mm')}</span>
+                    <span>{t('text.tomorrow')} {date.format('H:mm')}</span>
                 </>
             );
         else
@@ -66,12 +69,12 @@ const AuctionDetailsPage = (props) => {
                 <>
                     <span>{difference} {t('text.days')}</span>
                     <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
-                    <span>{moment(date).format('dddd, DD MMMM YYYY, HH:mm')}</span>
+                    <span>{date.format('dddd, DD MMMM YYYY, H:mm')}</span>
                 </>
             );
     }
 
-    const time = () => {
+    const timer = () => {
         const today = moment();
         const startDate = moment(auctionDetails.startDate);
         const endDate = moment(auctionDetails.endDate);
@@ -79,14 +82,14 @@ const AuctionDetailsPage = (props) => {
         if (startDate > today)
             return (
                 <>
-                    <span style={{marginRight: '0.5em'}}>{t('text.toStart')}:</span>
+                    <span>{t('text.toStart')}:</span>
                     {getDate(startDate)}
                 </>
             );
         else if (endDate >= today && startDate <= today)
             return (
                 <>
-                    <span style={{marginRight: '0.5em'}}>{t('text.timeLeft')}:</span>
+                    <span>{t('text.timeLeft')}:</span>
                     {getDate(endDate)}
                 </>
             );
@@ -94,7 +97,7 @@ const AuctionDetailsPage = (props) => {
             return (
                 <>
                     <span style={{marginRight: '0.5em'}}>{t('text.ended')}:</span>
-                    {moment(endDate).format('dddd, DD MMMM YYYY, HH:mm')}
+                    {endDate.format('dddd, DD MMMM YYYY, HH:mm')}
                 </>
             );
     }
@@ -106,7 +109,7 @@ const AuctionDetailsPage = (props) => {
                     <hr style={{marginBottom: 'auto'}} className="divider"/>
                     <div className="extra">
                         <Button type="primary" block
-                                disabled={auctionDetails.userUsername !== username || moment().format() < auctionDetails.startDate}>
+                                disabled={auctionDetails.userUsername !== username || moment() < moment(auctionDetails.startDate)}>
                             {t('text.edit')}
                         </Button>
                     </div>
@@ -126,7 +129,7 @@ const AuctionDetailsPage = (props) => {
                         </div>
                         <div style={{marginLeft: '10px'}}>
                             <Button type="primary" block
-                                    disabled={auctionDetails.userUsername === username || moment().format() > auctionDetails.endDate}>
+                                    disabled={auctionDetails.userUsername === username || moment() > moment(auctionDetails.endDate)}>
                                 {t('text.placeBid')}
                             </Button>
                         </div>
@@ -154,7 +157,7 @@ const AuctionDetailsPage = (props) => {
                             </div>
                             <hr className="divider"/>
                             <div className="countdown">
-                                {time()}
+                                {timer()}
                             </div>
                             <hr className="divider"/>
                             <div className="bids">
@@ -194,7 +197,8 @@ const AuctionDetailsPage = (props) => {
                                     <Timeline>
                                         {auctionDetails.bids.reverse().map(bid => {
                                             return (
-                                                <Timeline.Item>{moment(bid.date).format('dddd, DD MMMM YYYY, HH:mm')} - {bid.userUsername} {t('text.bid')} {bid.price} PLN</Timeline.Item>
+                                                <Timeline.Item
+                                                    key={bid.id}>{moment(bid.date).format('dddd, DD MMMM YYYY, HH:mm')} - {bid.userUsername} {t('text.bid')} {bid.price} PLN</Timeline.Item>
                                             );
                                         })}
                                     </Timeline>

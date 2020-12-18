@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 @Setter
 public class BidDto {
 
+    private Long id;
+
     private LocalDateTime date;
 
     private BigDecimal price;
