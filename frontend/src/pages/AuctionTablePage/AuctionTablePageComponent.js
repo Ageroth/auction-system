@@ -58,6 +58,8 @@ const AuctionTablePage = (props) => {
 
     const columns = [
         {
+            className: 'image-column',
+            width: '10%',
             title: t('auctionLabels.itemImage'),
             dataIndex: 'itemImage',
             key: 'itemImage',
@@ -65,6 +67,7 @@ const AuctionTablePage = (props) => {
                                         alt={itemImage}/>
         },
         {
+            width: '11%',
             title: t('auctionLabels.itemName'),
             dataIndex: 'itemName',
             key: 'itemName',
@@ -78,32 +81,37 @@ const AuctionTablePage = (props) => {
             key: 'itemDescription'
         },
         {
+            width: '6%',
             title: t('auctionLabels.currentPrice'),
             dataIndex: 'currentPrice',
             key: 'currentPrice',
             render: (text, record) => record.currentPrice ? `${record.currentPrice} PLN` : `${record.startingPrice} PLN`
         },
         {
+            width: '5%',
             title: t('auctionLabels.bidsNumber'),
             dataIndex: 'bidsNumber',
             key: 'bidsNumber'
         },
         {
+            width: '10%',
             title: t('auctionLabels.startDate'),
             dataIndex: 'startDate',
             key: 'startDate',
             sorter: true,
             defaultSortOrder: 'ascend',
-            render: startDate => `${moment(startDate).format('DD-MM-YYYY HH:mm')}`
+            render: startDate => `${moment(startDate).format('DD-MM-YYYY, HH:mm')}`
         },
         {
+            width: '10%',
             title: t('auctionLabels.endDate'),
             dataIndex: 'endDate',
             key: 'endDate',
             sorter: true,
-            render: endDate => `${moment(endDate).format('DD-MM-YYYY HH:mm')}`
+            render: endDate => `${moment(endDate).format('DD-MM-YYYY, HH:mm')}`
         },
         {
+            width: '5%',
             title: t('auctionLabels.status'),
             dataIndex: 'status',
             key: 'status',

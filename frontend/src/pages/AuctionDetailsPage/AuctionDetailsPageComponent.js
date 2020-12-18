@@ -154,8 +154,7 @@ const AuctionDetailsPage = (props) => {
                 <div className="auction-details-page-wrapper">
                     <div className="auction-card">
                         <div className="image-wrapper">
-                            <Image className="image"
-                                   src={"data:image/png;base64," + auctionDetails.itemImage}
+                            <Image src={"data:image/png;base64," + auctionDetails.itemImage}
                                    alt={auctionDetails.itemImage}/>
                         </div>
                         <div className="details">
