@@ -7,13 +7,14 @@ import {useTranslation} from 'react-i18next';
 import allroles from '../../utils/allroles'
 import {SearchOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css'
-import './UserListPage.css'
+import './UserTablePage.css'
 
 const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 
-const UserListPage = (props) => {
+const UserTablePage = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
+    const {users, pagination, isLoading} = props;
 
     const getColumnSearchProps = () => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -129,30 +130,37 @@ const UserListPage = (props) => {
     ];
 
     const handleTableChange = (pagination, filters, sorter) => {
+        let activationStatus;
+        let searchQuery;
+
+        filters.activated ? activationStatus = filters.activated[0] : activationStatus = null;
+        filters.lastName ? searchQuery = filters.lastName[0] : searchQuery = null;
+
         props.handleTableChange({
+            pagination,
             sortField: sorter.field,
             order: sorter.order,
-            pagination,
-            ...filters
+            status: activationStatus,
+            query: searchQuery
         })
     };
 
     return (
         <AppLayout>
-            <div className="user-list-wrapper">
+            <div className="user-table-wrapper">
                 <Table
                     columns={columns}
                     rowKey={record => record.id}
-                    dataSource={props.data}
-                    pagination={props.pagination}
-                    loading={props.isLoading}
+                    dataSource={users}
+                    pagination={pagination}
+                    loading={isLoading}
                     onChange={handleTableChange}
                     bordered
                 />
-                <Button type="primary" onClick={handleAdd}> {t('text.add')} </Button>
+                <Button className="user-table-button" type="primary" onClick={handleAdd}> {t('text.add')} </Button>
             </div>
         </AppLayout>
     );
 }
 
-export default UserListPage;
+export default UserTablePage;

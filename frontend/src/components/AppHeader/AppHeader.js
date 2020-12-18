@@ -72,6 +72,13 @@ const AppHeader = () => {
                 break;
 
             case CLIENT:
+                items = (
+                    <>
+                        <Menu.Item className="menu-left-item" key="auctions" icon={<UnorderedListOutlined/>}>
+                            <Link className="menu-link" to={`/auctions`}> {t('navbarLink.auctions')} </Link>
+                        </Menu.Item>
+                    </>
+                )
                 break;
 
             default:

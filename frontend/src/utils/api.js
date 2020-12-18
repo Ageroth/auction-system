@@ -37,18 +37,12 @@ export function resetPasswordRequest(value, payload) {
 }
 
 export function getUsersRequest(values) {
-    let activationStatus;
-    let searchQuery;
-    values.activated ? activationStatus = values.activated[0] : activationStatus = null;
-    values.lastName ? searchQuery = values.lastName[0] : searchQuery = null;
+    const {pagination, ...valuesCopy} = values;
 
     return axios.get('/users', {
         params: {
-            page: values.pagination.current - 1,
-            status: activationStatus,
-            sortField: values.sortField,
-            order: values.order,
-            query: searchQuery
+            page: pagination.current - 1,
+            ...valuesCopy
         }
     });
 }
@@ -86,11 +80,18 @@ export function getAllAccessLevelsRequest() {
 }
 
 export function getAuctionsRequest(values) {
+    const {pagination, ...valuesCopy} = values;
+
     return axios.get('/auctions', {
         params: {
-            page: values.pagination.current - 1,
+            page: pagination.current - 1,
+            ...valuesCopy
         }
     });
+}
+
+export function getAuctionDetailsRequest(value) {
+    return axios.get(`/auctions/${value}`);
 }
 
 export function addAuctionRequest(payload) {

@@ -6,6 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import pl.lodz.p.it.auctionsystem.entities.User;
+import pl.lodz.p.it.auctionsystem.utils.MessageService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

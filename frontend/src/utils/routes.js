@@ -4,7 +4,7 @@ import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage'
 import ActivationPage from '../pages/ActivationPage';
 import PasswordResetPage from '../pages/PasswordResetPage'
-import UserListPage from '../pages/UserListPage'
+import UserTablePage from '../pages/UserTablePage'
 import UserDetailsPage from '../pages/UserDetailsPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import UserPasswordChangePage from '../pages/UserPasswordChangePage'
@@ -13,7 +13,8 @@ import OwnDetailsPage from '../pages/OwnDetailsPage'
 import OwnPasswordChangePage from '../pages/OwnPasswordChangePage'
 import OwnDetailsEditPage from '../pages/OwnDetailsEditPage'
 import UserAddPage from '../pages/UserAddPage'
-import AuctionListPage from '../pages/AuctionListPage'
+import AuctionTablePage from '../pages/AuctionTablePage'
+import AuctionDetailsPage from '../pages/AuctionDetailsPage'
 import AuctionAddPage from '../pages/AuctionAddPage'
 
 const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
@@ -25,7 +26,7 @@ export const routes = [
     {path: '/activation/:activationCode', component: ActivationPage, public: true},
     {path: '/password_reset', component: PasswordResetPage, public: true},
     {path: '/password_reset/:passwordResetCode', component: PasswordResetPage, public: true},
-    {path: '/users', component: UserListPage, canAccess: [ADMINISTRATOR]},
+    {path: '/users', component: UserTablePage, canAccess: [ADMINISTRATOR]},
     {path: '/users/add', component: UserAddPage, canAccess: [ADMINISTRATOR]},
     {path: '/users/:userId', component: UserDetailsPage, canAccess: [ADMINISTRATOR]},
     {path: '/users/:userId/password_change', component: UserPasswordChangePage, canAccess: [ADMINISTRATOR]},
@@ -33,7 +34,8 @@ export const routes = [
     {path: '/my_profile', component: OwnDetailsPage},
     {path: '/my_profile/password_change', component: OwnPasswordChangePage},
     {path: '/my_profile/edit', component: OwnDetailsEditPage},
-    {path: '/auctions', component: AuctionListPage, canAccess: [MANAGER, CLIENT]},
+    {path: '/auctions', component: AuctionTablePage, canAccess: [MANAGER, CLIENT]},
     {path: '/auctions/add', component: AuctionAddPage, canAccess: [MANAGER]},
+    {path: '/auctions/:auctionId', component: AuctionDetailsPage, canAccess: [MANAGER, CLIENT]},
     {path: '*', component: NotFoundPage, public: true},
 ];

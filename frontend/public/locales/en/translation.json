@@ -16,12 +16,18 @@
     "roles": "Roles"
   },
   "auctionLabels": {
-    "itemImage": "Item image",
-    "itemName": "Item name",
-    "itemDescription": "Item description",
+    "itemImage": "Image",
+    "itemName": "Name",
+    "itemDescription": "Description",
     "startingPrice": "Starting price (PLN)",
     "startDate": "Start date",
-    "duration": "Duration (days)"
+    "duration": "Duration (days)",
+    "endDate": "End date",
+    "bidsNumber": "Bids number",
+    "currentPrice": "Current bid",
+    "status": "Status",
+    "current": "Current",
+    "finished": "Finished"
   },
   "validation": {
     "required": "This field is required",
@@ -73,7 +79,19 @@
     "areYouSure": "Are you sure?",
     "reset": "Reset",
     "search": "Search",
-    "schedule": "Schedule the start"
+    "schedule": "Schedule the start",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "days": "days",
+    "toStart": "To start",
+    "timeLeft": "Time left",
+    "ended": "Ended",
+    "placeBid": "Place a bid",
+    "seller": "Seller",
+    "bidHistory": "Bid history",
+    "bid": "bid",
+    "editForbidden": "You cannot edit somebody else's auction and an auction that has already started or finished",
+    "bidForbidden": "You cannot bid at your own auction or at an auction that is not currently live"
   },
   "role": {
     "admin": "Administrator",
@@ -100,6 +118,7 @@
     "userAdd": "New user",
     "activation": "Activation",
     "auctions": "Auctions",
-    "auctionAdd": "New auction"
+    "auctionAdd": "New auction",
+    "auctionDetails": "Auction details"
   }
 }

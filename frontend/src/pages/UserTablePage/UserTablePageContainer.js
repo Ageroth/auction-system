@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import UserListPage from './UserListPageComponent'
+import UserTablePage from './UserTablePageComponent'
 import {toast} from 'react-toastify';
 import {getUsersRequest} from '../../utils/api';
 
-export default class UserListPageContainer extends Component {
+export default class UserTablePageContainer extends Component {
     state = {
-        data: [],
+        users: [],
         pagination: {
             current: 1,
         },
@@ -14,6 +14,7 @@ export default class UserListPageContainer extends Component {
 
     componentDidMount() {
         const {pagination} = this.state;
+
         this.getUsers({pagination});
     }
 
@@ -23,7 +24,7 @@ export default class UserListPageContainer extends Component {
         getUsersRequest(params).then(res => {
             this.setState({
                 isLoading: false,
-                data: res.data.users,
+                users: res.data.users,
                 pagination: {
                     ...params.pagination,
                     total: res.data.totalItems,
@@ -41,8 +42,7 @@ export default class UserListPageContainer extends Component {
 
     render() {
         return (
-            <UserListPage data={this.state.data} pagination={this.state.pagination} isLoading={this.state.isLoading}
-                          handleTableChange={this.getUsers}/>
+            <UserTablePage handleTableChange={this.getUsers} {...this.state}/>
         );
     }
 }

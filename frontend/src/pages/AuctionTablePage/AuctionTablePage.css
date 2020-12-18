@@ -1,0 +1,34 @@
+.auction-table-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ant-table-wrapper {
+    width: 100%;
+}
+
+.auction-table-button {
+    margin-top: 10px;
+}
+
+tr.ant-table-row > td:nth-child(1) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+.ant-image {
+    width: 100%;
+    height: 100%;
+}
+
+.ant-image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: pointer;
+}

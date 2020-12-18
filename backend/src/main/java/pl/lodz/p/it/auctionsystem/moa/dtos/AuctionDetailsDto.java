@@ -5,12 +5,11 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
-public class AuctionDto {
-
-    private Long id;
+public class AuctionDetailsDto {
 
     private BigDecimal startingPrice;
 
@@ -18,13 +17,13 @@ public class AuctionDto {
 
     private LocalDateTime endDate;
 
-    private int bidsNumber;
-
-    private BigDecimal currentPrice;
+    private String userUsername;
 
     private String itemName;
 
     private String itemDescription;
 
     private byte[] itemImage;
+
+    private List<BidDto> bids;
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+public interface UserRepositoryMok extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     /**
      * Sprawdza czy istnieje encja {@link User} o podanej nazwie użytkownika.
@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @param username nazwa użytkownika
      * @return true jeśli istnieje, w przeciwnym wypadku false
      */
-    boolean existsByUsername(String username);
+    boolean existsByUsernameIgnoreCase(String username);
 
     /**
      * Sprawdza czy istnieje encja {@link User} o podanym emailu ignorując wielkość znaków.

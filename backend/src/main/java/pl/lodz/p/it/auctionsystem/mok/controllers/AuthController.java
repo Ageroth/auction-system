@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.auctionsystem.mok.dtos.JwtTokenDto;
 import pl.lodz.p.it.auctionsystem.mok.dtos.LoginDto;
-import pl.lodz.p.it.auctionsystem.security.jwt.JwtTokenUtils;
-import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
+import pl.lodz.p.it.auctionsystem.mok.security.jwt.JwtTokenUtils;
+import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.util.List;

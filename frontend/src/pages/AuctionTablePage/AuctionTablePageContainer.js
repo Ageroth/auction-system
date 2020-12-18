@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import AuctionListPage from './AuctionListPageComponent'
+import AuctionTablePage from './AuctionTablePageComponent'
 import {toast} from 'react-toastify';
 import {getAuctionsRequest} from '../../utils/api';
 
-export default class AuctionListPageContainer extends Component {
+export default class AuctionTablePageContainer extends Component {
     state = {
-        data: [],
+        auctions: [],
         pagination: {
             current: 1,
         },
@@ -13,8 +13,12 @@ export default class AuctionListPageContainer extends Component {
     };
 
     componentDidMount() {
+        const status = "CURRENT";
+        const sortField = "startDate";
+        const order = "ascend";
         const {pagination} = this.state;
-        this.getAuctions({pagination});
+
+        this.getAuctions({pagination, status, sortField, order});
     }
 
     getAuctions = (params = {}) => {
@@ -23,7 +27,7 @@ export default class AuctionListPageContainer extends Component {
         getAuctionsRequest(params).then(res => {
             this.setState({
                 isLoading: false,
-                data: res.data.auctions,
+                auctions: res.data.auctions,
                 pagination: {
                     ...params.pagination,
                     total: res.data.totalItems,
@@ -41,8 +45,7 @@ export default class AuctionListPageContainer extends Component {
 
     render() {
         return (
-            <AuctionListPage data={this.state.data} pagination={this.state.pagination} isLoading={this.state.isLoading}
-                             handleTableChange={this.getAuctions}/>
+            <AuctionTablePage handleTableChange={this.getAuctions} {...this.state}/>
         );
     }
 }

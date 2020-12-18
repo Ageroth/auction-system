@@ -12,8 +12,8 @@ import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
 import pl.lodz.p.it.auctionsystem.exceptions.UserAccessLevelAlreadyExistsException;
 import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserAccessLevelRepository;
-import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
-import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
+import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepositoryMok;
+import pl.lodz.p.it.auctionsystem.utils.MessageService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +25,7 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
 
     private final UserAccessLevelRepository userAccessLevelRepository;
 
-    private final UserRepository userRepository;
+    private final UserRepositoryMok userRepositoryMok;
 
     private final AccessLevelRepository accessLevelRepository;
 
@@ -33,10 +33,10 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
 
     @Autowired
     public UserAccessLevelServiceImpl(UserAccessLevelRepository userAccessLevelRepository,
-                                      UserRepository userRepository, AccessLevelRepository accessLevelRepository,
+                                      UserRepositoryMok userRepositoryMok, AccessLevelRepository accessLevelRepository,
                                       MessageService messageService) {
         this.userAccessLevelRepository = userAccessLevelRepository;
-        this.userRepository = userRepository;
+        this.userRepositoryMok = userRepositoryMok;
         this.accessLevelRepository = accessLevelRepository;
         this.messageService = messageService;
     }
@@ -45,7 +45,7 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void addUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+        User user = userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String accessLevelNotFoundMessage = messageService.getMessage("exception.accessLevelNotFound");
         AccessLevel accessLevel =
                 accessLevelRepository.findById(accessLevelId).orElseThrow(() -> new EntityNotFoundException(accessLevelNotFoundMessage));

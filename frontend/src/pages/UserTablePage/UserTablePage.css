@@ -1,4 +1,4 @@
-.user-list-wrapper {
+.user-table-wrapper {
     width: 100%;
     height: 100%;
     display: flex;
@@ -12,4 +12,8 @@
 
 .ant-table-wrapper {
     width: 100%;
+}
+
+.user-table-button {
+    margin-top: 10px;
 }

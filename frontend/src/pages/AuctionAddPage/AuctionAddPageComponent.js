@@ -25,7 +25,6 @@ const AuctionAddPage = (props) => {
     const [imageUrl, setImageUrl] = useState();
     const [scheduleItemVisible, setScheduleItemVisible] = useState(false);
     const [visible, setVisible] = useState(false);
-    const [selectedDate, setSelectedDate] = useState();
 
     const handleChange = (info) => {
         if (info.file.status === 'uploading') {
@@ -75,7 +74,6 @@ const AuctionAddPage = (props) => {
                     format="DD/MM/YYYY HH:mm"
                     disabledDate={disabledDate}
                     showTime={{format: 'HH:mm'}}
-                    onChange={d => setSelectedDate(d)}
                 />
             </Form.Item>
         </>
@@ -192,7 +190,8 @@ const AuctionAddPage = (props) => {
                             }
                         ]}
                     >
-                        <InputNumber step={0.01} min={0}/>
+                        <InputNumber step={0.01} min={0} formatter={value => `${value} PLN`}
+                                     parser={value => value.replace(/PL|PN|LN|P|N|L|\s?|(,*)/g, '')}/>
                     </Form.Item>
 
                     <Checkbox onChange={e => setScheduleItemVisible(e.target.checked)}>

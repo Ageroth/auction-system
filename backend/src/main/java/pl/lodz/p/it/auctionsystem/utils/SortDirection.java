@@ -1,4 +1,4 @@
-package pl.lodz.p.it.auctionsystem.mok.utils;
+package pl.lodz.p.it.auctionsystem.utils;
 
 import org.springframework.data.domain.Sort.Direction;
 

@@ -1,4 +1,4 @@
-package pl.lodz.p.it.auctionsystem.mok.utils;
+package pl.lodz.p.it.auctionsystem.utils;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;

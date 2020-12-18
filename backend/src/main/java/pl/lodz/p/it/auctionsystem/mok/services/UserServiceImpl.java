@@ -17,11 +17,11 @@ import pl.lodz.p.it.auctionsystem.entities.UserAccessLevel;
 import pl.lodz.p.it.auctionsystem.exceptions.*;
 import pl.lodz.p.it.auctionsystem.mok.dtos.*;
 import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
-import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepository;
-import pl.lodz.p.it.auctionsystem.mok.utils.AccessLevelEnum;
+import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepositoryMok;
+import pl.lodz.p.it.auctionsystem.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
-import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
-import pl.lodz.p.it.auctionsystem.mok.utils.SortDirection;
+import pl.lodz.p.it.auctionsystem.utils.MessageService;
+import pl.lodz.p.it.auctionsystem.utils.SortDirection;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -35,7 +35,7 @@ import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.isActive;
 @Transactional(rollbackFor = ApplicationException.class)
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryMok userRepositoryMok;
 
     private final AccessLevelRepository accessLevelRepository;
 
@@ -54,10 +54,10 @@ public class UserServiceImpl implements UserService {
     private int pageSize;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, AccessLevelRepository accessLevelRepository,
+    public UserServiceImpl(UserRepositoryMok userRepositoryMok, AccessLevelRepository accessLevelRepository,
                            PasswordEncoder passwordEncoder, MailService mailService, MessageService messageService,
                            ModelMapper modelMapper) {
-        this.userRepository = userRepository;
+        this.userRepositoryMok = userRepositoryMok;
         this.accessLevelRepository = accessLevelRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
         mailService.sendAccountActivationMail(user);
 
-        return userRepository.save(user).getId();
+        return userRepositoryMok.save(user).getId();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
             user.getUserAccessLevels().add(userAccessLevel);
         }
 
-        return userRepository.save(user).getId();
+        return userRepositoryMok.save(user).getId();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
     public OwnAccountDetailsDto getUserByUsername(String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
         return modelMapper.map(user, OwnAccountDetailsDto.class);
     }
@@ -130,14 +130,14 @@ public class UserServiceImpl implements UserService {
             pageable = PageRequest.of(userCriteria.getPage(), pageSize);
 
         if (userCriteria.getQuery() == null && userCriteria.getStatus() == null)
-            userPage = userRepository.findAll(pageable);
+            userPage = userRepositoryMok.findAll(pageable);
         else if (userCriteria.getQuery() != null && userCriteria.getStatus() == null)
-            userPage = userRepository.findAll(containsTextInName(userCriteria.getQuery()), pageable);
+            userPage = userRepositoryMok.findAll(containsTextInName(userCriteria.getQuery()), pageable);
         else if (userCriteria.getQuery() == null) {
-            userPage = userRepository.findAll(isActive(userCriteria.getStatus()), pageable);
+            userPage = userRepositoryMok.findAll(isActive(userCriteria.getStatus()), pageable);
         } else
             userPage =
-                    userRepository.findAll(containsTextInName(userCriteria.getQuery()).and(isActive(userCriteria.getStatus())), pageable);
+                    userRepositoryMok.findAll(containsTextInName(userCriteria.getQuery()).and(isActive(userCriteria.getStatus())), pageable);
 
         return userPage.map(user -> {
             UserDto userDto = modelMapper.map(user, UserDto.class);
@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
     public UserAccountDetailsDto getUserById(Long userId) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+        User user = userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
         UserAccountDetailsDto userAccountDetailsDto = modelMapper.map(user, UserAccountDetailsDto.class);
 
@@ -171,13 +171,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @PreAuthorize("permitAll()")
     public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
+        return userRepositoryMok.existsByUsernameIgnoreCase(username);
     }
 
     @Override
     @PreAuthorize("permitAll()")
     public boolean existsByEmail(String email) {
-        return userRepository.existsByEmailIgnoreCase(email);
+        return userRepositoryMok.existsByEmailIgnoreCase(email);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class UserServiceImpl implements UserService {
     public void activateUser(String activationCode) throws ApplicationException {
         String activationCodeInvalidMessage = messageService.getMessage("exception.activationCodeInvalid");
         User user =
-                userRepository.findByActivationCode(activationCode).orElseThrow(() -> new InvalidParameterException(activationCodeInvalidMessage));
+                userRepositoryMok.findByActivationCode(activationCode).orElseThrow(() -> new InvalidParameterException(activationCodeInvalidMessage));
 
         user.setActivated(true);
         user.setActivationCode(null);
@@ -196,7 +196,7 @@ public class UserServiceImpl implements UserService {
     public void sendPasswordResetEmail(PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.emailInvalid");
         User user =
-                userRepository.findByEmailIgnoreCase(passwordResetEmailDto.getEmail()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMok.findByEmailIgnoreCase(passwordResetEmailDto.getEmail()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordResetCode = UUID.randomUUID().toString().replace("-", "");
 
         user.setPasswordResetCode(passwordResetCode);
@@ -210,7 +210,7 @@ public class UserServiceImpl implements UserService {
     public void resetPassword(String passwordResetCode, PasswordResetDto passwordResetDto) throws ApplicationException {
         String passwordResetCodeInvalidMessage = messageService.getMessage("exception.passwordResetCodeInvalid");
         User user =
-                userRepository.findByPasswordResetCode(passwordResetCode).orElseThrow(() -> new
+                userRepositoryMok.findByPasswordResetCode(passwordResetCode).orElseThrow(() -> new
                         InvalidParameterException(passwordResetCodeInvalidMessage));
         LocalDateTime passwordResetCodeAddDate = user.getPasswordResetCodeAddDate();
         LocalDateTime passwordResetCodeValidityDate = passwordResetCodeAddDate.plusMinutes(passwordResetCodeValidTime);
@@ -233,7 +233,7 @@ public class UserServiceImpl implements UserService {
     public void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
         user.setFirstName(ownAccountDetailsUpdateDto.getFirstName());
         user.setLastName(ownAccountDetailsUpdateDto.getLastName());
@@ -245,7 +245,7 @@ public class UserServiceImpl implements UserService {
     public void updateUserDetailsById(Long userId, UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
         user.setFirstName(userAccountDetailsUpdateDto.getFirstName());
         user.setLastName(userAccountDetailsUpdateDto.getLastName());
@@ -257,7 +257,7 @@ public class UserServiceImpl implements UserService {
     public void changePasswordByUsername(String username, OwnPasswordChangeDto ownPasswordChangeDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
         if (!passwordEncoder.matches(ownPasswordChangeDto.getCurrentPassword(), user.getPassword())) {
             String passwordIncorrectMessage = messageService.getMessage("exception.passwordIncorrect");
@@ -281,20 +281,20 @@ public class UserServiceImpl implements UserService {
     public void changePasswordById(Long userId, UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordHash = passwordEncoder.encode(userPasswordChangeDto.getNewPassword());
 
         user.setPassword(passwordHash);
     }
 
     private User createUser(User user) throws ApplicationException {
-        if (userRepository.existsByUsername(user.getUsername())) {
+        if (userRepositoryMok.existsByUsernameIgnoreCase(user.getUsername())) {
             String usernameNotUniqueMessage = messageService.getMessage("exception.usernameNotUnique");
 
             throw new ValueNotUniqueException(usernameNotUniqueMessage);
         }
 
-        if (userRepository.existsByEmailIgnoreCase(user.getEmail())) {
+        if (userRepositoryMok.existsByEmailIgnoreCase(user.getEmail())) {
             String emailNotUnique = messageService.getMessage("exception.emailNotUnique");
 
             throw new ValueNotUniqueException(emailNotUnique);

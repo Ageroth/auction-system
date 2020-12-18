@@ -1,4 +1,4 @@
-package pl.lodz.p.it.auctionsystem.security.jwt;
+package pl.lodz.p.it.auctionsystem.mok.security.jwt;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
+import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
 
 import java.util.Date;
 

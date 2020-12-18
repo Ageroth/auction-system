@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.lodz.p.it.auctionsystem.exceptions.*;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
-import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -2,7 +2,7 @@ import React from 'react';
 import {Redirect, Route} from 'react-router-dom';
 import {useSelector} from 'react-redux'
 
-export const PrivateRoute = ({component: Component, canAccess, ...rest}) => {
+const PrivateRoute = ({component: Component, canAccess, ...rest}) => {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
     const currentRole = useSelector(state => state.user.currentRole);
 
@@ -24,3 +24,5 @@ export const PrivateRoute = ({component: Component, canAccess, ...rest}) => {
         )}/>
     );
 }
+
+export default PrivateRoute

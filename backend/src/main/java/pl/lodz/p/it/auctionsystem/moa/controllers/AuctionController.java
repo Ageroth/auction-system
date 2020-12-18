@@ -11,11 +11,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
+import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionCriteria;
+import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDetailsDto;
 import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
 import pl.lodz.p.it.auctionsystem.moa.services.AuctionService;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
-import pl.lodz.p.it.auctionsystem.mok.utils.MessageService;
-import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
+import pl.lodz.p.it.auctionsystem.mok.dtos.UserAccountDetailsDto;
+import pl.lodz.p.it.auctionsystem.utils.MessageService;
+import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -62,8 +65,8 @@ public class AuctionController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAuctions(@RequestParam(defaultValue = "0") int page) {
-        Page<AuctionDto> auctionDtoPage = auctionService.getAuctions(page);
+    public ResponseEntity<?> getAuctions(AuctionCriteria auctionCriteria) {
+        Page<AuctionDto> auctionDtoPage = auctionService.getAuctions(auctionCriteria);
 
         if (auctionDtoPage.getContent().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -76,5 +79,19 @@ public class AuctionController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
+    }
+
+    /**
+     * Zwraca szczegóły aukcji o podanym id.
+     *
+     * @param auctionId id aukcji
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link AuctionDetailsDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @GetMapping("/{auctionId}")
+    public ResponseEntity<?> getAuctionDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
+        AuctionDetailsDto auctionDetailsDto = auctionService.getAuctionById(auctionId);
+
+        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
     }
 }

@@ -9,10 +9,10 @@ import pl.lodz.p.it.auctionsystem.entities.User;
 public class UserSpecs {
 
     /**
-     * Służy do znalezienia encji {@link User} zawierających daną frazę w imieniu, nazwisku lub nazwie użytkownika.
+     * Służy do znalezienia encji {@link User} zawierających daną frazę w imieniu lub nazwisku.
      *
      * @param text poszukiwana fraza
-     * @return obiekt typu {@link Specification}
+     * @return obiekt typu {@link Specification<User>}
      */
     public static Specification<User> containsTextInName(String text) {
         if (!text.contains("%"))
@@ -30,7 +30,7 @@ public class UserSpecs {
      * Służy do znalezienia encji {@link User} w zależności od parametru aktywacji konta.
      *
      * @param status status aktywacji konta
-     * @return obiekt typu {@link Specification}
+     * @return obiekt typu {@link Specification<User>}
      */
     public static Specification<User> isActive(Boolean status) {
         return (root, query, builder) -> builder.equal(root.get("activated"), status);
