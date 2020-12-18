@@ -1,12 +1,23 @@
 .auction-details-page-wrapper {
-    width: 80%;
+    width: 60%;
 }
 
-.image {
+.image-wrapper {
     width: 60%;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 400px;
+}
+
+.image {
+    cursor: pointer;
+    width: unset;
+    height: inherit
+}
+
+.ant-image-img {
+    height: inherit;
 }
 
 .divider {
@@ -62,6 +73,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    margin-top: 20px;
 }
 
 .current-bid {
@@ -80,4 +92,5 @@
 .extra {
     display: flex;
     flex-direction: row;
+    width: 100%;
 }

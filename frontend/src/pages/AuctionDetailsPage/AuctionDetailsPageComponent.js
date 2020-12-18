@@ -12,22 +12,6 @@ import './AuctionDetailsPage.css'
 
 const {Countdown} = Statistic;
 
-const getDate = (date) => {
-    const endDate = moment(date);
-    const today = moment();
-    const difference = endDate.diff(today, 'hours');
-
-    if (i18n.language === 'pl')
-        moment.locale('pl');
-
-    if (difference <= 24 && difference > 0) {
-        return `Today ${moment(endDate).format('h:mm')}`
-    } else if (difference <= 48 && difference > 24)
-        return `Tomorrow ${moment(endDate).format('h:mm')}`
-    else
-        return moment(endDate).format('dddd, DD MMMM YYYY, HH:mm')
-}
-
 const AuctionDetailsPage = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -52,11 +36,74 @@ const AuctionDetailsPage = (props) => {
         //    logic here
     }
 
+    const getDate = (date) => {
+        const today = moment();
+        const difference = date.diff(today, 'day');
+
+
+        if (i18n.language === 'pl')
+            moment.locale('pl');
+
+        if (date.startOf('day').isSame(today.startOf('day')))
+            return (
+                <>
+                    <Countdown value={date}/>
+                    <span>&nbsp;|&nbsp;</span>
+                    <span>Today {moment(date).format('h:mm')}</span>
+                </>
+            );
+        else if (date.startOf('day').isSame(today.add(1, 'day').startOf('day')))
+            return (
+                <>
+                    <Countdown value={date}/>
+                    <span>&nbsp;|&nbsp;</span>
+                    <span>Tomorrow {moment(date).format('h:mm')}</span>
+                </>
+            );
+        else
+            return (
+                <>
+                    <span>{difference} days</span>
+                    <span>&nbsp;|&nbsp;</span>
+                    <span>{moment(date).format('dddd, DD MMMM YYYY, HH:mm')}</span>
+                </>
+            );
+    }
+
+    const time = () => {
+        const today = moment();
+        const startDate = moment(auctionDetails.startDate);
+        const endDate = moment(auctionDetails.endDate);
+
+        if (startDate > today)
+            return (
+                <>
+                    <span>To start:</span>
+                    {getDate(startDate)}
+                </>
+            );
+        else if (endDate >= today && startDate <= today)
+            return (
+                <>
+                    <span>Time left:</span>
+                    {getDate(endDate)}
+                </>
+            );
+        else
+            return (
+                <>
+                    <span>Ended:</span>
+                    &nbsp;
+                    {moment(endDate).format('dddd, DD MMMM YYYY, HH:mm')}
+                </>
+            );
+    }
+
     const extra = () => {
         if (currentRole === "MANAGER") {
             return (
                 <>
-                    <hr className="divider"/>
+                    <hr style={{marginBottom: 'auto'}} className="divider"/>
                     <div className="extra">
                         <Button type="primary" block
                                 disabled={auctionDetails.userUsername !== username || moment().format() < auctionDetails.startDate}>
@@ -64,11 +111,11 @@ const AuctionDetailsPage = (props) => {
                         </Button>
                     </div>
                 </>
-            )
+            );
         } else if (currentRole === "CLIENT") {
             return (
                 <>
-                    <hr className="divider"/>
+                    <hr style={{marginBottom: 'auto'}} className="divider"/>
                     <div className="extra">
                         <div>
                             <InputNumber step={currentPrice * 0.01}
@@ -85,9 +132,9 @@ const AuctionDetailsPage = (props) => {
                         </div>
                     </div>
                 </>
-            )
+            );
         } else
-            return null
+            return null;
     }
 
     return (
@@ -95,8 +142,8 @@ const AuctionDetailsPage = (props) => {
             {auctionDetails ? (
                 <div className="auction-details-page-wrapper">
                     <div className="auction-card">
-                        <div className="image">
-                            <Image style={{cursor: "pointer"}} width={400}
+                        <div className="image-wrapper">
+                            <Image className="image"
                                    src={"data:image/png;base64," + auctionDetails.itemImage}
                                    alt={auctionDetails.itemImage}/>
                         </div>
@@ -107,9 +154,7 @@ const AuctionDetailsPage = (props) => {
                             </div>
                             <hr className="divider"/>
                             <div className="countdown">
-                                <Countdown title="Time left:" value={auctionDetails.endDate}/>
-                                <span>&nbsp;|&nbsp;</span>
-                                <span>{getDate(auctionDetails.endDate)}</span>
+                                {time()}
                             </div>
                             <hr className="divider"/>
                             <div className="bids">
