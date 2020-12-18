@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Image, InputNumber, Spin, Statistic} from 'antd';
+import {Button, Image, InputNumber, Spin, Statistic, Tabs, Timeline} from 'antd';
 import AppLayout from '../../components/AppLayout';
 import {useTranslation} from 'react-i18next';
 import i18n from "../../utils/i18n"
@@ -11,6 +11,7 @@ import 'antd/dist/antd.css';
 import './AuctionDetailsPage.css'
 
 const {Countdown} = Statistic;
+const {TabPane} = Tabs;
 
 const AuctionDetailsPage = (props) => {
     const {t} = useTranslation();
@@ -48,7 +49,7 @@ const AuctionDetailsPage = (props) => {
             return (
                 <>
                     <Countdown value={date}/>
-                    <span>&nbsp;|&nbsp;</span>
+                    <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
                     <span>Today {moment(date).format('h:mm')}</span>
                 </>
             );
@@ -56,7 +57,7 @@ const AuctionDetailsPage = (props) => {
             return (
                 <>
                     <Countdown value={date}/>
-                    <span>&nbsp;|&nbsp;</span>
+                    <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
                     <span>Tomorrow {moment(date).format('h:mm')}</span>
                 </>
             );
@@ -64,7 +65,7 @@ const AuctionDetailsPage = (props) => {
             return (
                 <>
                     <span>{difference} days</span>
-                    <span>&nbsp;|&nbsp;</span>
+                    <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
                     <span>{moment(date).format('dddd, DD MMMM YYYY, HH:mm')}</span>
                 </>
             );
@@ -78,22 +79,21 @@ const AuctionDetailsPage = (props) => {
         if (startDate > today)
             return (
                 <>
-                    <span>To start:</span>
+                    <span style={{marginRight: '0.5em'}}>To start:</span>
                     {getDate(startDate)}
                 </>
             );
         else if (endDate >= today && startDate <= today)
             return (
                 <>
-                    <span>Time left:</span>
+                    <span style={{marginRight: '0.5em'}}>Time left:</span>
                     {getDate(endDate)}
                 </>
             );
         else
             return (
                 <>
-                    <span>Ended:</span>
-                    &nbsp;
+                    <span style={{marginRight: '0.5em'}}>Ended:</span>
                     {moment(endDate).format('dddd, DD MMMM YYYY, HH:mm')}
                 </>
             );
@@ -181,6 +181,26 @@ const AuctionDetailsPage = (props) => {
                             </div>
                             {extra()}
                         </div>
+                    </div>
+                    <div className="additional-info">
+                        <Tabs defaultActiveKey="1">
+                            <TabPane tab="Description" key="1">
+                                <div className="description">
+                                    <span>{auctionDetails.itemDescription}</span>
+                                </div>
+                            </TabPane>
+                            <TabPane tab="Bid history" key="2">
+                                <div className="history">
+                                    <Timeline>
+                                        {auctionDetails.bids.reverse().map(bid => {
+                                            return (
+                                                <Timeline.Item>{moment(bid.date).format('dddd, DD MMMM YYYY, HH:mm')} - {bid.userUsername} placed {bid.price} PLN</Timeline.Item>
+                                            );
+                                        })}
+                                    </Timeline>
+                                </div>
+                            </TabPane>
+                        </Tabs>
                     </div>
                 </div>
             ) : (
