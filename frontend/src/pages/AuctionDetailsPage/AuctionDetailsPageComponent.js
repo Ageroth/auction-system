@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, Image, InputNumber, Spin, Statistic, Tabs, Timeline} from 'antd';
 import AppLayout from '../../components/AppLayout';
 import {useTranslation} from 'react-i18next';
@@ -27,6 +27,8 @@ const AuctionDetailsPage = (props) => {
             }))
         ) : auctionDetails.startingPrice
     ) : null;
+    const [timeItem, setTimeItem] = useState(null);
+    const [extraItem, setExtraItem] = useState(null);
 
     const handleEditClick = () => {
         const currentLocation = history.location.pathname;
@@ -41,7 +43,6 @@ const AuctionDetailsPage = (props) => {
     const getDate = (date) => {
         const today = moment();
         const dateDay = moment(date).startOf('day');
-        const difference = dateDay.diff(today.startOf('day'), 'day');
 
         if (i18n.language === 'pl')
             moment.locale('pl');
@@ -51,7 +52,7 @@ const AuctionDetailsPage = (props) => {
         if (dateDay.isSame(today.startOf('day')))
             return (
                 <>
-                    <Countdown value={date}/>
+                    <Countdown value={date} onFinish={() => update()}/>
                     <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
                     <span>{t('text.today')} {date.format('H:mm')}</span>
                 </>
@@ -59,7 +60,7 @@ const AuctionDetailsPage = (props) => {
         else if (dateDay.isSame(today.add(1, 'day').startOf('day')))
             return (
                 <>
-                    <Countdown value={date}/>
+                    <Countdown value={date} onFinish={() => update()}/>
                     <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
                     <span>{t('text.tomorrow')} {date.format('H:mm')}</span>
                 </>
@@ -67,7 +68,8 @@ const AuctionDetailsPage = (props) => {
         else
             return (
                 <>
-                    <span>{difference} {t('text.days')}</span>
+                    <Countdown value={date} format="D" onFinish={() => update()}/>
+                    <span style={{fontWeight: 'bold', marginLeft: '0.5em'}}>{t('text.days')}</span>
                     <span style={{marginRight: '0.5em', marginLeft: '0.5em'}}>|</span>
                     <span>{date.format('dddd, DD MMMM YYYY, H:mm')}</span>
                 </>
@@ -86,7 +88,8 @@ const AuctionDetailsPage = (props) => {
                     {getDate(startDate)}
                 </>
             );
-        else if (endDate >= today && startDate <= today)
+        else if (endDate >= today && startDate
+            <= today)
             return (
                 <>
                     <span>{t('text.timeLeft')}:</span>
@@ -109,7 +112,7 @@ const AuctionDetailsPage = (props) => {
                     <hr style={{marginBottom: 'auto'}} className="divider"/>
                     <div className="extra">
                         <Button type="primary" block
-                                disabled={auctionDetails.userUsername !== username || moment() < moment(auctionDetails.startDate)}>
+                                disabled={auctionDetails.userUsername !== username || moment() > moment(auctionDetails.startDate)}>
                             {t('text.edit')}
                         </Button>
                     </div>
@@ -140,6 +143,11 @@ const AuctionDetailsPage = (props) => {
             return null;
     }
 
+    const update = () => {
+        setTimeItem(timer());
+        setExtraItem(extra());
+    }
+
     return (
         <AppLayout>
             {auctionDetails ? (
@@ -157,7 +165,7 @@ const AuctionDetailsPage = (props) => {
                             </div>
                             <hr className="divider"/>
                             <div className="countdown">
-                                {timer()}
+                                {timeItem ? timeItem : timer()}
                             </div>
                             <hr className="divider"/>
                             <div className="bids">
@@ -182,7 +190,7 @@ const AuctionDetailsPage = (props) => {
                                     </span>
                                 </div>
                             </div>
-                            {extra()}
+                            {extraItem ? extraItem : extra()}
                         </div>
                     </div>
                     <div className="additional-info">
