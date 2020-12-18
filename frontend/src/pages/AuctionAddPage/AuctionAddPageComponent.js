@@ -190,7 +190,8 @@ const AuctionAddPage = (props) => {
                             }
                         ]}
                     >
-                        <InputNumber step={0.01} min={0}/>
+                        <InputNumber step={0.01} min={0} formatter={value => `${value} PLN`}
+                                     parser={value => value.replace(/PL|PN|LN|P|N|L|\s?|(,*)/g, '')}/>
                     </Form.Item>
 
                     <Checkbox onChange={e => setScheduleItemVisible(e.target.checked)}>

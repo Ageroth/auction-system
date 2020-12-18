@@ -89,7 +89,9 @@
     "placeBid": "Licytuj",
     "seller": "Sprzedawca",
     "bidHistory": "Historia ofert",
-    "bid": "zaoferował"
+    "bid": "zaoferował",
+    "editForbidden": "Nie możesz edytować cudzej aukcji oraz aukcji, która już się rozpoczęła lub zakończyła",
+    "bidForbidden": "Nie możesz licytować na własnej aukcji lub na aukcji, która aktualnie nie trwa"
   },
   "role": {
     "admin": "Administrator",

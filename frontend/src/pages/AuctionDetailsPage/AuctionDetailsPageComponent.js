@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Image, InputNumber, Spin, Statistic, Tabs, Timeline} from 'antd';
+import {Button, Image, InputNumber, Spin, Statistic, Tabs, Timeline, Tooltip} from 'antd';
 import AppLayout from '../../components/AppLayout';
 import {useTranslation} from 'react-i18next';
 import i18n from "../../utils/i18n"
@@ -107,18 +107,32 @@ const AuctionDetailsPage = (props) => {
 
     const extra = () => {
         if (currentRole === "MANAGER") {
+            const isDisabled = auctionDetails.userUsername !== username || moment() > moment(auctionDetails.startDate);
+
             return (
                 <>
                     <hr style={{marginBottom: 'auto'}} className="divider"/>
                     <div className="extra">
-                        <Button type="primary" block
-                                disabled={auctionDetails.userUsername !== username || moment() > moment(auctionDetails.startDate)}>
-                            {t('text.edit')}
-                        </Button>
+                        {isDisabled ? (
+                            <Tooltip title={t('text.editForbidden')} color={"red"}>
+                                <Button type="primary" block
+                                        disabled={isDisabled}>
+                                    {t('text.edit')}
+                                </Button>
+                            </Tooltip>
+                        ) : (
+                            <Button type="primary" block>
+                                {t('text.edit')}
+                            </Button>
+                        )}
                     </div>
                 </>
             );
         } else if (currentRole === "CLIENT") {
+            const isDisabled = auctionDetails.userUsername === username ||
+                moment() > moment(auctionDetails.endDate) ||
+                moment() < moment(auctionDetails.startDate);
+
             return (
                 <>
                     <hr style={{marginBottom: 'auto'}} className="divider"/>
@@ -126,15 +140,23 @@ const AuctionDetailsPage = (props) => {
                         <div>
                             <InputNumber step={currentPrice * 0.01}
                                          min={currentPrice + 0.01}
-                                         formatter={value => `PLN ${value}`}
-                                         parser={value => value.replace(/PLN\s?|(,*)/g, '')}
-                                         defaultValue={currentPrice}/>
+                                         defaultValue={currentPrice}
+                                         formatter={value => `${value} PLN`}
+                                         parser={value => value.replace(/PL|PN|LN|P|N|L|\s?|(,*)/g, '')}/>
                         </div>
                         <div style={{marginLeft: '10px'}}>
-                            <Button type="primary" block
-                                    disabled={auctionDetails.userUsername === username || moment() > moment(auctionDetails.endDate)}>
-                                {t('text.placeBid')}
-                            </Button>
+                            {isDisabled ? (
+                                <Tooltip title={t('text.bidForbidden')} color={"red"}>
+                                    <Button type="primary"
+                                            disabled={isDisabled}>
+                                        {t('text.placeBid')}
+                                    </Button>
+                                </Tooltip>
+                            ) : (
+                                <Button type="primary">
+                                    {t('text.placeBid')}
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </>
