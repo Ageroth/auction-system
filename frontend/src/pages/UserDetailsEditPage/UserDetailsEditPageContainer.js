@@ -70,6 +70,7 @@ export default class UserDetailsEditPageContainer extends Component {
         const userDetails = this.state.userDetails;
         const accessLevels = this.state.accessLevels;
         const isSubmitting = this.state.isSubmitting;
+
         return (
             <>
                 {this.state.error ? <NotFoundPage/> :

@@ -11,6 +11,8 @@ import java.util.List;
 @Setter
 public class AuctionDetailsDto {
 
+    private Long id;
+
     private BigDecimal startingPrice;
 
     private LocalDateTime startDate;

@@ -7,6 +7,8 @@ import AppLayout from "../../components/AppLayout";
 import 'antd/dist/antd.css'
 import './AuctionAddPage.css'
 
+const {TextArea} = Input;
+
 function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -119,10 +121,6 @@ const AuctionAddPage = (props) => {
                     className="auction-add-form"
                     onFinish={onFinish}
                     scrollToFirstError
-                    initialValues={{
-                        ['startingPrice']: 0,
-                        ['duration']: 3
-                    }}
                 >
                     <Form.Item
                         valuePropName='file'
@@ -177,12 +175,13 @@ const AuctionAddPage = (props) => {
                             }
                         ]}
                     >
-                        <Input/>
+                        <TextArea/>
                     </Form.Item>
 
                     <Form.Item
                         label={t('auctionLabels.startingPrice')}
                         name="startingPrice"
+                        initialValue={0.01}
                         rules={[
                             {
                                 required: true,
@@ -190,7 +189,7 @@ const AuctionAddPage = (props) => {
                             }
                         ]}
                     >
-                        <InputNumber step={0.01} min={0} formatter={value => `${value} PLN`}
+                        <InputNumber step={0.01} min={0.01} formatter={value => `${value} PLN`}
                                      parser={value => value.replace(/PL|PN|LN|P|N|L|\s?|(,*)/g, '')}/>
                     </Form.Item>
 
@@ -203,6 +202,7 @@ const AuctionAddPage = (props) => {
                     <Form.Item
                         label={t('auctionLabels.duration')}
                         name="duration"
+                        initialValue={3}
                         rules={[
                             {
                                 required: true,

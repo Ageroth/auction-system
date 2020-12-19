@@ -7,7 +7,7 @@ export default class AuctionAddPageContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isSubmitting: false,
+            isSubmitting: false
         };
     }
 

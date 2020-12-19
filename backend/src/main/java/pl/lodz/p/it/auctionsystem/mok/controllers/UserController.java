@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.dtos.*;
+import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
 import pl.lodz.p.it.auctionsystem.mok.services.UserAccessLevelService;
 import pl.lodz.p.it.auctionsystem.mok.services.UserService;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
-import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.net.URI;

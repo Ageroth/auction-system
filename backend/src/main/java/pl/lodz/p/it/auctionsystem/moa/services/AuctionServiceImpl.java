@@ -15,10 +15,7 @@ import pl.lodz.p.it.auctionsystem.entities.Item;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionCriteria;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDetailsDto;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
+import pl.lodz.p.it.auctionsystem.moa.dtos.*;
 import pl.lodz.p.it.auctionsystem.moa.repositories.AuctionRepository;
 import pl.lodz.p.it.auctionsystem.moa.repositories.UserRepositoryMoa;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
@@ -112,10 +109,20 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public AuctionDetailsDto getAuctionById(Long auctionId) throws ApplicationException {
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
-
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
 
         return modelMapper.map(auction, AuctionDetailsDto.class);
+    }
+
+    @Override
+    public void updateAuctionById(Long auctionId, AuctionEditDto auctionEditDto) throws ApplicationException {
+        String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
+        Auction auction =
+                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+
+        auction.setStartingPrice(auctionEditDto.getStartingPrice());
+        auction.getItem().setName(auctionEditDto.getItemName());
+        auction.getItem().setDescription(auctionEditDto.getItemDescription());
     }
 }

@@ -115,13 +115,12 @@ const AuctionDetailsPage = (props) => {
                     <div className="extra">
                         {isDisabled ? (
                             <Tooltip title={t('text.editForbidden')} color={"red"}>
-                                <Button type="primary" block
-                                        disabled={isDisabled}>
+                                <Button type="primary" block disabled={isDisabled} onClick={handleEditClick}>
                                     {t('text.edit')}
                                 </Button>
                             </Tooltip>
                         ) : (
-                            <Button type="primary" block>
+                            <Button type="primary" block onClick={handleEditClick}>
                                 {t('text.edit')}
                             </Button>
                         )}

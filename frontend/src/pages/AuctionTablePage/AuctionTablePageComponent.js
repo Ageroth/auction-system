@@ -81,14 +81,14 @@ const AuctionTablePage = (props) => {
             key: 'itemDescription'
         },
         {
-            width: '6%',
+            width: '8%',
             title: t('auctionLabels.currentPrice'),
             dataIndex: 'currentPrice',
             key: 'currentPrice',
             render: (text, record) => record.currentPrice ? `${record.currentPrice} PLN` : `${record.startingPrice} PLN`
         },
         {
-            width: '5%',
+            width: '8%',
             title: t('auctionLabels.bidsNumber'),
             dataIndex: 'bidsNumber',
             key: 'bidsNumber'

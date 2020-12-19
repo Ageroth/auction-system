@@ -10,15 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionCriteria;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDetailsDto;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
+import pl.lodz.p.it.auctionsystem.moa.dtos.*;
 import pl.lodz.p.it.auctionsystem.moa.services.AuctionService;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
-import pl.lodz.p.it.auctionsystem.mok.dtos.UserAccountDetailsDto;
-import pl.lodz.p.it.auctionsystem.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
+import pl.lodz.p.it.auctionsystem.utils.MessageService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -93,5 +89,23 @@ public class AuctionController {
         AuctionDetailsDto auctionDetailsDto = auctionService.getAuctionById(auctionId);
 
         return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+    }
+
+    /**
+     * Aktualizuje dane aukcji o podanym id.
+     *
+     * @param auctionId      id aukcji
+     * @param auctionEditDto obiekt typu {@link AuctionEditDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @PatchMapping("/{auctionId}")
+    public ResponseEntity<?> updateAuctionDetails(@PathVariable(value = "auctionId") Long auctionId,
+                                                  @Valid @RequestBody AuctionEditDto auctionEditDto) throws ApplicationException {
+        auctionService.updateAuctionById(auctionId, auctionEditDto);
+
+        String message = messageService.getMessage("info.auctionUpdated");
+
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
 }

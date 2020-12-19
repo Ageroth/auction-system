@@ -46,9 +46,6 @@ const UserDetailsEditPage = (props) => {
                         className="user-details-edit-form"
                         onFinish={onFinish}
                         scrollToFirstError
-                        initialValues={{
-                            'accessLevelIds': userDetails.accessLevelIds
-                        }}
                     >
                         <Form.Item
                             label={t('userLabels.firstName')}
@@ -115,6 +112,7 @@ const UserDetailsEditPage = (props) => {
                         <Form.Item
                             label={t('userLabels.roles')}
                             name="accessLevelIds"
+                            initialValue={userDetails.accessLevelIds}
                             rules={[
                                 {
                                     required: true,

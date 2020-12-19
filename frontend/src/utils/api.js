@@ -97,3 +97,7 @@ export function getAuctionDetailsRequest(value) {
 export function addAuctionRequest(payload) {
     return axios.post('/auctions', payload);
 }
+
+export function updateAuctionRequest(value, payload) {
+    return axios.patch(`/auctions/${value}`, JSON.stringify(payload));
+}
