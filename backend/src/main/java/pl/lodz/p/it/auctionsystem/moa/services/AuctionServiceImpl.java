@@ -59,13 +59,7 @@ public class AuctionServiceImpl implements AuctionService {
         User user =
                 userRepositoryMoa.findByUsernameIgnoreCase(auctionAddDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         Item item = new Item(auctionAddDto.getItemName(), auctionAddDto.getItemDescription(), auctionAddDto.getImage());
-        LocalDateTime startDate;
-
-        if (auctionAddDto.getStartDate() == null)
-            startDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-        else
-            startDate = auctionAddDto.getStartDate().truncatedTo(ChronoUnit.MINUTES);
-
+        LocalDateTime startDate = auctionAddDto.getStartDate().truncatedTo(ChronoUnit.MINUTES);
         LocalDateTime endDate = startDate.plusDays(auctionAddDto.getDuration());
 
         Auction auction = new Auction(auctionAddDto.getStartingPrice(), startDate, endDate, user, item);

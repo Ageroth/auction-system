@@ -84,7 +84,7 @@ const UserTablePage = (props) => {
             dataIndex: 'createdAt',
             key: 'createdAt',
             sorter: true,
-            render: createdAt => `${moment(createdAt).format('DD-MM-YYYY HH:mm')}`
+            render: createdAt => `${moment(createdAt).format('DD-MM-YYYY, HH:mm')}`
         },
         {
             title: t('userLabels.roles'),

@@ -44,7 +44,7 @@ const UserDetailsPage = (props) => {
                             <Descriptions.Item
                                 label={`${t('userLabels.activated')}:`}> {userDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
                             <Descriptions.Item
-                                label={`${t('userLabels.created')}:`}> {moment(userDetails.createdAt).format('DD-MM-YYYY HH:MM')} </Descriptions.Item>
+                                label={`${t('userLabels.created')}:`}> {moment(userDetails.createdAt).format('DD-MM-YYYY, HH:MM')} </Descriptions.Item>
                             <Descriptions.Item label={`${t('userLabels.roles')}:`}>
                                 {userDetails.accessLevelIds.map(accessLevelId => {
                                     let value;

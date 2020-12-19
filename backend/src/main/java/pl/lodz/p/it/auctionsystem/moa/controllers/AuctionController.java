@@ -108,4 +108,6 @@ public class AuctionController {
 
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
+
+//    public ResponseEntity<?> bidAtAuction(@PathVariable(value = "auctionId") Long auctionId,
 }
