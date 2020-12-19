@@ -14,7 +14,7 @@
     margin-top: 10px;
 }
 
-tr.ant-table-row > td:nth-child(1) {
+td.ant-table-cell.image-column {
     display: flex;
     justify-content: center;
     align-items: center;
