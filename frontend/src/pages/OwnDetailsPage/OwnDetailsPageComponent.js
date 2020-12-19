@@ -27,22 +27,29 @@ const OwnDetailsPage = (props) => {
     return (
         <AppLayout>
             {myDetails ? (
-                <div className="my-details-page-wrapper">
-                    <Descriptions className="table" title={t('text.yourDetails')} column={1} bordered>
-                        <Descriptions.Item label={t('userLabels.username')}> {myDetails.username} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.firstName')}> {myDetails.firstName} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.lastName')}> {myDetails.lastName} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.email')}> {myDetails.email} </Descriptions.Item>
-                        <Descriptions.Item
-                            label={t('userLabels.phoneNumber')}> {myDetails.phoneNumber} </Descriptions.Item>
-                        <Descriptions.Item
-                            label={t('userLabels.activated')}> {myDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
-                        <Descriptions.Item
-                            label={t('userLabels.created')}> {moment(myDetails.createdAt).format('DD-MM-YYYY HH:MM')} </Descriptions.Item>
-                    </Descriptions>
-                    <div className="buttons">
-                        <Button type="primary" onClick={handleEditClick}> {t('text.edit')} </Button>
-                        <Button type="primary" onClick={handlePasswordChangeClick}> {t('text.changePassword')} </Button>
+                <div className="own-details-page-wrapper">
+                    <h1 style={{fontWeight: "bold"}}>{t('text.yourDetails')}</h1>
+                    <div className="own-details">
+                        <Descriptions className="table" column={1} bordered colon={false}>
+                            <Descriptions.Item
+                                label={`${t('userLabels.username')}:`}>{myDetails.username}</Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.firstName')}:`}>{myDetails.firstName}</Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.lastName')}:`}>{myDetails.lastName}</Descriptions.Item>
+                            <Descriptions.Item label={`${t('userLabels.email')}:`}>{myDetails.email}</Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.phoneNumber')}:`}>{myDetails.phoneNumber}</Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.activated')}:`}> {myDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.created')}:`}> {moment(myDetails.createdAt).format('DD-MM-YYYY HH:MM')} </Descriptions.Item>
+                        </Descriptions>
+                        <div className="buttons">
+                            <Button type="primary" onClick={handleEditClick}> {t('text.edit')} </Button>
+                            <Button type="primary"
+                                    onClick={handlePasswordChangeClick}> {t('text.changePassword')} </Button>
+                        </div>
                     </div>
                 </div>
             ) : (

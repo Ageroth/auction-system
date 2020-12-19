@@ -113,7 +113,7 @@ const AuctionAddPage = (props) => {
     return (
         <AppLayout>
             <div className="auction-add-page-wrapper">
-                <h1 style={{fontWeight: "bold"}}> ADD </h1>
+                <h1 style={{fontWeight: "bold"}}> {t('pageName.auctionAdd')} </h1>
                 <Form
                     form={form}
                     layout="horizontal"

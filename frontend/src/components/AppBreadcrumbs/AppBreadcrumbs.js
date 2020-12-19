@@ -34,15 +34,17 @@ const AppBreadcrumbs = ({breadcrumbs}) => {
         <>
             {breadcrumbs.length > 1 ?
                 (
-                    <div className="breadcrumbs-wrapper">
-                        {breadcrumbs.map(({breadcrumb, match}, index) => (
-                            <div className="bc" key={match.url}>
-                                <Link to={match.url || ""}>{' '} {t(breadcrumb.props.children)}</Link>
-                                {index < breadcrumbs.length - 1 ? " >" : null}
-                                &nbsp;
-                            </div>
-                        ))}
-                    </div>
+                    <>
+                        <div className="breadcrumbs-wrapper">
+                            {breadcrumbs.map(({breadcrumb, match}, index) => (
+                                <div className="bc" key={match.url}>
+                                    <Link to={match.url || ""}>{' '} {t(breadcrumb.props.children)}</Link>
+                                    {index < breadcrumbs.length - 1 ? " >" : null}
+                                    &nbsp;
+                                </div>
+                            ))}
+                        </div>
+                    </>
                 ) : null
             }
         </>

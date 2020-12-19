@@ -2,14 +2,17 @@
     text-align: center;
 }
 
-.ant-descriptions-item-content {
-    background-color: #fafafa;
+.own-details-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.my-details-page-wrapper {
+.own-details {
     padding: 20px;
     border-radius: 5px;
-    background-color: #f6f8fa;
+    background-color: white;
     border: 1px solid #eaecef;
 }
 

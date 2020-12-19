@@ -38,7 +38,7 @@ const UserDetailsEditPage = (props) => {
         <AppLayout>
             {userDetails && accessLevels ? (
                 <div className="user-details-edit-page-wrapper">
-                    <h1 style={{fontWeight: "bold"}}> {t('pageName.edit')} </h1>
+                    <h1 style={{fontWeight: "bold"}}> {t('pageName.userEdit')} </h1>
                     <Form
                         form={form}
                         layout="vertical"

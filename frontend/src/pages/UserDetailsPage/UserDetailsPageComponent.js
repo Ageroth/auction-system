@@ -28,38 +28,45 @@ const UserDetailsPage = (props) => {
         <AppLayout>
             {userDetails ? (
                 <div className="user-details-page-wrapper">
-                    <Descriptions className="table" title={t('text.userDetails')} column={1} bordered>
-                        <Descriptions.Item label={t('userLabels.username')}> {userDetails.username} </Descriptions.Item>
-                        <Descriptions.Item
-                            label={t('userLabels.firstName')}> {userDetails.firstName} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.lastName')}> {userDetails.lastName} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.email')}> {userDetails.email} </Descriptions.Item>
-                        <Descriptions.Item
-                            label={t('userLabels.phoneNumber')}> {userDetails.phoneNumber} </Descriptions.Item>
-                        <Descriptions.Item
-                            label={t('userLabels.activated')}> {userDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
-                        <Descriptions.Item
-                            label={t('userLabels.created')}> {moment(userDetails.createdAt).format('DD-MM-YYYY HH:MM')} </Descriptions.Item>
-                        <Descriptions.Item label={t('userLabels.roles')}>
-                            {userDetails.accessLevelIds.map(accessLevelId => {
-                                let value;
+                    <h1 style={{fontWeight: "bold"}}>{t('text.userDetails')}</h1>
+                    <div className="user-details">
+                        <Descriptions className="table" column={1} bordered colon={false}>
+                            <Descriptions.Item
+                                label={`${t('userLabels.username')}:`}>{userDetails.username}</Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.firstName')}:`}>{userDetails.firstName}</Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.lastName')}:`}>{userDetails.lastName}</Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.email')}:`}>{userDetails.email}</Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.phoneNumber')}:`}>{userDetails.phoneNumber}</Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.activated')}:`}> {userDetails.activated ? t('text.yes') : t('text.no')} </Descriptions.Item>
+                            <Descriptions.Item
+                                label={`${t('userLabels.created')}:`}> {moment(userDetails.createdAt).format('DD-MM-YYYY HH:MM')} </Descriptions.Item>
+                            <Descriptions.Item label={`${t('userLabels.roles')}:`}>
+                                {userDetails.accessLevelIds.map(accessLevelId => {
+                                    let value;
 
-                                if (accessLevelId === 1)
-                                    value = t('role.admin');
-                                else if (accessLevelId === 2)
-                                    value = t('role.man');
-                                else if (accessLevelId === 3)
-                                    value = t('role.client')
+                                    if (accessLevelId === 1)
+                                        value = t('role.admin');
+                                    else if (accessLevelId === 2)
+                                        value = t('role.man');
+                                    else if (accessLevelId === 3)
+                                        value = t('role.client')
 
-                                return (
-                                    <Checkbox key={value} indeterminate="true"> {value} </Checkbox>
-                                );
-                            })}
-                        </Descriptions.Item>
-                    </Descriptions>
-                    <div className="buttons">
-                        <Button type="primary" onClick={handleEditClick}> {t('text.edit')} </Button>
-                        <Button type="primary" onClick={handlePasswordChangeClick}> {t('text.changePassword')} </Button>
+                                    return (
+                                        <Checkbox key={value} indeterminate="true"> {value} </Checkbox>
+                                    );
+                                })}
+                            </Descriptions.Item>
+                        </Descriptions>
+                        <div className="buttons">
+                            <Button type="primary" onClick={handleEditClick}> {t('text.edit')} </Button>
+                            <Button type="primary"
+                                    onClick={handlePasswordChangeClick}> {t('text.changePassword')} </Button>
+                        </div>
                     </div>
                 </div>
             ) : (

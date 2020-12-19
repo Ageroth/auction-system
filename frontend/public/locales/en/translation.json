@@ -19,7 +19,7 @@
     "itemImage": "Image",
     "itemName": "Name",
     "itemDescription": "Description",
-    "startingPrice": "Starting price (PLN)",
+    "startingPrice": "Starting price",
     "startDate": "Start date",
     "duration": "Duration (days)",
     "endDate": "End date",
@@ -116,9 +116,11 @@
     "users": "Users",
     "userDetails": "User details",
     "userAdd": "New user",
+    "userEdit": "User edit",
     "activation": "Activation",
     "auctions": "Auctions",
     "auctionAdd": "New auction",
-    "auctionDetails": "Auction details"
+    "auctionDetails": "Auction details",
+    "auctionEdit": "Auction edit"
   }
 }

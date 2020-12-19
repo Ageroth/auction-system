@@ -36,7 +36,7 @@ const AuctionEditPage = (props) => {
         <AppLayout>
             {auctionDetails ? (
                 <div className="auction-edit-page-wrapper">
-                    <h1 style={{fontWeight: "bold"}}> {t('pageName.edit')} </h1>
+                    <h1 style={{fontWeight: "bold"}}> {t('pageName.auctionEdit')} </h1>
                     <Form
                         form={form}
                         layout="vertical"

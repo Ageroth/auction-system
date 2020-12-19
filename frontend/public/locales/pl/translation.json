@@ -19,7 +19,7 @@
     "itemImage": "Zdjęcie",
     "itemName": "Nazwa",
     "itemDescription": "Opis",
-    "startingPrice": "Cena wywoławcza (PLN)",
+    "startingPrice": "Cena wywoławcza",
     "startDate": "Data rozpoczęcia",
     "duration": "Czas trwania (dni)",
     "endDate": "Data zakończenia",
@@ -116,9 +116,11 @@
     "users": "Użytkownicy",
     "userDetails": "Szczegóły użytkownika",
     "userAdd": "Nowy użytkownik",
+    "userEdit": "Edycja użytkownika",
     "activation": "Aktywacja",
     "auctions": "Aukcje",
     "auctionAdd": "Nowa aukcja",
-    "auctionDetails": "Szczegóły aukcji"
+    "auctionDetails": "Szczegóły aukcji",
+    "auctionEdit": "Edycja aukcji"
   }
 }
