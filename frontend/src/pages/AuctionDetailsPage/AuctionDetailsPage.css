@@ -110,3 +110,18 @@
 .ant-timeline-item-last > .ant-timeline-item-content {
     min-height: unset;
 }
+
+.bid-place-form {
+    display: flex;
+    flex-direction: row;
+}
+
+.bid-place-form {
+    display: flex;
+    flex-direction: row;
+}
+
+.bid-place-form > * {
+    margin-bottom: 0;
+    margin-right: 15px;
+}

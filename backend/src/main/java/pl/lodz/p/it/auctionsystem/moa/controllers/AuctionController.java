@@ -109,5 +109,27 @@ public class AuctionController {
         return ResponseEntity.ok().body(new ApiResponseDto(true, message));
     }
 
-//    public ResponseEntity<?> bidAtAuction(@PathVariable(value = "auctionId") Long auctionId,
+    /**
+     * Dodaje nową ofertę do aukcji o podanym id.
+     *
+     * @param auctionId   id aukcji
+     * @param bidPlaceDto obiekt typu {@link BidPlaceDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @PostMapping("/{auctionId}")
+    public ResponseEntity<?> placeABid(@PathVariable(value = "auctionId") Long auctionId,
+                                       @Valid @RequestBody BidPlaceDto bidPlaceDto, Authentication authentication) throws ApplicationException {
+        bidPlaceDto.setUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+
+        Long result = auctionService.addBid(auctionId, bidPlaceDto);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/auctions/{auctionId}")
+                .buildAndExpand(result).toUri();
+
+        String message = messageService.getMessage("info.bidPlaced");
+
+        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+    }
 }

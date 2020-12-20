@@ -101,3 +101,7 @@ export function addAuctionRequest(payload) {
 export function updateAuctionRequest(value, payload) {
     return axios.patch(`/auctions/${value}`, JSON.stringify(payload));
 }
+
+export function placeABidRequest(value, payload) {
+    return axios.post(`/auctions/${value}`, JSON.stringify(payload));
+}

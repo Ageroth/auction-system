@@ -17,6 +17,7 @@ import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
 import pl.lodz.p.it.auctionsystem.moa.dtos.*;
 import pl.lodz.p.it.auctionsystem.moa.repositories.AuctionRepository;
+import pl.lodz.p.it.auctionsystem.moa.repositories.BidRepository;
 import pl.lodz.p.it.auctionsystem.moa.repositories.UserRepositoryMoa;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.utils.SortDirection;
@@ -35,6 +36,8 @@ public class AuctionServiceImpl implements AuctionService {
 
     private final AuctionRepository auctionRepository;
 
+    private final BidRepository bidRepository;
+
     private final UserRepositoryMoa userRepositoryMoa;
 
     private final MessageService messageService;
@@ -45,9 +48,11 @@ public class AuctionServiceImpl implements AuctionService {
     private int pageSize;
 
     @Autowired
-    public AuctionServiceImpl(AuctionRepository auctionRepository, UserRepositoryMoa userRepositoryMoa,
+    public AuctionServiceImpl(AuctionRepository auctionRepository, BidRepository bidRepository,
+                              UserRepositoryMoa userRepositoryMoa,
                               MessageService messageService, ModelMapper modelMapper) {
         this.auctionRepository = auctionRepository;
+        this.bidRepository = bidRepository;
         this.userRepositoryMoa = userRepositoryMoa;
         this.messageService = messageService;
         this.modelMapper = modelMapper;
@@ -118,5 +123,22 @@ public class AuctionServiceImpl implements AuctionService {
         auction.setStartingPrice(auctionEditDto.getStartingPrice());
         auction.getItem().setName(auctionEditDto.getItemName());
         auction.getItem().setDescription(auctionEditDto.getItemDescription());
+    }
+
+    @Override
+    public Long addBid(Long auctionId, BidPlaceDto bidPlaceDto) throws ApplicationException {
+        String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
+        User user =
+                userRepositoryMoa.findByUsernameIgnoreCase(bidPlaceDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+        String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
+        Auction auction =
+                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+        LocalDateTime date = LocalDateTime.now();
+
+        Bid bid = new Bid(date, bidPlaceDto.getPrice(), user, auction);
+
+        Bid savedBid = bidRepository.save(bid);
+
+        return savedBid.getId();
     }
 }

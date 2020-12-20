@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Image, InputNumber, Spin, Statistic, Tabs, Timeline, Tooltip} from 'antd';
+import {Button, Form, Image, InputNumber, Popconfirm, Spin, Statistic, Tabs, Timeline, Tooltip} from 'antd';
 import AppLayout from '../../components/AppLayout';
 import {useTranslation} from 'react-i18next';
 import i18n from "../../utils/i18n"
@@ -15,6 +15,8 @@ const {Countdown} = Statistic;
 const {TabPane} = Tabs;
 
 const AuctionDetailsPage = (props) => {
+    const [visible, setVisible] = useState(false);
+    const [form] = Form.useForm();
     const {t} = useTranslation();
     const history = useHistory();
     const auctionDetails = props.auctionDetails;
@@ -36,8 +38,22 @@ const AuctionDetailsPage = (props) => {
         history.push(`${currentLocation}/edit`);
     }
 
-    const handleBidClick = () => {
-        //    logic here
+    const onFinish = (values) => {
+        const payload = Object.assign({}, values);
+        props.onSubmit(payload);
+    }
+
+    const showPopconfirm = () => {
+        setVisible(true);
+    }
+
+    const handleCancel = () => {
+        setVisible(false);
+    }
+
+    const handleOk = () => {
+        setVisible(false);
+        form.submit();
     }
 
     const getDate = (date) => {
@@ -115,12 +131,12 @@ const AuctionDetailsPage = (props) => {
                     <div className="extra">
                         {isDisabled ? (
                             <Tooltip title={t('text.editForbidden')} color={"red"}>
-                                <Button type="primary" block disabled={isDisabled} onClick={handleEditClick}>
+                                <Button type="primary" disabled={true} block>
                                     {t('text.edit')}
                                 </Button>
                             </Tooltip>
                         ) : (
-                            <Button type="primary" block onClick={handleEditClick}>
+                            <Button type="primary" onClick={handleEditClick} block>
                                 {t('text.edit')}
                             </Button>
                         )}
@@ -136,27 +152,55 @@ const AuctionDetailsPage = (props) => {
                 <>
                     <hr style={{marginBottom: 'auto'}} className="divider"/>
                     <div className="extra">
-                        <div>
-                            <InputNumber step={currentPrice * 0.01}
-                                         min={currentPrice + 0.01}
-                                         defaultValue={currentPrice}
-                                         formatter={value => `${value} PLN`}
-                                         parser={value => value.replace(/PL|PN|LN|P|N|L|\s?|(,*)/g, '')}/>
-                        </div>
-                        <div style={{marginLeft: '10px'}}>
-                            {isDisabled ? (
+                        {isDisabled ? (
+                            <>
+                                <InputNumber style={{marginRight: "15px"}} step={0.01}
+                                             defaultValue={currentPrice + 0.01}
+                                             formatter={value => `${value} PLN`} readOnly={true}/>
                                 <Tooltip title={t('text.bidForbidden')} color={"red"}>
-                                    <Button type="primary"
-                                            disabled={isDisabled}>
+                                    <Button type="primary" disabled={true}>
                                         {t('text.placeBid')}
                                     </Button>
                                 </Tooltip>
-                            ) : (
-                                <Button type="primary">
-                                    {t('text.placeBid')}
-                                </Button>
-                            )}
-                        </div>
+                            </>
+                        ) : (
+                            <Form
+                                form={form}
+                                name="bid_place_form"
+                                className="bid-place-form"
+                                scrollToFirstError
+                                onFinish={onFinish}
+                            >
+                                <Form.Item
+                                    name="price"
+                                    initialValue={currentPrice + 0.01}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: t('validation.required')
+                                        },
+                                    ]}
+                                >
+                                    <InputNumber step={0.01} min={currentPrice + 0.01}
+                                                 formatter={value => `${value} PLN`}
+                                                 parser={value => value.replace(/PL|PN|LN|P|N|L|\s?|(,*)/g, '')}/>
+                                </Form.Item>
+
+                                <Form.Item>
+                                    <Popconfirm
+                                        title={t('text.areYouSure')}
+                                        visible={visible}
+                                        onConfirm={handleOk}
+                                        onCancel={handleCancel}
+                                        okText={t('text.yes')}
+                                        cancelText={t('text.no')}
+                                    >
+                                        <Button type="primary" loading={props.isSubmitting}
+                                                onClick={showPopconfirm}>{t('text.placeBid')}</Button>
+                                    </Popconfirm>
+                                </Form.Item>
+                            </Form>
+                        )}
                     </div>
                 </>
             );

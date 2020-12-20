@@ -16,11 +16,11 @@ public class AuctionAddDto {
 
     private int duration;
 
+    private String username;
+
     private String itemName;
 
     private String itemDescription;
 
     private byte[] image;
-
-    private String username;
 }

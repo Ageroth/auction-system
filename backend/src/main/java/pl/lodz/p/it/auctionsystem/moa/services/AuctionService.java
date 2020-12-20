@@ -22,4 +22,6 @@ public interface AuctionService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void updateAuctionById(Long auctionId, AuctionEditDto auctionEditDto) throws ApplicationException;
+
+    Long addBid(Long auctionId, BidPlaceDto bidPlaceDto) throws ApplicationException;
 }
