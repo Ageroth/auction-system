@@ -92,7 +92,7 @@ const AuctionEditPage = (props) => {
                                 }
                             ]}
                         >
-                            <InputNumber step={0.01} min={0.01} formatter={value => `${value} PLN`}
+                            <InputNumber step={0.01} precision={2} min={0.01} formatter={value => `${value} PLN`}
                                          parser={value => value.replace(/PL|PN|LN|P|N|L|\s?|(,*)/g, '')}/>
                         </Form.Item>
 

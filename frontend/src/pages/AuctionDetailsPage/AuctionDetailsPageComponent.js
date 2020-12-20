@@ -154,9 +154,8 @@ const AuctionDetailsPage = (props) => {
                     <div className="extra">
                         {isDisabled ? (
                             <>
-                                <InputNumber style={{marginRight: "15px"}} step={0.01}
-                                             defaultValue={currentPrice + 0.01}
-                                             formatter={value => `${value} PLN`} readOnly={true}/>
+                                <InputNumber style={{marginRight: "15px"}} defaultValue={currentPrice + 0.01}
+                                             precision={2} formatter={value => `${value} PLN`} readOnly={true}/>
                                 <Tooltip title={t('text.bidForbidden')} color={"red"}>
                                     <Button type="primary" disabled={true}>
                                         {t('text.placeBid')}
@@ -181,7 +180,7 @@ const AuctionDetailsPage = (props) => {
                                         },
                                     ]}
                                 >
-                                    <InputNumber step={0.01} min={currentPrice + 0.01}
+                                    <InputNumber step={0.01} precision={2} min={currentPrice + 0.01}
                                                  formatter={value => `${value} PLN`}
                                                  parser={value => value.replace(/PL|PN|LN|P|N|L|\s?|(,*)/g, '')}/>
                                 </Form.Item>

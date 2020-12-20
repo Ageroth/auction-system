@@ -102,7 +102,7 @@ const AuctionAddPage = (props) => {
             "itemName": values.itemName,
             "itemDescription": values.itemDescription,
             "startingPrice": values.startingPrice,
-            "startDate": values.startDate ? moment(values.startDate).utc(true) : moment().utc(true),
+            "startDate": values.startDate,
             "duration": values.duration
         })], {
             type: "application/json"
@@ -189,7 +189,7 @@ const AuctionAddPage = (props) => {
                             }
                         ]}
                     >
-                        <InputNumber step={0.01} min={0.01} formatter={value => `${value} PLN`}
+                        <InputNumber step={0.01} precision={2} min={0.01} formatter={value => `${value} PLN`}
                                      parser={value => value.replace(/PL|PN|LN|P|N|L|\s?|(,*)/g, '')}/>
                     </Form.Item>
 

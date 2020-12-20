@@ -22,6 +22,7 @@ import pl.lodz.p.it.auctionsystem.moa.repositories.UserRepositoryMoa;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.utils.SortDirection;
 
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
@@ -64,10 +65,17 @@ public class AuctionServiceImpl implements AuctionService {
         User user =
                 userRepositoryMoa.findByUsernameIgnoreCase(auctionAddDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         Item item = new Item(auctionAddDto.getItemName(), auctionAddDto.getItemDescription(), auctionAddDto.getImage());
-        LocalDateTime startDate = auctionAddDto.getStartDate().truncatedTo(ChronoUnit.MINUTES);
+        LocalDateTime startDate;
+
+        if (auctionAddDto.getStartDate() == null)
+            startDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        else
+            startDate = auctionAddDto.getStartDate().truncatedTo(ChronoUnit.MINUTES);
+
         LocalDateTime endDate = startDate.plusDays(auctionAddDto.getDuration());
 
-        Auction auction = new Auction(auctionAddDto.getStartingPrice(), startDate, endDate, user, item);
+        Auction auction = new Auction(auctionAddDto.getStartingPrice().setScale(2, RoundingMode.DOWN), startDate,
+                endDate, user, item);
 
         return auctionRepository.save(auction).getId();
     }
@@ -133,9 +141,9 @@ public class AuctionServiceImpl implements AuctionService {
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
-        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime date = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
-        Bid bid = new Bid(date, bidPlaceDto.getPrice(), user, auction);
+        Bid bid = new Bid(date, bidPlaceDto.getPrice().setScale(2, RoundingMode.HALF_UP), user, auction);
 
         Bid savedBid = bidRepository.save(bid);
 
