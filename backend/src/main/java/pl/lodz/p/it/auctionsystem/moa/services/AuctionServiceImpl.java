@@ -28,8 +28,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Optional;
 
-import static pl.lodz.p.it.auctionsystem.moa.utils.AuctionSpecs.containsTextInName;
-import static pl.lodz.p.it.auctionsystem.moa.utils.AuctionSpecs.hasStatus;
+import static pl.lodz.p.it.auctionsystem.moa.utils.AuctionSpecs.*;
 
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
@@ -101,6 +100,42 @@ public class AuctionServiceImpl implements AuctionService {
         } else
             auctionPage =
                     auctionRepository.findAll(containsTextInName(auctionCriteria.getQuery()).and(hasStatus(auctionCriteria.getStatus())), pageable);
+
+        return auctionPage.map(auction -> {
+            AuctionDto auctionDto = modelMapper.map(auction, AuctionDto.class);
+            Optional<Bid> highestBid = auction.getBids().stream().max(Comparator.comparing(Bid::getPrice));
+
+            auctionDto.setBidsNumber(auction.getBids().size());
+            auctionDto.setCurrentPrice(highestBid.map(Bid::getPrice).orElse(null));
+
+            return auctionDto;
+        });
+    }
+
+    @Override
+    public Page<AuctionDto> getAuctionsByUsername(AuctionCriteria auctionCriteria, String username) {
+        Pageable pageable;
+        Page<Auction> auctionPage;
+
+        if (auctionCriteria.getSortField() != null && auctionCriteria.getOrder() != null)
+            pageable = PageRequest.of(auctionCriteria.getPage(), pageSize,
+                    Sort.by(SortDirection.getSortDirection(auctionCriteria.getOrder()),
+                            auctionCriteria.getSortField()));
+        else
+            pageable = PageRequest.of(auctionCriteria.getPage(), pageSize);
+
+        if (auctionCriteria.getQuery() == null && auctionCriteria.getStatus() == null)
+            auctionPage = auctionRepository.findAll(isOwner(username), pageable);
+        else if (auctionCriteria.getQuery() != null && auctionCriteria.getStatus() == null)
+            auctionPage =
+                    auctionRepository.findAll(isOwner(username).and(containsTextInName(auctionCriteria.getQuery())),
+                            pageable);
+        else if (auctionCriteria.getQuery() == null) {
+            auctionPage = auctionRepository.findAll(isOwner(username).and(hasStatus(auctionCriteria.getStatus())),
+                    pageable);
+        } else
+            auctionPage =
+                    auctionRepository.findAll(isOwner(username).and(containsTextInName(auctionCriteria.getQuery()).and(hasStatus(auctionCriteria.getStatus()))), pageable);
 
         return auctionPage.map(auction -> {
             AuctionDto auctionDto = modelMapper.map(auction, AuctionDto.class);

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import OwnDetailsPage from './OwnDetailsPageComponent';
 import {toast} from 'react-toastify';
-import {getMyDetailsRequest} from '../../utils/api';
+import {getOwnDetailsRequest} from '../../utils/api';
 
 export default class OwnDetailsPageContainer extends Component {
     state = {
@@ -9,11 +9,11 @@ export default class OwnDetailsPageContainer extends Component {
     };
 
     componentDidMount() {
-        this.getMyDetails();
+        this.getOwnDetails();
     }
 
-    getMyDetails = () => {
-        getMyDetailsRequest().then(res => {
+    getOwnDetails = () => {
+        getOwnDetailsRequest().then(res => {
             this.setState({myDetails: res.data});
         }).catch(e => {
             toast.error(e.response.data.message, {

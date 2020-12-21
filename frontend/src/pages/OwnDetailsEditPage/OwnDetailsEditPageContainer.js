@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import OwnDetailsEditPage from './OwnDetailsEditPageComponent';
 import {toast} from 'react-toastify';
-import {getMyDetailsRequest, updateOwnDetailsRequest} from '../../utils/api';
+import {getOwnDetailsRequest, updateOwnDetailsRequest} from '../../utils/api';
 
 export default class OwnDetailsEditPageContainer extends Component {
     constructor(props) {
@@ -13,11 +13,11 @@ export default class OwnDetailsEditPageContainer extends Component {
     }
 
     componentDidMount() {
-        this.getMyDetails();
+        this.getOwnDetails();
     }
 
-    getMyDetails = () => {
-        getMyDetailsRequest().then(res => {
+    getOwnDetails = () => {
+        getOwnDetailsRequest().then(res => {
             this.setState({myDetails: res.data});
         }).catch(e => {
             toast.error(e.response.data.message, {

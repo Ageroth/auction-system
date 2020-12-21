@@ -86,7 +86,7 @@ public class UserController {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/me")
-    public ResponseEntity<?> getMyDetails(Authentication authentication) throws ApplicationException {
+    public ResponseEntity<?> getOwnDetails(Authentication authentication) throws ApplicationException {
         OwnAccountDetailsDto ownAccountDetailsDto =
                 userService.getUserByUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
 

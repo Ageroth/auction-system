@@ -22,6 +22,7 @@ const routes = [
     {path: '/activation', breadcrumb: null},
     {path: '/activation/:activationCode', breadcrumb: null},
     {path: '/auctions', breadcrumb: 'pageName.auctions'},
+    {path: '/auctions/my_auctions', breadcrumb: 'pageName.myAuctions'},
     {path: '/auctions/add', breadcrumb: 'pageName.auctionAdd'},
     {path: '/auctions/:auctionId/edit', breadcrumb: 'pageName.edit'},
     {path: '/auctions/:auctionId', breadcrumb: 'pageName.auctionDetails'}

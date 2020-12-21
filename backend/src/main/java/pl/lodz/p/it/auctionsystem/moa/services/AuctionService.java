@@ -12,6 +12,8 @@ public interface AuctionService {
 
     Page<AuctionDto> getAuctions(AuctionCriteria auctionCriteria);
 
+    Page<AuctionDto> getAuctionsByUsername(AuctionCriteria auctionCriteria, String username);
+
     AuctionDetailsDto getAuctionById(Long auctionId) throws ApplicationException;
 
     /**

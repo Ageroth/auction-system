@@ -14,6 +14,7 @@ import OwnPasswordChangePage from '../pages/OwnPasswordChangePage'
 import OwnDetailsEditPage from '../pages/OwnDetailsEditPage'
 import UserAddPage from '../pages/UserAddPage'
 import AuctionTablePage from '../pages/AuctionTablePage'
+import OwnAuctionTablePage from '../pages/OwnAuctionTablePage'
 import AuctionAddPage from '../pages/AuctionAddPage'
 import AuctionDetailsPage from '../pages/AuctionDetailsPage'
 import AuctionEditPage from '../pages/AuctionEditPage'
@@ -36,6 +37,7 @@ export const routes = [
     {path: '/my_profile/password_change', component: OwnPasswordChangePage},
     {path: '/my_profile/edit', component: OwnDetailsEditPage},
     {path: '/auctions', component: AuctionTablePage, canAccess: [MANAGER, CLIENT]},
+    {path: '/auctions/my_auctions', component: OwnAuctionTablePage, canAccess: [MANAGER]},
     {path: '/auctions/add', component: AuctionAddPage, canAccess: [MANAGER]},
     {path: '/auctions/:auctionId', component: AuctionDetailsPage, canAccess: [MANAGER, CLIENT]},
     {path: '/auctions/:auctionId/edit', component: AuctionEditPage, canAccess: [MANAGER]},

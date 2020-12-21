@@ -28,7 +28,7 @@ const OwnDetailsPage = (props) => {
         <AppLayout>
             {myDetails ? (
                 <div className="own-details-page-wrapper">
-                    <h1 style={{fontWeight: "bold"}}>{t('text.yourDetails')}</h1>
+                    <h1 style={{fontWeight: "bold"}}>{t('text.myDetails')}</h1>
                     <div className="own-details">
                         <Descriptions className="table" column={1} bordered colon={false}>
                             <Descriptions.Item

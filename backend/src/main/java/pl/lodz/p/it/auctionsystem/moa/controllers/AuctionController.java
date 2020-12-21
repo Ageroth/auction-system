@@ -77,6 +77,24 @@ public class AuctionController {
         }
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<?> getOwnAuctions(AuctionCriteria auctionCriteria, Authentication authentication) {
+        Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUsername(auctionCriteria,
+                ((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+
+        if (auctionDtoPage.getContent().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("auctions", auctionDtoPage.getContent());
+            response.put("currentPage", auctionDtoPage.getNumber());
+            response.put("totalItems", auctionDtoPage.getTotalElements());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
     /**
      * Zwraca szczegóły aukcji o podanym id.
      *

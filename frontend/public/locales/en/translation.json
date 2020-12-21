@@ -73,7 +73,7 @@
     "home": "Home page",
     "404": "The page you are looking for doesn't exist (error 404)",
     "userDetails": "User details",
-    "yourDetails": "Your details",
+    "myDetails": "My details",
     "edit": "Edit",
     "add": "Add",
     "areYouSure": "Are you sure?",
@@ -101,8 +101,9 @@
   "navbarLink": {
     "users": "Users",
     "newUser": "New user",
-    "yourAccount": "Your account",
+    "myAccount": "My account",
     "auctions": "Auctions",
+    "myAuctions": "My auctions",
     "newAuction": "New auction"
   },
   "pageName": {
@@ -119,6 +120,7 @@
     "userEdit": "User edit",
     "activation": "Activation",
     "auctions": "Auctions",
+    "myAuctions": "My auctions",
     "auctionAdd": "New auction",
     "auctionDetails": "Auction details",
     "auctionEdit": "Auction edit"
