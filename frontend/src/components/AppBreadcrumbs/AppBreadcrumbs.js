@@ -22,8 +22,13 @@ const routes = [
     {path: '/activation', breadcrumb: null},
     {path: '/activation/:activationCode', breadcrumb: null},
     {path: '/auctions', breadcrumb: 'pageName.auctions'},
-    {path: '/auctions/add', breadcrumb: 'pageName.auctionAdd'},
-    {path: '/auctions/:auctionId', breadcrumb: 'pageName.auctionDetails'}
+    {path: '/auctions/:auctionId/edit', breadcrumb: 'pageName.edit'},
+    {path: '/auctions/:auctionId', breadcrumb: 'pageName.auctionDetails'},
+    {path: '/my_auctions', breadcrumb: 'pageName.myAuctions'},
+    {path: '/my_auctions/add', breadcrumb: 'pageName.auctionAdd'},
+    {path: '/my_auctions/:auctionId/edit', breadcrumb: 'pageName.edit'},
+    {path: '/my_auctions/:auctionId', breadcrumb: 'pageName.auctionDetails'},
+    {path: '/my_biddings', breadcrumb: 'pageName.myBiddings'}
 ];
 
 const AppBreadcrumbs = ({breadcrumbs}) => {
@@ -33,15 +38,17 @@ const AppBreadcrumbs = ({breadcrumbs}) => {
         <>
             {breadcrumbs.length > 1 ?
                 (
-                    <div className="breadcrumbs-wrapper">
-                        {breadcrumbs.map(({breadcrumb, match}, index) => (
-                            <div className="bc" key={match.url}>
-                                <Link to={match.url || ""}>{' '} {t(breadcrumb.props.children)}</Link>
-                                {index < breadcrumbs.length - 1 ? " >" : null}
-                                &nbsp;
-                            </div>
-                        ))}
-                    </div>
+                    <>
+                        <div className="breadcrumbs-wrapper">
+                            {breadcrumbs.map(({breadcrumb, match}, index) => (
+                                <div className="bc" key={match.url}>
+                                    <Link to={match.url || ""}>{' '} {t(breadcrumb.props.children)}</Link>
+                                    {index < breadcrumbs.length - 1 ? " >" : null}
+                                    &nbsp;
+                                </div>
+                            ))}
+                        </div>
+                    </>
                 ) : null
             }
         </>

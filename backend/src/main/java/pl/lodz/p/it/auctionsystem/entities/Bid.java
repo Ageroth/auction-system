@@ -39,4 +39,11 @@ public class Bid extends BaseEntity {
     @ManyToOne(optional = false)
     @NotNull
     private Auction auction;
+
+    public Bid(LocalDateTime date, BigDecimal price, User user, Auction auction) {
+        this.date = date;
+        this.price = price;
+        this.user = user;
+        this.auction = auction;
+    }
 }

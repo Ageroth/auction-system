@@ -10,15 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionAddDto;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionCriteria;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDetailsDto;
-import pl.lodz.p.it.auctionsystem.moa.dtos.AuctionDto;
+import pl.lodz.p.it.auctionsystem.moa.dtos.*;
 import pl.lodz.p.it.auctionsystem.moa.services.AuctionService;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
-import pl.lodz.p.it.auctionsystem.mok.dtos.UserAccountDetailsDto;
-import pl.lodz.p.it.auctionsystem.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
+import pl.lodz.p.it.auctionsystem.utils.MessageService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -81,6 +77,42 @@ public class AuctionController {
         }
     }
 
+    @GetMapping("/selling")
+    public ResponseEntity<?> getOwnAuctions(AuctionCriteria auctionCriteria, Authentication authentication) {
+        Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUsername(auctionCriteria,
+                ((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+
+        if (auctionDtoPage.getContent().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("auctions", auctionDtoPage.getContent());
+            response.put("currentPage", auctionDtoPage.getNumber());
+            response.put("totalItems", auctionDtoPage.getTotalElements());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/buying")
+    public ResponseEntity<?> getOwnBiddings(AuctionCriteria auctionCriteria, Authentication authentication) {
+        Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUserBids(auctionCriteria,
+                ((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+
+        if (auctionDtoPage.getContent().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("auctions", auctionDtoPage.getContent());
+            response.put("currentPage", auctionDtoPage.getNumber());
+            response.put("totalItems", auctionDtoPage.getTotalElements());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
     /**
      * Zwraca szczegóły aukcji o podanym id.
      *
@@ -93,5 +125,61 @@ public class AuctionController {
         AuctionDetailsDto auctionDetailsDto = auctionService.getAuctionById(auctionId);
 
         return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+    }
+
+    /**
+     * Zwraca szczegóły aukcji o podanym id.
+     *
+     * @param auctionId id aukcji
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link AuctionDetailsDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @GetMapping("/selling/{auctionId}")
+    public ResponseEntity<?> getOwnAuctionDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
+        AuctionDetailsDto auctionDetailsDto = auctionService.getOwnAuctionById(auctionId);
+
+        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+    }
+
+    /**
+     * Aktualizuje dane naszej aukcji o podanym id.
+     *
+     * @param auctionId      id aukcji
+     * @param auctionEditDto obiekt typu {@link AuctionEditDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @PatchMapping("/selling/{auctionId}")
+    public ResponseEntity<?> updateAuctionDetails(@PathVariable(value = "auctionId") Long auctionId,
+                                                  @Valid @RequestBody AuctionEditDto auctionEditDto) throws ApplicationException {
+        auctionService.updateAuctionById(auctionId, auctionEditDto);
+
+        String message = messageService.getMessage("info.auctionUpdated");
+
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+    }
+
+    /**
+     * Dodaje nową ofertę do aukcji o podanym id.
+     *
+     * @param auctionId   id aukcji
+     * @param bidPlaceDto obiekt typu {@link BidPlaceDto}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @PostMapping("/{auctionId}")
+    public ResponseEntity<?> placeABid(@PathVariable(value = "auctionId") Long auctionId,
+                                       @Valid @RequestBody BidPlaceDto bidPlaceDto, Authentication authentication) throws ApplicationException {
+        bidPlaceDto.setUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+
+        Long result = auctionService.addBid(auctionId, bidPlaceDto);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/auctions/{auctionId}")
+                .buildAndExpand(result).toUri();
+
+        String message = messageService.getMessage("info.bidPlaced");
+
+        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
 }

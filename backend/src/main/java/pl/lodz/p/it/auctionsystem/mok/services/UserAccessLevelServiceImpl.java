@@ -50,7 +50,7 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
         AccessLevel accessLevel =
                 accessLevelRepository.findById(accessLevelId).orElseThrow(() -> new EntityNotFoundException(accessLevelNotFoundMessage));
 
-        if (userAccessLevelRepository.existsByUser_IdAndAccessLevel_Id(userId, accessLevelId)) {
+        if (userAccessLevelRepository.existsByUserIdAndAccessLevelId(userId, accessLevelId)) {
             String userAccessLevelAlreadyExistsMessage = messageService.getMessage("exception" +
                     ".userAccessLevelAlreadyExists");
 
@@ -66,7 +66,7 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void deleteUserAccessLevel(Long userId, Long accessLevelId) throws ApplicationException {
         String userAccessLevelNotFoundMessage = messageService.getMessage("exception.userAccessLevelNotFound");
-        UserAccessLevel userAccessLevel = userAccessLevelRepository.findByUser_IdAndAccessLevel_Id(userId,
+        UserAccessLevel userAccessLevel = userAccessLevelRepository.findByUserIdAndAccessLevelId(userId,
                 accessLevelId)
                 .orElseThrow(() -> new EntityNotFoundException(userAccessLevelNotFoundMessage));
 
@@ -76,7 +76,7 @@ public class UserAccessLevelServiceImpl implements UserAccessLevelService {
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void modifyUserAccessLevels(Long userId, List<Long> accessLevelIds) throws ApplicationException {
-        List<UserAccessLevel> oldUserAccessLevels = userAccessLevelRepository.findByUser_Id(userId);
+        List<UserAccessLevel> oldUserAccessLevels = userAccessLevelRepository.findByUserId(userId);
         List<Long> oldUserAccessLevelIds = oldUserAccessLevels.stream()
                 .map(userAccessLevel -> userAccessLevel.getAccessLevel().getId()).collect(Collectors.toList());
         List<Long> combined = Stream.concat(oldUserAccessLevelIds.stream(), accessLevelIds.stream())

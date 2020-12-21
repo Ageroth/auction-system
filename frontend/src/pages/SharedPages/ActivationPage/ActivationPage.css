@@ -1,0 +1,16 @@
+.activation-box {
+    padding: 15px;
+    border-radius: 5px;
+    background-color: white;
+    border: 1px solid #eaecef;
+}
+
+h3 {
+    font-size: 20px;
+    text-align: center;
+}
+
+p {
+    font-size: 15px;
+    text-align: center;
+}

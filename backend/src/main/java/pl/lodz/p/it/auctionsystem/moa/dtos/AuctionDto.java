@@ -22,6 +22,8 @@ public class AuctionDto {
 
     private BigDecimal currentPrice;
 
+    private String userUsername;
+
     private String itemName;
 
     private String itemDescription;

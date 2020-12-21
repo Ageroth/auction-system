@@ -19,7 +19,7 @@
     "itemImage": "Zdjęcie",
     "itemName": "Nazwa",
     "itemDescription": "Opis",
-    "startingPrice": "Cena wywoławcza (PLN)",
+    "startingPrice": "Cena wywoławcza",
     "startDate": "Data rozpoczęcia",
     "duration": "Czas trwania (dni)",
     "endDate": "Data zakończenia",
@@ -73,7 +73,7 @@
     "home": "Strona główna",
     "404": "Strona, której szukasz, nie istnieje (błąd 404)",
     "userDetails": "Szczegóły użytkownika",
-    "yourDetails": "Twoje szczegóły",
+    "myDetails": "Moje szczegóły",
     "edit": "Edytuj",
     "add": "Dodaj",
     "areYouSure": "Jesteś pewny?",
@@ -91,7 +91,9 @@
     "bidHistory": "Historia ofert",
     "bid": "zaoferował",
     "editForbidden": "Nie możesz edytować cudzej aukcji oraz aukcji, która już się rozpoczęła lub zakończyła",
-    "bidForbidden": "Nie możesz licytować na własnej aukcji lub na aukcji, która aktualnie nie trwa"
+    "bidForbidden": "Nie możesz licytować na własnej aukcji lub na aukcji, która aktualnie nie trwa",
+    "auctionAlreadyStarted": "Nie możesz edytować aukcji, która już się rozpoczęła lub zakończyła",
+    "you": "Ty"
   },
   "role": {
     "admin": "Administrator",
@@ -101,9 +103,11 @@
   "navbarLink": {
     "users": "Użytkownicy",
     "newUser": "Nowy użytkownik",
-    "yourAccount": "Twoje konto",
+    "myAccount": "Moje konto",
     "auctions": "Aukcje",
-    "newAuction": "Nowa aukcja"
+    "myAuctions": "Moje aukcje",
+    "newAuction": "Nowa aukcja",
+    "myBiddings": "Moje licytacje"
   },
   "pageName": {
     "home": "Strona główna",
@@ -116,9 +120,13 @@
     "users": "Użytkownicy",
     "userDetails": "Szczegóły użytkownika",
     "userAdd": "Nowy użytkownik",
+    "userEdit": "Edycja użytkownika",
     "activation": "Aktywacja",
     "auctions": "Aukcje",
+    "myAuctions": "Moje aukcje",
     "auctionAdd": "Nowa aukcja",
-    "auctionDetails": "Szczegóły aukcji"
+    "auctionDetails": "Szczegóły aukcji",
+    "auctionEdit": "Edycja aukcji",
+    "myBiddings": "Moje licytacje"
   }
 }

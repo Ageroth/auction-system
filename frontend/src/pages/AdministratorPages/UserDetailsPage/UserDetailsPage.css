@@ -1,0 +1,28 @@
+.ant-descriptions-title {
+    text-align: center;
+}
+
+.user-details-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-details {
+    padding: 20px;
+    border-radius: 5px;
+    background-color: white;
+    border: 1px solid #eaecef;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.buttons button {
+    margin-right: 5px;
+}

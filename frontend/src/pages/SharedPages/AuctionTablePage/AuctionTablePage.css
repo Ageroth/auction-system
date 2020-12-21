@@ -1,0 +1,30 @@
+.auction-table-page-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ant-table-wrapper {
+    width: 100%;
+}
+
+td.ant-table-cell.image-column {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+.ant-image {
+    width: 100%;
+    height: 100%;
+}
+
+.ant-image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: pointer;
+}

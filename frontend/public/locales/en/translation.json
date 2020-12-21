@@ -19,7 +19,7 @@
     "itemImage": "Image",
     "itemName": "Name",
     "itemDescription": "Description",
-    "startingPrice": "Starting price (PLN)",
+    "startingPrice": "Starting price",
     "startDate": "Start date",
     "duration": "Duration (days)",
     "endDate": "End date",
@@ -73,7 +73,7 @@
     "home": "Home page",
     "404": "The page you are looking for doesn't exist (error 404)",
     "userDetails": "User details",
-    "yourDetails": "Your details",
+    "myDetails": "My details",
     "edit": "Edit",
     "add": "Add",
     "areYouSure": "Are you sure?",
@@ -91,7 +91,9 @@
     "bidHistory": "Bid history",
     "bid": "bid",
     "editForbidden": "You cannot edit somebody else's auction and an auction that has already started or finished",
-    "bidForbidden": "You cannot bid at your own auction or at an auction that is not currently live"
+    "bidForbidden": "You cannot bid at your own auction or at an auction that is not currently live",
+    "auctionAlreadyStarted": "You cannot edit an auction that has already started or finished",
+    "you": "You"
   },
   "role": {
     "admin": "Administrator",
@@ -101,9 +103,11 @@
   "navbarLink": {
     "users": "Users",
     "newUser": "New user",
-    "yourAccount": "Your account",
+    "myAccount": "My account",
     "auctions": "Auctions",
-    "newAuction": "New auction"
+    "myAuctions": "My auctions",
+    "newAuction": "New auction",
+    "myBiddings": "My biddings"
   },
   "pageName": {
     "home": "Home",
@@ -116,9 +120,13 @@
     "users": "Users",
     "userDetails": "User details",
     "userAdd": "New user",
+    "userEdit": "User edit",
     "activation": "Activation",
     "auctions": "Auctions",
+    "myAuctions": "My auctions",
     "auctionAdd": "New auction",
-    "auctionDetails": "Auction details"
+    "auctionDetails": "Auction details",
+    "auctionEdit": "Auction edit",
+    "myBiddings": "My biddings"
   }
 }

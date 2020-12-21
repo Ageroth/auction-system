@@ -4,7 +4,7 @@ import {Avatar, Dropdown, Layout, Menu, Select} from 'antd';
 import {useDispatch, useSelector} from 'react-redux'
 import {changeCurrentRole, logOut} from '../../actions/userActions';
 import {useTranslation} from 'react-i18next';
-import {HomeOutlined, PlusOutlined, TeamOutlined, UnorderedListOutlined, UserAddOutlined} from '@ant-design/icons';
+import {BarsOutlined, BookOutlined, HomeOutlined, PlusOutlined, TeamOutlined, UserAddOutlined} from '@ant-design/icons';
 import allroles from '../../utils/allroles'
 import 'antd/dist/antd.css';
 import './AppHeader.css'
@@ -29,7 +29,7 @@ const AppHeader = () => {
     const dropdownMenu = (
         <Menu onClick={handleDropdownMenuClick}>
             <Menu.Item className="dropdown-item" key="profile">
-                <Link to={`/my_profile`}> {t('navbarLink.yourAccount')} </Link>
+                <Link to={`/my_profile`}> {t('navbarLink.myAccount')} </Link>
             </Menu.Item>
             <Menu.Divider/>
             <Menu.Item className="dropdown-item" key="logout">
@@ -61,11 +61,16 @@ const AppHeader = () => {
             case MANAGER:
                 items = (
                     <>
-                        <Menu.Item className="menu-left-item" key="auctions" icon={<UnorderedListOutlined/>}>
+                        <Menu.Item className="menu-left-item" key="auctions" icon={<BookOutlined/>}>
                             <Link className="menu-link" to={`/auctions`}> {t('navbarLink.auctions')} </Link>
                         </Menu.Item>
                         <Menu.Item className="menu-left-item" key="user-add" icon={<PlusOutlined/>}>
-                            <Link className="menu-link" to={`/auctions/add`}> {t('navbarLink.newAuction')} </Link>
+                            <Link className="menu-link"
+                                  to={`/my_auctions/add`}> {t('navbarLink.newAuction')} </Link>
+                        </Menu.Item>
+                        <Menu.Item className="menu-left-item" key="my_auctions" icon={<BarsOutlined/>}>
+                            <Link className="menu-link"
+                                  to={`/my_auctions`}> {t('navbarLink.myAuctions')} </Link>
                         </Menu.Item>
                     </>
                 )
@@ -74,8 +79,11 @@ const AppHeader = () => {
             case CLIENT:
                 items = (
                     <>
-                        <Menu.Item className="menu-left-item" key="auctions" icon={<UnorderedListOutlined/>}>
+                        <Menu.Item className="menu-left-item" key="auctions" icon={<BookOutlined/>}>
                             <Link className="menu-link" to={`/auctions`}> {t('navbarLink.auctions')} </Link>
+                        </Menu.Item>
+                        <Menu.Item className="menu-left-item" key="my_biddings" icon={<BarsOutlined/>}>
+                            <Link className="menu-link" to={`/my_biddings`}> {t('navbarLink.myBiddings')} </Link>
                         </Menu.Item>
                     </>
                 )

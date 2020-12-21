@@ -34,4 +34,22 @@ public class AuctionSpecs {
         else
             return (root, query, builder) -> builder.greaterThan(root.get("endDate"), LocalDateTime.now());
     }
+
+    /**
+     * Służy do znalezienia encji {@link Auction}, których właścicielem jest użytkownik o danej nazwie użytkownika.
+     *
+     * @param username nazwa użytkownika właściciela
+     * @return obiekt typu {@link Specification<Auction>}
+     */
+    public static Specification<Auction> isOwner(String username) {
+        return (root, query, builder) -> builder.equal(root.get("user").get("username"), username);
+    }
+
+    public static Specification<Auction> hasBid(String username) {
+        return (root, query, builder) -> {
+            query.distinct(true);
+
+            return builder.equal(root.join("bids").get("user").get("username"), username);
+        };
+    }
 }

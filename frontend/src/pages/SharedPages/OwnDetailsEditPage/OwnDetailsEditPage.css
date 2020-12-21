@@ -1,0 +1,17 @@
+.own-details-edit-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.own-details-edit-form {
+    padding: 20px;
+    border-radius: 5px;
+    background-color: white;
+    border: 1px solid #eaecef;
+}
+
+.own-details-edit-form-button {
+    width: 100%;
+}

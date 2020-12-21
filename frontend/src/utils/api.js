@@ -63,7 +63,7 @@ export function updateUserDetailsRequest(value, payload) {
     return axios.put(`/users/${value}/details`, JSON.stringify(payload));
 }
 
-export function getMyDetailsRequest() {
+export function getOwnDetailsRequest() {
     return axios.get('/users/me');
 }
 
@@ -96,4 +96,38 @@ export function getAuctionDetailsRequest(value) {
 
 export function addAuctionRequest(payload) {
     return axios.post('/auctions', payload);
+}
+
+export function getOwnAuctionsRequest(values) {
+    const {pagination, ...valuesCopy} = values;
+
+    return axios.get('/auctions/selling', {
+        params: {
+            page: pagination.current - 1,
+            ...valuesCopy
+        }
+    });
+}
+
+export function getOwnAuctionDetailsRequest(value) {
+    return axios.get(`/auctions/selling/${value}`);
+}
+
+export function updateAuctionRequest(value, payload) {
+    return axios.patch(`/auctions/selling/${value}`, JSON.stringify(payload));
+}
+
+export function getOwnBiddingsRequest(values) {
+    const {pagination, ...valuesCopy} = values;
+
+    return axios.get('/auctions/buying', {
+        params: {
+            page: pagination.current - 1,
+            ...valuesCopy
+        }
+    });
+}
+
+export function placeABidRequest(value, payload) {
+    return axios.post(`/auctions/${value}`, JSON.stringify(payload));
 }
