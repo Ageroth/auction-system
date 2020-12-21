@@ -1,4 +1,5 @@
 import React from 'react';
+import {useSelector} from "react-redux";
 import {Link, useHistory} from 'react-router-dom';
 import {Button, Image, Input, Space, Table} from 'antd';
 import AppLayout from '../../components/AppLayout'
@@ -12,6 +13,7 @@ const AuctionTablePage = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
     const {auctions, pagination, isLoading} = props;
+    const username = useSelector(state => state.user.username);
 
     const getColumnSearchProps = () => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -74,6 +76,14 @@ const AuctionTablePage = (props) => {
             ...getColumnSearchProps(),
             render: (text, record) => <Link style={{color: "#1890ff"}}
                                             to={`/auctions/${record.id}`}>{record.itemName}</Link>
+        },
+        {
+            width: '7%',
+            title: t('text.seller'),
+            dataIndex: 'userUsername',
+            key: 'userUsername',
+            render: userUsername => userUsername === username ?
+                <span style={{fontWeight: "bold"}}>{t('text.you')}</span> : userUsername
         },
         {
             title: t('auctionLabels.itemDescription'),

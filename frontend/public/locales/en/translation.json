@@ -91,7 +91,8 @@
     "bidHistory": "Bid history",
     "bid": "bid",
     "editForbidden": "You cannot edit somebody else's auction and an auction that has already started or finished",
-    "bidForbidden": "You cannot bid at your own auction or at an auction that is not currently live"
+    "bidForbidden": "You cannot bid at your own auction or at an auction that is not currently live",
+    "you": "You"
   },
   "role": {
     "admin": "Administrator",
