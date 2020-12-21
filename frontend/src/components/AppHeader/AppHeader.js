@@ -65,7 +65,8 @@ const AppHeader = () => {
                             <Link className="menu-link" to={`/auctions`}> {t('navbarLink.auctions')} </Link>
                         </Menu.Item>
                         <Menu.Item className="menu-left-item" key="user-add" icon={<PlusOutlined/>}>
-                            <Link className="menu-link" to={`/auctions/add`}> {t('navbarLink.newAuction')} </Link>
+                            <Link className="menu-link"
+                                  to={`/auctions/my_auctions/add`}> {t('navbarLink.newAuction')} </Link>
                         </Menu.Item>
                         <Menu.Item className="menu-left-item" key="my_auctions" icon={<BarsOutlined/>}>
                             <Link className="menu-link"

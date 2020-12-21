@@ -1,23 +1,23 @@
 import allroles from '../utils/allroles';
-import HomePage from '../pages/HomePage'
-import LoginPage from '../pages/LoginPage';
-import SignupPage from '../pages/SignupPage'
-import ActivationPage from '../pages/ActivationPage';
-import PasswordResetPage from '../pages/PasswordResetPage'
-import UserTablePage from '../pages/UserTablePage'
-import UserDetailsPage from '../pages/UserDetailsPage'
-import NotFoundPage from '../pages/NotFoundPage'
-import UserPasswordChangePage from '../pages/UserPasswordChangePage'
-import UserDetailsEditPage from '../pages/UserDetailsEditPage'
-import OwnDetailsPage from '../pages/OwnDetailsPage'
-import OwnPasswordChangePage from '../pages/OwnPasswordChangePage'
-import OwnDetailsEditPage from '../pages/OwnDetailsEditPage'
-import UserAddPage from '../pages/UserAddPage'
-import AuctionTablePage from '../pages/AuctionTablePage'
-import OwnAuctionTablePage from '../pages/OwnAuctionTablePage'
-import AuctionAddPage from '../pages/AuctionAddPage'
-import AuctionDetailsPage from '../pages/AuctionDetailsPage'
-import AuctionEditPage from '../pages/AuctionEditPage'
+import HomePage from '../pages/SharedPages/HomePage'
+import LoginPage from '../pages/SharedPages/LoginPage';
+import SignupPage from '../pages/SharedPages/SignupPage'
+import ActivationPage from '../pages/SharedPages/ActivationPage';
+import PasswordResetPage from '../pages/SharedPages/PasswordResetPage'
+import UserTablePage from '../pages/AdministratorPages/UserTablePage'
+import UserDetailsPage from '../pages/AdministratorPages/UserDetailsPage'
+import NotFoundPage from '../pages/SharedPages/NotFoundPage'
+import UserPasswordChangePage from '../pages/AdministratorPages/UserPasswordChangePage'
+import UserDetailsEditPage from '../pages/AdministratorPages/UserDetailsEditPage'
+import OwnDetailsPage from '../pages/SharedPages/OwnDetailsPage'
+import OwnPasswordChangePage from '../pages/SharedPages/OwnPasswordChangePage'
+import OwnDetailsEditPage from '../pages/SharedPages/OwnDetailsEditPage'
+import UserAddPage from '../pages/AdministratorPages/UserAddPage'
+import AuctionTablePage from '../pages/SharedPages/AuctionTablePage'
+import OwnAuctionTablePage from '../pages/ManagerPages/OwnAuctionTablePage'
+import AuctionAddPage from '../pages/ManagerPages/AuctionAddPage'
+import AuctionDetailsPage from '../pages/SharedPages/AuctionDetailsPage'
+import AuctionEditPage from '../pages/ManagerPages/AuctionEditPage'
 
 const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 
@@ -38,7 +38,7 @@ export const routes = [
     {path: '/my_profile/edit', component: OwnDetailsEditPage},
     {path: '/auctions', component: AuctionTablePage, canAccess: [MANAGER, CLIENT]},
     {path: '/auctions/my_auctions', component: OwnAuctionTablePage, canAccess: [MANAGER]},
-    {path: '/auctions/add', component: AuctionAddPage, canAccess: [MANAGER]},
+    {path: '/auctions/my_auctions/add', component: AuctionAddPage, canAccess: [MANAGER]},
     {path: '/auctions/:auctionId', component: AuctionDetailsPage, canAccess: [MANAGER, CLIENT]},
     {path: '/auctions/:auctionId/edit', component: AuctionEditPage, canAccess: [MANAGER]},
     {path: '*', component: NotFoundPage, public: true},
