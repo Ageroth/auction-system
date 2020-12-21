@@ -77,9 +77,27 @@ public class AuctionController {
         }
     }
 
-    @GetMapping("/me")
+    @GetMapping("/selling")
     public ResponseEntity<?> getOwnAuctions(AuctionCriteria auctionCriteria, Authentication authentication) {
         Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUsername(auctionCriteria,
+                ((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+
+        if (auctionDtoPage.getContent().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("auctions", auctionDtoPage.getContent());
+            response.put("currentPage", auctionDtoPage.getNumber());
+            response.put("totalItems", auctionDtoPage.getTotalElements());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/buying")
+    public ResponseEntity<?> getOwnBiddings(AuctionCriteria auctionCriteria, Authentication authentication) {
+        Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUserBids(auctionCriteria,
                 ((UserDetailsImpl) authentication.getPrincipal()).getUsername());
 
         if (auctionDtoPage.getContent().isEmpty()) {
@@ -116,7 +134,7 @@ public class AuctionController {
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link AuctionDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @GetMapping("/me/{auctionId}")
+    @GetMapping("/selling/{auctionId}")
     public ResponseEntity<?> getOwnAuctionDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
         AuctionDetailsDto auctionDetailsDto = auctionService.getOwnAuctionById(auctionId);
 
@@ -131,7 +149,7 @@ public class AuctionController {
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @PatchMapping("/me/{auctionId}")
+    @PatchMapping("/selling/{auctionId}")
     public ResponseEntity<?> updateAuctionDetails(@PathVariable(value = "auctionId") Long auctionId,
                                                   @Valid @RequestBody AuctionEditDto auctionEditDto) throws ApplicationException {
         auctionService.updateAuctionById(auctionId, auctionEditDto);

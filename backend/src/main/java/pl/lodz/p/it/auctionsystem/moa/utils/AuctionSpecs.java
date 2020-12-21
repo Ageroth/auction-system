@@ -42,8 +42,14 @@ public class AuctionSpecs {
      * @return obiekt typu {@link Specification<Auction>}
      */
     public static Specification<Auction> isOwner(String username) {
-        String finalText = username.toLowerCase();
+        return (root, query, builder) -> builder.equal(root.get("user").get("username"), username);
+    }
 
-        return (root, query, builder) -> builder.equal(builder.lower(root.get("user").get("username")), finalText);
+    public static Specification<Auction> hasBid(String username) {
+        return (root, query, builder) -> {
+            query.distinct(true);
+
+            return builder.equal(root.join("bids").get("user").get("username"), username);
+        };
     }
 }

@@ -94,29 +94,40 @@ export function getAuctionDetailsRequest(value) {
     return axios.get(`/auctions/${value}`);
 }
 
-export function getOwnAuctionDetailsRequest(value) {
-    return axios.get(`/auctions/me/${value}`);
-}
-
 export function addAuctionRequest(payload) {
     return axios.post('/auctions', payload);
-}
-
-export function updateAuctionRequest(value, payload) {
-    return axios.patch(`/auctions/${value}`, JSON.stringify(payload));
-}
-
-export function placeABidRequest(value, payload) {
-    return axios.post(`/auctions/${value}`, JSON.stringify(payload));
 }
 
 export function getOwnAuctionsRequest(values) {
     const {pagination, ...valuesCopy} = values;
 
-    return axios.get('/auctions/me', {
+    return axios.get('/auctions/selling', {
         params: {
             page: pagination.current - 1,
             ...valuesCopy
         }
     });
+}
+
+export function getOwnAuctionDetailsRequest(value) {
+    return axios.get(`/auctions/selling/${value}`);
+}
+
+export function updateAuctionRequest(value, payload) {
+    return axios.patch(`/auctions/selling/${value}`, JSON.stringify(payload));
+}
+
+export function getOwnBiddingsRequest(values) {
+    const {pagination, ...valuesCopy} = values;
+
+    return axios.get('/auctions/buying', {
+        params: {
+            page: pagination.current - 1,
+            ...valuesCopy
+        }
+    });
+}
+
+export function placeABidRequest(value, payload) {
+    return axios.post(`/auctions/${value}`, JSON.stringify(payload));
 }

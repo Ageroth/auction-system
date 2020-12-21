@@ -105,8 +105,9 @@
     "newUser": "Nowy użytkownik",
     "myAccount": "Moje konto",
     "auctions": "Aukcje",
-    "myAuctions": "My auctions",
-    "newAuction": "Nowa aukcja"
+    "myAuctions": "Moje aukcje",
+    "newAuction": "Nowa aukcja",
+    "myBiddings": "Moje licytacje"
   },
   "pageName": {
     "home": "Strona główna",
@@ -125,6 +126,7 @@
     "myAuctions": "Moje aukcje",
     "auctionAdd": "Nowa aukcja",
     "auctionDetails": "Szczegóły aukcji",
-    "auctionEdit": "Edycja aukcji"
+    "auctionEdit": "Edycja aukcji",
+    "myBiddings": "Moje licytacje"
   }
 }

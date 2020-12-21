@@ -93,7 +93,6 @@
     "editForbidden": "You cannot edit somebody else's auction and an auction that has already started or finished",
     "bidForbidden": "You cannot bid at your own auction or at an auction that is not currently live",
     "auctionAlreadyStarted": "You cannot edit an auction that has already started or finished",
-    "auctionAlreadyStarted": "You cannot edit an auction that has already started or finished",
     "you": "You"
   },
   "role": {
@@ -107,7 +106,8 @@
     "myAccount": "My account",
     "auctions": "Auctions",
     "myAuctions": "My auctions",
-    "newAuction": "New auction"
+    "newAuction": "New auction",
+    "myBiddings": "My biddings"
   },
   "pageName": {
     "home": "Home",
@@ -126,6 +126,7 @@
     "myAuctions": "My auctions",
     "auctionAdd": "New auction",
     "auctionDetails": "Auction details",
-    "auctionEdit": "Auction edit"
+    "auctionEdit": "Auction edit",
+    "myBiddings": "My biddings"
   }
 }

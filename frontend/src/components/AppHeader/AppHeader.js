@@ -82,6 +82,9 @@ const AppHeader = () => {
                         <Menu.Item className="menu-left-item" key="auctions" icon={<BookOutlined/>}>
                             <Link className="menu-link" to={`/auctions`}> {t('navbarLink.auctions')} </Link>
                         </Menu.Item>
+                        <Menu.Item className="menu-left-item" key="my_biddings" icon={<BarsOutlined/>}>
+                            <Link className="menu-link" to={`/my_biddings`}> {t('navbarLink.myBiddings')} </Link>
+                        </Menu.Item>
                     </>
                 )
                 break;

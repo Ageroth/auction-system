@@ -19,6 +19,7 @@ import AuctionAddPage from '../pages/ManagerPages/AuctionAddPage'
 import AuctionDetailsPage from '../pages/SharedPages/AuctionDetailsPage'
 import OwnAuctionDetailsPage from '../pages/ManagerPages/OwnAuctionDetailsPage'
 import AuctionEditPage from '../pages/ManagerPages/AuctionEditPage'
+import BiddingTablePage from '../pages/ClientPages/BiddingTablePage'
 
 const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
 
@@ -44,5 +45,6 @@ export const routes = [
     {path: '/my_auctions/add', component: AuctionAddPage, canAccess: [MANAGER]},
     {path: '/my_auctions/:auctionId', component: OwnAuctionDetailsPage, canAccess: [MANAGER]},
     {path: '/my_auctions/:auctionId/edit', component: AuctionEditPage, canAccess: [MANAGER]},
+    {path: '/my_biddings', component: BiddingTablePage, canAccess: [CLIENT]},
     {path: '*', component: NotFoundPage, public: true},
 ];
