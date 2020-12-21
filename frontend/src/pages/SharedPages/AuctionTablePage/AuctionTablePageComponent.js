@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSelector} from "react-redux";
-import {Link, useHistory} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {Button, Image, Input, Space, Table} from 'antd';
 import AppLayout from '../../../components/AppLayout'
 import {useTranslation} from 'react-i18next';
@@ -11,7 +11,6 @@ import './AuctionTablePage.css'
 
 const AuctionTablePage = (props) => {
     const {t} = useTranslation();
-    const history = useHistory();
     const {auctions, pagination, isLoading} = props;
     const username = useSelector(state => state.user.username);
 
@@ -51,12 +50,6 @@ const AuctionTablePage = (props) => {
     const handleReset = (clearFilters) => {
         clearFilters();
     };
-
-    const handleAdd = () => {
-        const currentLocation = history.location.pathname;
-
-        history.push(`${currentLocation}/my_auctions/add`);
-    }
 
     const columns = [
         {
@@ -153,7 +146,7 @@ const AuctionTablePage = (props) => {
 
     return (
         <AppLayout>
-            <div className="auction-table-wrapper">
+            <div className="auction-table-page-wrapper">
                 <Table
                     columns={columns}
                     rowKey={record => record.id}
@@ -163,7 +156,6 @@ const AuctionTablePage = (props) => {
                     onChange={handleTableChange}
                     bordered
                 />
-                <Button className="auction-table-button" type="primary" onClick={handleAdd}> {t('text.add')} </Button>
             </div>
         </AppLayout>
     );

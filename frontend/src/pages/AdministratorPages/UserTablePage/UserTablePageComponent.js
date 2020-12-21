@@ -147,7 +147,7 @@ const UserTablePage = (props) => {
 
     return (
         <AppLayout>
-            <div className="user-table-wrapper">
+            <div className="user-table-page-wrapper">
                 <Table
                     columns={columns}
                     rowKey={record => record.id}

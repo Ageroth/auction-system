@@ -92,6 +92,8 @@
     "bid": "bid",
     "editForbidden": "You cannot edit somebody else's auction and an auction that has already started or finished",
     "bidForbidden": "You cannot bid at your own auction or at an auction that is not currently live",
+    "auctionAlreadyStarted": "You cannot edit an auction that has already started or finished",
+    "auctionAlreadyStarted": "You cannot edit an auction that has already started or finished",
     "you": "You"
   },
   "role": {

@@ -21,7 +21,7 @@ export default class AuctionAddPageContainer extends Component {
                 closeOnClick: true
             });
 
-            this.props.history.push(`../my_auctions`);
+            this.props.history.push(`/my_auctions`);
         }).catch(e => {
             this.setState({isSubmitting: false});
             toast.error(e.response.data.message, {

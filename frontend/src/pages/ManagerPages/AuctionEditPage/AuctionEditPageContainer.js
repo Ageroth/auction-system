@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import AuctionEditPage from './AuctionEditPageComponent'
 import {toast} from 'react-toastify';
-import {getAuctionDetailsRequest, updateAuctionRequest} from "../../../utils/api";
+import {getOwnAuctionDetailsRequest, updateAuctionRequest} from "../../../utils/api";
 import NotFoundPage from "../../SharedPages/NotFoundPage";
 
 export default class AuctionEditPageContainer extends Component {
@@ -16,11 +16,11 @@ export default class AuctionEditPageContainer extends Component {
     }
 
     componentDidMount() {
-        this.getAuctionDetails();
+        this.getOwnAuctionDetails();
     }
 
-    getAuctionDetails = () => {
-        getAuctionDetailsRequest(this.state.auctionId).then((res) => {
+    getOwnAuctionDetails = () => {
+        getOwnAuctionDetailsRequest(this.state.auctionId).then((res) => {
             this.setState({auctionDetails: res.data});
         }).catch(e => {
             this.setState({error: true});

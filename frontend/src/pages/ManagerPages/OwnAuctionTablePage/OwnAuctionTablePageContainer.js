@@ -3,7 +3,7 @@ import OwnAuctionTablePage from './OwnAuctionTablePageComponent'
 import {toast} from 'react-toastify';
 import {getOwnAuctionsRequest} from '../../../utils/api';
 
-export default class AuctionTablePageContainer extends Component {
+export default class OwnAuctionTablePageContainer extends Component {
     state = {
         auctions: [],
         pagination: {

@@ -110,14 +110,28 @@ public class AuctionController {
     }
 
     /**
-     * Aktualizuje dane aukcji o podanym id.
+     * Zwraca szczegóły aukcji o podanym id.
+     *
+     * @param auctionId id aukcji
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link AuctionDetailsDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @GetMapping("/me/{auctionId}")
+    public ResponseEntity<?> getOwnAuctionDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
+        AuctionDetailsDto auctionDetailsDto = auctionService.getOwnAuctionById(auctionId);
+
+        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+    }
+
+    /**
+     * Aktualizuje dane naszej aukcji o podanym id.
      *
      * @param auctionId      id aukcji
      * @param auctionEditDto obiekt typu {@link AuctionEditDto}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @PatchMapping("/{auctionId}")
+    @PatchMapping("/me/{auctionId}")
     public ResponseEntity<?> updateAuctionDetails(@PathVariable(value = "auctionId") Long auctionId,
                                                   @Valid @RequestBody AuctionEditDto auctionEditDto) throws ApplicationException {
         auctionService.updateAuctionById(auctionId, auctionEditDto);

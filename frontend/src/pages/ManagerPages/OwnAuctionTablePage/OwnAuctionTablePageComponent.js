@@ -73,7 +73,7 @@ const OwnAuctionTablePage = (props) => {
             key: 'itemName',
             ...getColumnSearchProps(),
             render: (text, record) => <Link style={{color: "#1890ff"}}
-                                            to={`/auctions/${record.id}`}>{record.itemName}</Link>
+                                            to={`my_auctions/${record.id}`}>{record.itemName}</Link>
         },
         {
             title: t('auctionLabels.itemDescription'),
@@ -143,7 +143,7 @@ const OwnAuctionTablePage = (props) => {
 
     return (
         <AppLayout>
-            <div className="own-auction-table-wrapper">
+            <div className="own-auction-table-page-wrapper">
                 <Table
                     columns={columns}
                     rowKey={record => record.id}

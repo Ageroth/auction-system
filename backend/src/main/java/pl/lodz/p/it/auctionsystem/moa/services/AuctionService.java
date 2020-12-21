@@ -16,6 +16,8 @@ public interface AuctionService {
 
     AuctionDetailsDto getAuctionById(Long auctionId) throws ApplicationException;
 
+    AuctionDetailsDto getOwnAuctionById(Long auctionId) throws ApplicationException;
+
     /**
      * Aktualizuje dane aukcji o podanym id.
      *

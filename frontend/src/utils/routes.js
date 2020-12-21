@@ -17,6 +17,7 @@ import AuctionTablePage from '../pages/SharedPages/AuctionTablePage'
 import OwnAuctionTablePage from '../pages/ManagerPages/OwnAuctionTablePage'
 import AuctionAddPage from '../pages/ManagerPages/AuctionAddPage'
 import AuctionDetailsPage from '../pages/SharedPages/AuctionDetailsPage'
+import OwnAuctionDetailsPage from '../pages/ManagerPages/OwnAuctionDetailsPage'
 import AuctionEditPage from '../pages/ManagerPages/AuctionEditPage'
 
 const {ADMINISTRATOR, MANAGER, CLIENT} = allroles;
@@ -37,9 +38,11 @@ export const routes = [
     {path: '/my_profile/password_change', component: OwnPasswordChangePage},
     {path: '/my_profile/edit', component: OwnDetailsEditPage},
     {path: '/auctions', component: AuctionTablePage, canAccess: [MANAGER, CLIENT]},
-    {path: '/auctions/my_auctions', component: OwnAuctionTablePage, canAccess: [MANAGER]},
-    {path: '/auctions/my_auctions/add', component: AuctionAddPage, canAccess: [MANAGER]},
     {path: '/auctions/:auctionId', component: AuctionDetailsPage, canAccess: [MANAGER, CLIENT]},
     {path: '/auctions/:auctionId/edit', component: AuctionEditPage, canAccess: [MANAGER]},
+    {path: '/my_auctions', component: OwnAuctionTablePage, canAccess: [MANAGER]},
+    {path: '/my_auctions/add', component: AuctionAddPage, canAccess: [MANAGER]},
+    {path: '/my_auctions/:auctionId', component: OwnAuctionDetailsPage, canAccess: [MANAGER]},
+    {path: '/my_auctions/:auctionId/edit', component: AuctionEditPage, canAccess: [MANAGER]},
     {path: '*', component: NotFoundPage, public: true},
 ];
