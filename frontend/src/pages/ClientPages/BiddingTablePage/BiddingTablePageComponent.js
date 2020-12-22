@@ -68,7 +68,7 @@ const BiddingTablePage = (props) => {
             key: 'itemName',
             ...getColumnSearchProps(),
             render: (text, record) => <Link style={{color: "#1890ff"}}
-                                            to={`/auctions/${record.id}`}>{record.itemName}</Link>
+                                            to={`/my_biddings/${record.id}`}>{record.itemName}</Link>
         },
         {
             width: '7%',

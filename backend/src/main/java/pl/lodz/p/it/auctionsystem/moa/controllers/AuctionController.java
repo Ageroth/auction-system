@@ -142,6 +142,20 @@ public class AuctionController {
     }
 
     /**
+     * Zwraca szczegóły aukcji o podanym id.
+     *
+     * @param auctionId id aukcji
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link AuctionDetailsDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @GetMapping("/buying/{auctionId}")
+    public ResponseEntity<?> getOwnBiddingDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
+        AuctionDetailsDto auctionDetailsDto = auctionService.getOwnBiddingById(auctionId);
+
+        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+    }
+
+    /**
      * Aktualizuje dane naszej aukcji o podanym id.
      *
      * @param auctionId      id aukcji

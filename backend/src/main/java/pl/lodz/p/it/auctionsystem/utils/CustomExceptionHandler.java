@@ -119,7 +119,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<?> handleAuthenticationException() {
-        String authenticationMessage = messageService.getMessage("exception.DisabledException");
+        String authenticationMessage = messageService.getMessage("exception.authenticationException");
 
         return new ResponseEntity<>(new ApiResponseDto(false, authenticationMessage), HttpStatus.BAD_REQUEST);
     }
@@ -144,7 +144,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentialsException() {
-        String badCredentialsMessage = messageService.getMessage("exception.BadCredentials");
+        String badCredentialsMessage = messageService.getMessage("exception.badCredentials");
 
         return new ResponseEntity<>(new ApiResponseDto(false, badCredentialsMessage), HttpStatus.UNAUTHORIZED);
     }
@@ -156,8 +156,18 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<?> handleDisabledException() {
-        String disabledMessage = messageService.getMessage("exception.DisabledException");
+        String disabledMessage = messageService.getMessage("exception.disabledException");
 
         return new ResponseEntity<>(new ApiResponseDto(false, disabledMessage), HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Obsługuje wyjątek {@link AccessForbiddenException}.
+     *
+     * @return Kod odpowiedzi HTTP 403 z obiektem {@link ApiResponseDto}
+     */
+    @ExceptionHandler(AccessForbiddenException.class)
+    public ResponseEntity<?> handleAccessForbiddenException(AccessForbiddenException ex) {
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.FORBIDDEN);
     }
 }

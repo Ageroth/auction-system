@@ -8,12 +8,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
 import pl.lodz.p.it.auctionsystem.entities.Bid;
 import pl.lodz.p.it.auctionsystem.entities.Item;
 import pl.lodz.p.it.auctionsystem.entities.User;
+import pl.lodz.p.it.auctionsystem.exceptions.AccessForbiddenException;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
 import pl.lodz.p.it.auctionsystem.moa.dtos.*;
@@ -204,6 +207,23 @@ public class AuctionServiceImpl implements AuctionService {
         return modelMapper.map(auction, AuctionDetailsDto.class);
     }
 
+
+    @Override
+    public AuctionDetailsDto getOwnBiddingById(Long auctionId) throws ApplicationException {
+        String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
+        Auction auction =
+                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auction.getBids().stream().noneMatch(bid -> bid.getUser().getUsername().equals(authentication.getName()))) {
+            String accessForbiddenMessage = messageService.getMessage("exception.accessForbiddenException");
+
+            throw new AccessForbiddenException(accessForbiddenMessage);
+        }
+
+        return modelMapper.map(auction, AuctionDetailsDto.class);
+    }
 
     @Override
     public void updateAuctionById(Long auctionId, AuctionEditDto auctionEditDto) throws ApplicationException {
