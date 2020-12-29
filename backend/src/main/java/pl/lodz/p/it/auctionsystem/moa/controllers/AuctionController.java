@@ -23,6 +23,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Kontroler obsługujący operacje związane z aukcjami.
+ */
 @RestController
 @RequestMapping("/api/auctions")
 public class AuctionController {
@@ -37,6 +40,15 @@ public class AuctionController {
         this.messageService = messageService;
     }
 
+    /**
+     * Dodaje nową aukcję.
+     *
+     * @param auctionAddDto  obiekt typu {@link AuctionAddDto}
+     * @param file           wgrywany plik
+     * @param authentication obiekt typu {@link Authentication}
+     * @return Kod odpowiedzi HTTP 201 z obiektem typu {@link ApiResponseDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addAuction(@RequestPart("auction") @Valid AuctionAddDto auctionAddDto,
                                         @RequestPart("file") @Valid @NotBlank MultipartFile file,
@@ -60,6 +72,13 @@ public class AuctionController {
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
 
+    /**
+     * Zwraca aukcje spełniające dane kryteria.
+     *
+     * @param auctionCriteria obiekt typu {@link AuctionCriteria}
+     * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych aukcji, aktualnym numerem strony oraz całkowitą ilością
+     * aukcji
+     */
     @GetMapping
     public ResponseEntity<?> getAuctions(AuctionCriteria auctionCriteria) {
         Page<AuctionDto> auctionDtoPage = auctionService.getAuctions(auctionCriteria);
@@ -77,6 +96,14 @@ public class AuctionController {
         }
     }
 
+    /**
+     * Zwraca własne aukcje spełniające dane kryteria.
+     *
+     * @param auctionCriteria obiekt typu {@link AuctionCriteria}
+     * @param authentication  obiekt typu {@link Authentication}
+     * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych aukcji, aktualnym numerem strony oraz całkowitą ilością
+     * aukcji
+     */
     @GetMapping("/selling")
     public ResponseEntity<?> getOwnAuctions(AuctionCriteria auctionCriteria, Authentication authentication) {
         Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUsername(auctionCriteria,
@@ -95,9 +122,17 @@ public class AuctionController {
         }
     }
 
+    /**
+     * Zwraca aukcje, w których bierzemy udział, spełniające dane kryteria.
+     *
+     * @param auctionCriteria obiekt typu {@link AuctionCriteria}
+     * @param authentication  obiekt typu {@link Authentication}
+     * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych aukcji, aktualnym numerem strony oraz całkowitą ilością
+     * aukcji
+     */
     @GetMapping("/buying")
     public ResponseEntity<?> getOwnBiddings(AuctionCriteria auctionCriteria, Authentication authentication) {
-        Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUserBids(auctionCriteria,
+        Page<AuctionDto> auctionDtoPage = auctionService.getParticipatedAuctions(auctionCriteria,
                 ((UserDetailsImpl) authentication.getPrincipal()).getUsername());
 
         if (auctionDtoPage.getContent().isEmpty()) {
@@ -144,13 +179,17 @@ public class AuctionController {
     /**
      * Zwraca szczegóły aukcji o podanym id.
      *
-     * @param auctionId id aukcji
+     * @param auctionId      id aukcji
+     * @param authentication obiekt typu {@link Authentication}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link AuctionDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/buying/{auctionId}")
-    public ResponseEntity<?> getOwnBiddingDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
-        AuctionDetailsDto auctionDetailsDto = auctionService.getOwnBiddingById(auctionId);
+    public ResponseEntity<?> getOwnBiddingDetails(@PathVariable(value = "auctionId") Long auctionId,
+                                                  Authentication authentication) throws ApplicationException {
+        String currentUserUsername = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+
+        AuctionDetailsDto auctionDetailsDto = auctionService.getOwnBiddingById(auctionId, currentUserUsername);
 
         return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
     }
@@ -158,15 +197,15 @@ public class AuctionController {
     /**
      * Aktualizuje dane naszej aukcji o podanym id.
      *
-     * @param auctionId      id aukcji
-     * @param auctionEditDto obiekt typu {@link AuctionEditDto}
+     * @param auctionId        id aukcji
+     * @param auctionUpdateDto obiekt typu {@link AuctionUpdateDto}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/selling/{auctionId}")
     public ResponseEntity<?> updateAuctionDetails(@PathVariable(value = "auctionId") Long auctionId,
-                                                  @Valid @RequestBody AuctionEditDto auctionEditDto) throws ApplicationException {
-        auctionService.updateAuctionById(auctionId, auctionEditDto);
+                                                  @Valid @RequestBody AuctionUpdateDto auctionUpdateDto) throws ApplicationException {
+        auctionService.updateAuctionById(auctionId, auctionUpdateDto);
 
         String message = messageService.getMessage("info.auctionUpdated");
 
@@ -176,8 +215,9 @@ public class AuctionController {
     /**
      * Dodaje nową ofertę do aukcji o podanym id.
      *
-     * @param auctionId   id aukcji
-     * @param bidPlaceDto obiekt typu {@link BidPlaceDto}
+     * @param auctionId      id aukcji
+     * @param bidPlaceDto    obiekt typu {@link BidPlaceDto}
+     * @param authentication obiekt typu {@link Authentication}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */

@@ -6,6 +6,9 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * DTO zawierające dane aukcji, wykorzystywane przy jej dodawaniu.
+ */
 @Getter
 @Setter
 public class AuctionAddDto {

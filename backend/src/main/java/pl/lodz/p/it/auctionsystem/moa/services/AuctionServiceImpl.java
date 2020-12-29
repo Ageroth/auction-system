@@ -8,8 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
@@ -153,7 +151,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public Page<AuctionDto> getAuctionsByUserBids(AuctionCriteria auctionCriteria, String username) {
+    public Page<AuctionDto> getParticipatedAuctions(AuctionCriteria auctionCriteria, String username) {
         Pageable pageable;
         Page<Auction> auctionPage;
 
@@ -210,14 +208,12 @@ public class AuctionServiceImpl implements AuctionService {
 
 
     @Override
-    public AuctionDetailsDto getOwnBiddingById(Long auctionId) throws ApplicationException {
+    public AuctionDetailsDto getOwnBiddingById(Long auctionId, String username) throws ApplicationException {
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auction.getBids().stream().noneMatch(bid -> bid.getUser().getUsername().equals(authentication.getName()))) {
+        if (auction.getBids().stream().noneMatch(bid -> bid.getUser().getUsername().equals(username))) {
             String accessForbiddenMessage = messageService.getMessage("exception.accessForbiddenException");
 
             throw new AccessForbiddenException(accessForbiddenMessage);
@@ -227,14 +223,14 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public void updateAuctionById(Long auctionId, AuctionEditDto auctionEditDto) throws ApplicationException {
+    public void updateAuctionById(Long auctionId, AuctionUpdateDto auctionUpdateDto) throws ApplicationException {
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
 
-        auction.setStartingPrice(auctionEditDto.getStartingPrice());
-        auction.getItem().setName(auctionEditDto.getItemName());
-        auction.getItem().setDescription(auctionEditDto.getItemDescription());
+        auction.setStartingPrice(auctionUpdateDto.getStartingPrice());
+        auction.getItem().setName(auctionUpdateDto.getItemName());
+        auction.getItem().setDescription(auctionUpdateDto.getItemDescription());
     }
 
     @Override

@@ -97,8 +97,9 @@ public class UserController {
      * Zwraca użytkowników spełniających dane kryteria.
      *
      * @param userCriteria obiekt typu {@link UserCriteria}
-     * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
-     * użytkowników oraz liczbą wszystkich stron
+     * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych użytkowników, aktualnym numerem strony oraz całkowitą
+     * ilością
+     * użytkowników
      */
     @GetMapping
     public ResponseEntity<?> getUsers(UserCriteria userCriteria) {

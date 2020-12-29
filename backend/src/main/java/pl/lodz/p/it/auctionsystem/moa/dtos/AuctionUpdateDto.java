@@ -5,9 +5,12 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+/**
+ * DTO zawierające szczegóły aukcji, wykorzystywane do jej aktualizacji.
+ */
 @Getter
 @Setter
-public class AuctionEditDto {
+public class AuctionUpdateDto {
 
     private BigDecimal startingPrice;
 

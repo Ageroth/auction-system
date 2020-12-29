@@ -4,7 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import pl.lodz.p.it.auctionsystem.entities.User;
 
 /**
- * Klasa zawierająca metody wykorzystywane do zaawansowanych zapytań bazy danych.
+ * Klasa zawierająca metody wykorzystywane do zaawansowanych zapytań bazy danych związanych z encją {@link User}.
  */
 public class UserSpecs {
 

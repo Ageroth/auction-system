@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import pl.lodz.p.it.auctionsystem.moa.utils.AuctionStatusEnum;
 
+/**
+ * DTO zawierające parametry, wykorzystywane przy przesyłaniu parametrów do sortowania, filtrowania i stronnicowania.
+ */
 @Getter
 @Setter
 public class AuctionCriteria {

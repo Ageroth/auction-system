@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO reprezentujące informację o dostępności adresu email lub nazwy użytkownika.
+ * DTO zawierające informację o dostępności adresu email lub nazwy użytkownika.
  */
 @AllArgsConstructor
 @Getter

@@ -6,6 +6,9 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * DTO zawierające szczegóły oferty.
+ */
 @Getter
 @Setter
 public class BidDto {
