@@ -14,7 +14,7 @@ public class AuctionSpecs {
      * Służy do znalezienia encji {@link Auction} zawierających daną frazę w nazwie przedmiotu.
      *
      * @param text poszukiwana fraza
-     * @return obiekt typu {@link Specification<Auction>}
+     * @return obiekt typu {@link Specification}
      */
     public static Specification<Auction> containsTextInName(String text) {
         if (!text.contains("%"))
@@ -29,7 +29,7 @@ public class AuctionSpecs {
      * Służy do znalezienia encji {@link Auction} o danym statusie.
      *
      * @param auctionStatusEnum poszukiwany status
-     * @return obiekt typu {@link Specification<Auction>}
+     * @return obiekt typu {@link Specification}
      */
     public static Specification<Auction> hasStatus(AuctionStatusEnum auctionStatusEnum) {
         if (auctionStatusEnum.equals(AuctionStatusEnum.FINISHED))
@@ -42,7 +42,7 @@ public class AuctionSpecs {
      * Służy do znalezienia encji {@link Auction}, których właścicielem jest użytkownik o danej nazwie użytkownika.
      *
      * @param username nazwa użytkownika właściciela
-     * @return obiekt typu {@link Specification<Auction>}
+     * @return obiekt typu {@link Specification}
      */
     public static Specification<Auction> isOwner(String username) {
         return (root, query, builder) -> builder.equal(root.get("user").get("username"), username);
@@ -52,7 +52,7 @@ public class AuctionSpecs {
      * Służy do znalezienia encji {@link Auction}, których uczestnikiem jest użytkownik o danej nazwie użytkownika.
      *
      * @param username nazwa użytkownika uczestniczącego w aukcjach
-     * @return obiekt typu {@link Specification<Auction>}
+     * @return obiekt typu {@link Specification}
      */
     public static Specification<Auction> hasBid(String username) {
         return (root, query, builder) -> {

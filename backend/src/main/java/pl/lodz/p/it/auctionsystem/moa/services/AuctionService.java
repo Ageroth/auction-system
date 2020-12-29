@@ -89,6 +89,7 @@ public interface AuctionService {
      *
      * @param auctionId   id aukcji
      * @param bidPlaceDto obiekt typu {@link BidPlaceDto}
+     * @return id nowo utworzonego obiektu
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     Long addBid(Long auctionId, BidPlaceDto bidPlaceDto) throws ApplicationException;

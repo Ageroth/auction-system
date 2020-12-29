@@ -13,12 +13,12 @@ import pl.lodz.p.it.auctionsystem.utils.MessageService;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserRepositoryMok userRepositoryMok;
+    private final UserRepositoryMok userRepositoryMok;
 
-    private MessageService messageService;
+    private final MessageService messageService;
 
     @Autowired
-    public void setUserRepository(UserRepositoryMok userRepositoryMok, MessageService messageService) {
+    public UserDetailsServiceImpl(UserRepositoryMok userRepositoryMok, MessageService messageService) {
         this.userRepositoryMok = userRepositoryMok;
         this.messageService = messageService;
     }

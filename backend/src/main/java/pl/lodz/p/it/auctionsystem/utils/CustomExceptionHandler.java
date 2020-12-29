@@ -164,6 +164,7 @@ public class CustomExceptionHandler {
     /**
      * Obsługuje wyjątek {@link AccessForbiddenException}.
      *
+     * @param ex obiekt wyjątku
      * @return Kod odpowiedzi HTTP 403 z obiektem {@link ApiResponseDto}
      */
     @ExceptionHandler(AccessForbiddenException.class)
