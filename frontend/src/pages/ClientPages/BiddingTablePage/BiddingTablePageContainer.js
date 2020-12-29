@@ -45,7 +45,7 @@ export default class BiddingTablePageContainer extends Component {
 
     render() {
         return (
-            <BiddingTablePage handleTableChange={this.getAuctions} {...this.state}/>
+            <BiddingTablePage handleTableChange={this.getBiddings} {...this.state}/>
         );
     }
 }

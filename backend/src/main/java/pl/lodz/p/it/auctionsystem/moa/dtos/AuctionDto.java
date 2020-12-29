@@ -29,4 +29,6 @@ public class AuctionDto {
     private String itemDescription;
 
     private byte[] itemImage;
+
+    private String topBidderName;
 }

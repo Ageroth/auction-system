@@ -183,6 +183,7 @@ public class AuctionServiceImpl implements AuctionService {
 
             auctionDto.setBidsNumber(auction.getBids().size());
             auctionDto.setCurrentPrice(highestBid.map(Bid::getPrice).orElse(null));
+            auctionDto.setTopBidderName(highestBid.map(bid -> bid.getUser().getUsername()).orElse(null));
 
             return auctionDto;
         });

@@ -93,7 +93,11 @@
     "editForbidden": "Nie możesz edytować cudzej aukcji oraz aukcji, która już się rozpoczęła lub zakończyła",
     "bidForbidden": "Nie możesz licytować na własnej aukcji lub na aukcji, która aktualnie nie trwa",
     "auctionAlreadyStarted": "Nie możesz edytować aukcji, która już się rozpoczęła lub zakończyła",
-    "you": "Ty"
+    "you": "Ty",
+    "winning": "WYGRYWASZ",
+    "losing": "PRZEGRYWASZ",
+    "lost": "PRZEGRANA",
+    "won": "ZWYCIĘSTWO"
   },
   "role": {
     "admin": "Administrator",
