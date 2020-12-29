@@ -19,15 +19,16 @@ const BiddingDetailsPage = (props) => {
     const {t} = useTranslation();
     const auctionDetails = props.auctionDetails;
     const username = useSelector(state => state.user.username);
-    const currentPrice = auctionDetails ? (
-        auctionDetails.bids.length > 0 ? (
-            Math.max.apply(Math, auctionDetails.bids.map(function (o) {
-                return o.price;
-            }))
-        ) : auctionDetails.startingPrice
-    ) : null;
     const [timeItem, setTimeItem] = useState(null);
     const [extraItem, setExtraItem] = useState(null);
+    let maxBid = auctionDetails ? (
+        auctionDetails.bids.length > 0 ? (
+            auctionDetails.bids.reduce((max, bid) => max.price > bid.price ? max : bid)
+        ) : null
+    ) : null
+    const currentPrice = auctionDetails ? (
+        maxBid ? maxBid.price : auctionDetails.startingPrice
+    ) : null
 
     const onFinish = (values) => {
         const payload = Object.assign({}, values);
@@ -119,7 +120,6 @@ const BiddingDetailsPage = (props) => {
 
         return (
             <>
-                <hr style={{marginBottom: 'auto'}} className="divider"/>
                 <div className="extra">
                     {isDisabled ? (
                         <>
@@ -219,6 +219,20 @@ const BiddingDetailsPage = (props) => {
                                         </p>
                                     </span>
                                 </div>
+                            </div>
+                            <hr className="divider"/>
+                            <div style={{marginBottom: 'auto'}} className="bidding-result">
+                                {
+                                    maxBid.userUsername === username ? (
+                                        auctionDetails.endDate > moment().format() ?
+                                            <span style={{color: "green"}}>{t('text.winning')}</span> :
+                                            <span style={{color: "green"}}>{t('text.won')}</span>
+                                    ) : (
+                                        auctionDetails.endDate > moment().format() ?
+                                            <span style={{color: "red"}}>{t('text.losing')}</span> :
+                                            <span style={{color: "red"}}>{t('text.lost')}</span>
+                                    )
+                                }
                             </div>
                             {extraItem ? extraItem : extra()}
                         </div>
