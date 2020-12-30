@@ -24,13 +24,16 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
+
         localeResolver.setDefaultLocale(Locale.UK);
+
         return localeResolver;
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         final long MAX_AGE_SECS = 3600;
+
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")
@@ -49,13 +52,16 @@ public class AppConfig implements WebMvcConfigurer {
 
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
+
         return messageSource;
     }
 
     @Override
     public LocalValidatorFactoryBean getValidator() {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+
         bean.setValidationMessageSource(messageSource());
+
         return bean;
     }
 }
