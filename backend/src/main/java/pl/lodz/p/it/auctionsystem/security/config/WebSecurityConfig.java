@@ -1,6 +1,6 @@
 package pl.lodz.p.it.auctionsystem.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +23,7 @@ import pl.lodz.p.it.auctionsystem.security.services.UserDetailsServiceImpl;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -30,14 +31,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthEntryPoint unauthorizedHandler;
 
     private final JwtTokenAuthFilter authenticationFilter;
-
-    @Autowired
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthEntryPoint unauthorizedHandler,
-                             JwtTokenAuthFilter authenticationFilter) {
-        this.userDetailsService = userDetailsService;
-        this.unauthorizedHandler = unauthorizedHandler;
-        this.authenticationFilter = authenticationFilter;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -35,6 +35,5 @@ public class AuctionAddDto {
     @Size(max = 4096, message = "{validation.max4096chars}")
     private String itemDescription;
 
-    @NotNull(message = "{validation.notBlank}")
     private byte[] image;
 }

@@ -1,6 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,27 +15,18 @@ import javax.mail.internet.MimeMessage;
  * Klasa służaca do obsługi wysyłania emaili.
  */
 @Component
+@RequiredArgsConstructor
 public class MailService {
 
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
-    private MessageService messageService;
+    private final MessageService messageService;
 
     @Value("${base.url}")
     private String baseUrl;
 
     @Value("${email}")
     private String email;
-
-    @Autowired
-    public void setJavaMailSender(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
-
-    @Autowired
-    public void setMessageService(MessageService messageService) {
-        this.messageService = messageService;
-    }
 
     /**
      * Wysyła wiadomość o wskazanych parametrach.

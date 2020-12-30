@@ -1,6 +1,6 @@
 package pl.lodz.p.it.auctionsystem.moa.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,17 +27,12 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/auctions")
+@RequiredArgsConstructor
 public class AuctionController {
 
     private final AuctionService auctionService;
 
     private final MessageService messageService;
-
-    @Autowired
-    public AuctionController(AuctionService auctionService, MessageService messageService) {
-        this.auctionService = auctionService;
-        this.messageService = messageService;
-    }
 
     /**
      * Dodaje nową aukcję.

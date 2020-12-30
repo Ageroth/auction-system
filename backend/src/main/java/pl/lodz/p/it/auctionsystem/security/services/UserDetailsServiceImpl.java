@@ -1,6 +1,6 @@
 package pl.lodz.p.it.auctionsystem.security.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,17 +11,12 @@ import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepositoryMok;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
 
 @Service
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepositoryMok userRepositoryMok;
 
     private final MessageService messageService;
-
-    @Autowired
-    public UserDetailsServiceImpl(UserRepositoryMok userRepositoryMok, MessageService messageService) {
-        this.userRepositoryMok = userRepositoryMok;
-        this.messageService = messageService;
-    }
 
     @Override
     @Transactional

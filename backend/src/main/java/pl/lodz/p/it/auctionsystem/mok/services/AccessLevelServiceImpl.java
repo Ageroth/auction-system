@@ -1,7 +1,7 @@
 package pl.lodz.p.it.auctionsystem.mok.services;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,17 +16,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
+@RequiredArgsConstructor
 public class AccessLevelServiceImpl implements AccessLevelService {
 
     private final AccessLevelRepository accessLevelRepository;
 
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public AccessLevelServiceImpl(AccessLevelRepository accessLevelRepository, ModelMapper modelMapper) {
-        this.accessLevelRepository = accessLevelRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")

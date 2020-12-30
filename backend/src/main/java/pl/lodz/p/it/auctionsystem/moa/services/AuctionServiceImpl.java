@@ -1,7 +1,7 @@
 package pl.lodz.p.it.auctionsystem.moa.services;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +35,7 @@ import static pl.lodz.p.it.auctionsystem.moa.utils.AuctionSpecs.*;
 
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
+@RequiredArgsConstructor
 public class AuctionServiceImpl implements AuctionService {
 
     private final AuctionRepository auctionRepository;
@@ -49,17 +50,6 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Value("${page.size}")
     private int pageSize;
-
-    @Autowired
-    public AuctionServiceImpl(AuctionRepository auctionRepository, BidRepository bidRepository,
-                              UserRepositoryMoa userRepositoryMoa,
-                              MessageService messageService, ModelMapper modelMapper) {
-        this.auctionRepository = auctionRepository;
-        this.bidRepository = bidRepository;
-        this.userRepositoryMoa = userRepositoryMoa;
-        this.messageService = messageService;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     @PreAuthorize("hasRole('MANAGER')")

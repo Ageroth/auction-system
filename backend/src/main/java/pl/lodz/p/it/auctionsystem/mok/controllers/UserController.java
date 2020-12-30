@@ -1,6 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +24,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
@@ -31,14 +32,6 @@ public class UserController {
     private final UserAccessLevelService userAccessLevelService;
 
     private final MessageService messageService;
-
-    @Autowired
-    public UserController(UserService userService, UserAccessLevelService userAccessLevelService,
-                          MessageService messageService) {
-        this.userService = userService;
-        this.userAccessLevelService = userAccessLevelService;
-        this.messageService = messageService;
-    }
 
     /**
      * Odpowiada za samodzielną rejestrację użytkownika.
@@ -219,7 +212,8 @@ public class UserController {
     @PutMapping("/me/details")
     public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
-        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() : null;
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
 
         userService.updateDetailsByUsername(username, ownAccountDetailsUpdateDto);
 
@@ -239,7 +233,8 @@ public class UserController {
     @PatchMapping("/me/password")
     public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
                                                Authentication authentication) throws ApplicationException {
-        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() : null;
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
 
         userService.changePasswordByUsername(username, ownPasswordChangeDto);
 
