@@ -1,6 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.mok.dtos.*;
-import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
 import pl.lodz.p.it.auctionsystem.mok.services.UserAccessLevelService;
 import pl.lodz.p.it.auctionsystem.mok.services.UserService;
+import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
 
 import javax.validation.Valid;
@@ -24,6 +24,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
@@ -31,14 +32,6 @@ public class UserController {
     private final UserAccessLevelService userAccessLevelService;
 
     private final MessageService messageService;
-
-    @Autowired
-    public UserController(UserService userService, UserAccessLevelService userAccessLevelService,
-                          MessageService messageService) {
-        this.userService = userService;
-        this.userAccessLevelService = userAccessLevelService;
-        this.messageService = messageService;
-    }
 
     /**
      * Odpowiada za samodzielną rejestrację użytkownika.
@@ -87,8 +80,11 @@ public class UserController {
      */
     @GetMapping("/me")
     public ResponseEntity<?> getOwnDetails(Authentication authentication) throws ApplicationException {
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
+
         OwnAccountDetailsDto ownAccountDetailsDto =
-                userService.getUserByUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+                userService.getUserByUsername(username);
 
         return new ResponseEntity<>(ownAccountDetailsDto, HttpStatus.OK);
     }
@@ -97,8 +93,9 @@ public class UserController {
      * Zwraca użytkowników spełniających dane kryteria.
      *
      * @param userCriteria obiekt typu {@link UserCriteria}
-     * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych użytkowników, aktualnym numerem strony, całkowitą ilością
-     * użytkowników oraz liczbą wszystkich stron
+     * @return Kod odpowiedzi HTTP 200 z listą stronnicowanych użytkowników, aktualnym numerem strony oraz całkowitą
+     * ilością
+     * użytkowników
      */
     @GetMapping
     public ResponseEntity<?> getUsers(UserCriteria userCriteria) {
@@ -215,9 +212,10 @@ public class UserController {
     @PutMapping("/me/details")
     public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
-        String currentUserUsername = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
 
-        userService.updateDetailsByUsername(currentUserUsername, ownAccountDetailsUpdateDto);
+        userService.updateDetailsByUsername(username, ownAccountDetailsUpdateDto);
 
         String message = messageService.getMessage("info.yourDetailsUpdated");
 
@@ -235,9 +233,10 @@ public class UserController {
     @PatchMapping("/me/password")
     public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
                                                Authentication authentication) throws ApplicationException {
-        String currentUserUsername = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
 
-        userService.changePasswordByUsername(currentUserUsername, ownPasswordChangeDto);
+        userService.changePasswordByUsername(username, ownPasswordChangeDto);
 
         String message = messageService.getMessage("info.yourPasswordChanged");
 

@@ -28,7 +28,9 @@ const routes = [
     {path: '/my_auctions/add', breadcrumb: 'pageName.auctionAdd'},
     {path: '/my_auctions/:auctionId/edit', breadcrumb: 'pageName.edit'},
     {path: '/my_auctions/:auctionId', breadcrumb: 'pageName.auctionDetails'},
-    {path: '/my_biddings', breadcrumb: 'pageName.myBiddings'}
+    {path: '/my_biddings', breadcrumb: 'pageName.myBiddings'},
+    {path: '/my_biddings/:auctionId', breadcrumb: 'pageName.auctionDetails'}
+
 ];
 
 const AppBreadcrumbs = ({breadcrumbs}) => {

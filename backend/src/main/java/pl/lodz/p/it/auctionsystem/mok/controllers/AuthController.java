@@ -1,6 +1,6 @@
 package pl.lodz.p.it.auctionsystem.mok.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.auctionsystem.mok.dtos.JwtTokenDto;
 import pl.lodz.p.it.auctionsystem.mok.dtos.LoginDto;
-import pl.lodz.p.it.auctionsystem.mok.security.jwt.JwtTokenUtils;
-import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
+import pl.lodz.p.it.auctionsystem.security.jwt.JwtTokenUtils;
+import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -25,17 +25,12 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
     private final JwtTokenUtils jwtTokenUtils;
-
-    @Autowired
-    public AuthController(AuthenticationManager authenticationManager, JwtTokenUtils jwtTokenUtils) {
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenUtils = jwtTokenUtils;
-    }
 
     /**
      * Uwierzytelnia użytkownika na podstawie przesłanych danych i zwraca odpowiedź.

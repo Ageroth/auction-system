@@ -103,7 +103,6 @@ const OwnAuctionDetailsPage = (props) => {
 
         return (
             <>
-                <hr style={{marginBottom: 'auto'}} className="divider"/>
                 <div className="extra">
                     {isDisabled ? (
                         <Tooltip title={t('text.auctionAlreadyStarted')} color={"red"}>
@@ -167,6 +166,7 @@ const OwnAuctionDetailsPage = (props) => {
                                     </span>
                                 </div>
                             </div>
+                            <hr style={{marginBottom: 'auto'}} className="divider"/>
                             {extraItem ? extraItem : extra()}
                         </div>
                     </div>

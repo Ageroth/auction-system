@@ -68,7 +68,7 @@ const BiddingTablePage = (props) => {
             key: 'itemName',
             ...getColumnSearchProps(),
             render: (text, record) => <Link style={{color: "#1890ff"}}
-                                            to={`/auctions/${record.id}`}>{record.itemName}</Link>
+                                            to={`/my_biddings/${record.id}`}>{record.itemName}</Link>
         },
         {
             width: '7%',
@@ -125,6 +125,18 @@ const BiddingTablePage = (props) => {
             filterMultiple: false,
             defaultFilteredValue: ['CURRENT'],
             render: (text, record) => record.endDate > moment().format() ? t('auctionLabels.current') : t('auctionLabels.finished')
+        },
+        {
+            title: 'Result',
+            dataIndex: 'topBidderName',
+            key: 'topBidderName',
+            render: (text, record) => record.topBidderName === username ? (
+                record.endDate > moment().format() ? <span style={{color: "green"}}>{t('text.winning')}</span> :
+                    <span style={{color: "green"}}>{t('text.won')}</span>
+            ) : (
+                record.endDate > moment().format() ? <span style={{color: "red"}}>{t('text.losing')}</span> :
+                    <span style={{color: "red"}}>{t('text.lost')}</span>
+            )
         }
     ];
 

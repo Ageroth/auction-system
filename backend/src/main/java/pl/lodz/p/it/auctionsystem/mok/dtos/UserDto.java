@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * DTO ze szczegółami kont użytkowników, wykorzystywane do wyświetlania ich listy.
+ * DTO zawierające dane kont użytkowników, wykorzystywane do wyświetlania ich listy.
  */
 @Getter
 @Setter
@@ -28,6 +28,4 @@ public class UserDto {
     private String firstName;
 
     private String lastName;
-
-    private String phoneNumber;
 }

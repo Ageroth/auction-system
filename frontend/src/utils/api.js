@@ -128,6 +128,10 @@ export function getOwnBiddingsRequest(values) {
     });
 }
 
+export function getOwnBiddingDetailsRequest(value) {
+    return axios.get(`/auctions/buying/${value}`);
+}
+
 export function placeABidRequest(value, payload) {
     return axios.post(`/auctions/${value}`, JSON.stringify(payload));
 }

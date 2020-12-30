@@ -16,8 +16,8 @@ const ActivationPage = (props) => {
                 </div>
             ) : (
                 <div className="activation-box">
-                    <h3> {t('message.title.activationSucceded')} </h3>
-                    <p> {t('message.content.activationSucceded')} </p>
+                    <h3> {t('message.title.activationSucceeded')} </h3>
+                    <p> {t('message.content.activationSucceeded')} </p>
                 </div>
             )}
         </AppLayout>

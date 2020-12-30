@@ -1,7 +1,7 @@
 package pl.lodz.p.it.auctionsystem.mok.services;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,8 +18,8 @@ import pl.lodz.p.it.auctionsystem.exceptions.*;
 import pl.lodz.p.it.auctionsystem.mok.dtos.*;
 import pl.lodz.p.it.auctionsystem.mok.repositories.AccessLevelRepository;
 import pl.lodz.p.it.auctionsystem.mok.repositories.UserRepositoryMok;
-import pl.lodz.p.it.auctionsystem.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.mok.utils.MailService;
+import pl.lodz.p.it.auctionsystem.utils.AccessLevelEnum;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.utils.SortDirection;
 
@@ -33,6 +33,7 @@ import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.isActive;
 
 @Service
 @Transactional(rollbackFor = ApplicationException.class)
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepositoryMok userRepositoryMok;
@@ -52,18 +53,6 @@ public class UserServiceImpl implements UserService {
 
     @Value("${page.size}")
     private int pageSize;
-
-    @Autowired
-    public UserServiceImpl(UserRepositoryMok userRepositoryMok, AccessLevelRepository accessLevelRepository,
-                           PasswordEncoder passwordEncoder, MailService mailService, MessageService messageService,
-                           ModelMapper modelMapper) {
-        this.userRepositoryMok = userRepositoryMok;
-        this.accessLevelRepository = accessLevelRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.mailService = mailService;
-        this.messageService = messageService;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     @PreAuthorize("permitAll()")

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO wykorzystywane przy przesyłaniu parametrów do sortowania, filtrowania i stronnicowania.
+ * DTO zawierające parametry, wykorzystywane przy przesyłaniu parametrów do sortowania, filtrowania i stronnicowania.
  */
 @Getter
 @Setter

@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * DTO zawierające szczegóły aukcji, wykorzystywane do ich wyświetlenia.
+ */
 @Getter
 @Setter
 public class AuctionDetailsDto {

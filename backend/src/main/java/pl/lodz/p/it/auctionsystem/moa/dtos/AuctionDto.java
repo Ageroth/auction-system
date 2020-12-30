@@ -6,6 +6,9 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * DTO zawierające dane aukcji, wykorzystywane do wyświetlania ich listy.
+ */
 @Getter
 @Setter
 public class AuctionDto {
@@ -29,4 +32,6 @@ public class AuctionDto {
     private String itemDescription;
 
     private byte[] itemImage;
+
+    private String topBidderName;
 }

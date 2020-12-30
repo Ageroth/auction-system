@@ -43,7 +43,7 @@ public interface UserService {
      * Zwraca użytkowników spełniających zadane kryteria.
      *
      * @param userCriteria obiekt typu {@link UserCriteria}
-     * @return obiekt typu {@link Page<UserDto>}
+     * @return obiekt typu {@link Page}
      */
     Page<UserDto> getUsers(UserCriteria userCriteria);
 

@@ -1,4 +1,4 @@
-package pl.lodz.p.it.auctionsystem.mok.security.services;
+package pl.lodz.p.it.auctionsystem.security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;

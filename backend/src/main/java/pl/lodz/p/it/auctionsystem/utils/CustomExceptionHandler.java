@@ -3,6 +3,7 @@ package pl.lodz.p.it.auctionsystem.utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -13,9 +14,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.lodz.p.it.auctionsystem.exceptions.*;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Klasa obsługująca wyjątki aplikacyjne.
@@ -100,16 +98,17 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+        StringBuilder stringBuilder = new StringBuilder();
 
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
 
-            errors.put(fieldName, errorMessage);
+            stringBuilder.append(fieldName).append(':').append(errorMessage).append("\n");
         });
 
-        return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(new ApiResponseDto(false, stringBuilder.toString()),
+                HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     /**
@@ -119,7 +118,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<?> handleAuthenticationException() {
-        String authenticationMessage = messageService.getMessage("exception.DisabledException");
+        String authenticationMessage = messageService.getMessage("exception.authenticationException");
 
         return new ResponseEntity<>(new ApiResponseDto(false, authenticationMessage), HttpStatus.BAD_REQUEST);
     }
@@ -144,7 +143,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentialsException() {
-        String badCredentialsMessage = messageService.getMessage("exception.BadCredentials");
+        String badCredentialsMessage = messageService.getMessage("exception.badCredentials");
 
         return new ResponseEntity<>(new ApiResponseDto(false, badCredentialsMessage), HttpStatus.UNAUTHORIZED);
     }
@@ -156,8 +155,31 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<?> handleDisabledException() {
-        String disabledMessage = messageService.getMessage("exception.DisabledException");
+        String disabledMessage = messageService.getMessage("exception.disabledException");
 
         return new ResponseEntity<>(new ApiResponseDto(false, disabledMessage), HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Obsługuje wyjątek {@link AccessForbiddenException}.
+     *
+     * @param ex obiekt wyjątku
+     * @return Kod odpowiedzi HTTP 403 z obiektem {@link ApiResponseDto}
+     */
+    @ExceptionHandler(AccessForbiddenException.class)
+    public ResponseEntity<?> handleAccessForbiddenException(AccessForbiddenException ex) {
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Obsługuje wyjątek {@link AccessDeniedException}.
+     *
+     * @return Kod odpowiedzi HTTP 403 z obiektem {@link ApiResponseDto}
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException() {
+        String accessDeniedMessage = messageService.getMessage("exception.accessForbiddenException");
+
+        return new ResponseEntity<>(new ApiResponseDto(false, accessDeniedMessage), HttpStatus.FORBIDDEN);
     }
 }
