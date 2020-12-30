@@ -58,7 +58,10 @@ public class AuctionController {
             e.printStackTrace();
         }
 
-        auctionAddDto.setUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
+
+        auctionAddDto.setUsername(username);
 
         Long result = auctionService.addAuction(auctionAddDto);
 
@@ -105,8 +108,10 @@ public class AuctionController {
      */
     @GetMapping("/selling")
     public ResponseEntity<?> getOwnAuctions(AuctionCriteria auctionCriteria, Authentication authentication) {
-        Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUsername(auctionCriteria,
-                ((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
+
+        Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUsername(auctionCriteria, username);
 
         if (auctionDtoPage.getContent().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -131,8 +136,10 @@ public class AuctionController {
      */
     @GetMapping("/buying")
     public ResponseEntity<?> getOwnBiddings(AuctionCriteria auctionCriteria, Authentication authentication) {
-        Page<AuctionDto> auctionDtoPage = auctionService.getParticipatedAuctions(auctionCriteria,
-                ((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
+
+        Page<AuctionDto> auctionDtoPage = auctionService.getParticipatedAuctions(auctionCriteria, username);
 
         if (auctionDtoPage.getContent().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -186,9 +193,10 @@ public class AuctionController {
     @GetMapping("/buying/{auctionId}")
     public ResponseEntity<?> getOwnBiddingDetails(@PathVariable(value = "auctionId") Long auctionId,
                                                   Authentication authentication) throws ApplicationException {
-        String currentUserUsername = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
 
-        AuctionDetailsDto auctionDetailsDto = auctionService.getOwnBiddingById(auctionId, currentUserUsername);
+        AuctionDetailsDto auctionDetailsDto = auctionService.getOwnBiddingById(auctionId, username);
 
         return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
     }
@@ -198,13 +206,18 @@ public class AuctionController {
      *
      * @param auctionId        id aukcji
      * @param auctionUpdateDto obiekt typu {@link AuctionUpdateDto}
+     * @param authentication   obiekt typu {@link Authentication}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/selling/{auctionId}")
     public ResponseEntity<?> updateAuctionDetails(@PathVariable(value = "auctionId") Long auctionId,
-                                                  @Valid @RequestBody AuctionUpdateDto auctionUpdateDto) throws ApplicationException {
-        auctionService.updateAuctionById(auctionId, auctionUpdateDto);
+                                                  @Valid @RequestBody AuctionUpdateDto auctionUpdateDto,
+                                                  Authentication authentication) throws ApplicationException {
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
+
+        auctionService.updateAuctionById(auctionId, auctionUpdateDto, username);
 
         String message = messageService.getMessage("info.auctionUpdated");
 
@@ -223,7 +236,10 @@ public class AuctionController {
     @PostMapping("/{auctionId}")
     public ResponseEntity<?> placeABid(@PathVariable(value = "auctionId") Long auctionId,
                                        @Valid @RequestBody BidPlaceDto bidPlaceDto, Authentication authentication) throws ApplicationException {
-        bidPlaceDto.setUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
+
+        bidPlaceDto.setUsername(username);
 
         Long result = auctionService.addBid(auctionId, bidPlaceDto);
 

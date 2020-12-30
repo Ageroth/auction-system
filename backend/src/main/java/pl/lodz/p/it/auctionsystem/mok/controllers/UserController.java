@@ -87,8 +87,11 @@ public class UserController {
      */
     @GetMapping("/me")
     public ResponseEntity<?> getOwnDetails(Authentication authentication) throws ApplicationException {
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
+
         OwnAccountDetailsDto ownAccountDetailsDto =
-                userService.getUserByUsername(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+                userService.getUserByUsername(username);
 
         return new ResponseEntity<>(ownAccountDetailsDto, HttpStatus.OK);
     }
@@ -216,9 +219,9 @@ public class UserController {
     @PutMapping("/me/details")
     public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
-        String currentUserUsername = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() : null;
 
-        userService.updateDetailsByUsername(currentUserUsername, ownAccountDetailsUpdateDto);
+        userService.updateDetailsByUsername(username, ownAccountDetailsUpdateDto);
 
         String message = messageService.getMessage("info.yourDetailsUpdated");
 
@@ -236,9 +239,9 @@ public class UserController {
     @PatchMapping("/me/password")
     public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
                                                Authentication authentication) throws ApplicationException {
-        String currentUserUsername = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() : null;
 
-        userService.changePasswordByUsername(currentUserUsername, ownPasswordChangeDto);
+        userService.changePasswordByUsername(username, ownPasswordChangeDto);
 
         String message = messageService.getMessage("info.yourPasswordChanged");
 

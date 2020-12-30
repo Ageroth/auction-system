@@ -80,9 +80,10 @@ public interface AuctionService {
      *
      * @param auctionId        id aukcji
      * @param auctionUpdateDto obiekt typu {@link AuctionUpdateDto}
+     * @param username         nazwa aktualnie zalogowanego użytkownika
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateAuctionById(Long auctionId, AuctionUpdateDto auctionUpdateDto) throws ApplicationException;
+    void updateAuctionById(Long auctionId, AuctionUpdateDto auctionUpdateDto, String username) throws ApplicationException;
 
     /**
      * Dodaje nową ofertę do aukcji o podanym id.
