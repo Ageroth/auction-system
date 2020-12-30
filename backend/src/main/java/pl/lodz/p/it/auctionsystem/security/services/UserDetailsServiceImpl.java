@@ -1,4 +1,4 @@
-package pl.lodz.p.it.auctionsystem.mok.security.services;
+package pl.lodz.p.it.auctionsystem.security.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

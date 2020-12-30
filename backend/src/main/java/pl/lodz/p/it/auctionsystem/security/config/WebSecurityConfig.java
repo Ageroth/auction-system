@@ -1,4 +1,4 @@
-package pl.lodz.p.it.auctionsystem.mok.security.config;
+package pl.lodz.p.it.auctionsystem.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pl.lodz.p.it.auctionsystem.mok.security.jwt.JwtAuthEntryPoint;
-import pl.lodz.p.it.auctionsystem.mok.security.jwt.JwtTokenAuthFilter;
-import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsServiceImpl;
+import pl.lodz.p.it.auctionsystem.security.jwt.JwtAuthEntryPoint;
+import pl.lodz.p.it.auctionsystem.security.jwt.JwtTokenAuthFilter;
+import pl.lodz.p.it.auctionsystem.security.services.UserDetailsServiceImpl;
 
 /**
  * Klasa obsługująca konfigurację bezpieczeństwa aplikacji.

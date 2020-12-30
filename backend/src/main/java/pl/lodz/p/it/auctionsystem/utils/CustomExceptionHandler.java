@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.lodz.p.it.auctionsystem.exceptions.*;
 import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Klasa obsługująca wyjątki aplikacyjne.
  */
@@ -100,16 +97,17 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+        StringBuilder stringBuilder = new StringBuilder();
 
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
 
-            errors.put(fieldName, errorMessage);
+            stringBuilder.append(fieldName).append(':').append(errorMessage).append("\n");
         });
 
-        return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(new ApiResponseDto(false, stringBuilder.toString()),
+                HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     /**

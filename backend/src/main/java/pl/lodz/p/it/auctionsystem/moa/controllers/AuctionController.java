@@ -12,8 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.moa.dtos.*;
 import pl.lodz.p.it.auctionsystem.moa.services.AuctionService;
-import pl.lodz.p.it.auctionsystem.mok.dtos.ApiResponseDto;
-import pl.lodz.p.it.auctionsystem.mok.security.services.UserDetailsImpl;
+import pl.lodz.p.it.auctionsystem.security.services.UserDetailsImpl;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
 
 import javax.validation.Valid;
