@@ -209,7 +209,7 @@ public class UserController {
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @PutMapping("/me/details")
+    @PatchMapping("/me/details")
     public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
                                               Authentication authentication) throws ApplicationException {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
@@ -251,7 +251,7 @@ public class UserController {
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @PutMapping("/{userId}/details")
+    @PatchMapping("/{userId}/details")
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
                                                @Valid @RequestBody UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException {
         userService.updateUserDetailsById(userId, userAccountDetailsUpdateDto);

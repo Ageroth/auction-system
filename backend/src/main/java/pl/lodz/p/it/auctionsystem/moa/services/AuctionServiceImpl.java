@@ -15,9 +15,7 @@ import pl.lodz.p.it.auctionsystem.entities.Auction;
 import pl.lodz.p.it.auctionsystem.entities.Bid;
 import pl.lodz.p.it.auctionsystem.entities.Item;
 import pl.lodz.p.it.auctionsystem.entities.User;
-import pl.lodz.p.it.auctionsystem.exceptions.AccessForbiddenException;
-import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
-import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
+import pl.lodz.p.it.auctionsystem.exceptions.*;
 import pl.lodz.p.it.auctionsystem.moa.dtos.*;
 import pl.lodz.p.it.auctionsystem.moa.repositories.AuctionRepository;
 import pl.lodz.p.it.auctionsystem.moa.repositories.BidRepository;
@@ -25,6 +23,7 @@ import pl.lodz.p.it.auctionsystem.moa.repositories.UserRepositoryMoa;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
 import pl.lodz.p.it.auctionsystem.utils.SortDirection;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -62,8 +61,15 @@ public class AuctionServiceImpl implements AuctionService {
 
         if (auctionAddDto.getStartDate() == null)
             startDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-        else
+        else {
             startDate = auctionAddDto.getStartDate().truncatedTo(ChronoUnit.MINUTES);
+
+            if (startDate.isBefore(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))) {
+                String addingInvalidDateMessage = messageService.getMessage("exception.addingInvalidDateException");
+
+                throw new InvalidDateException(addingInvalidDateMessage);
+            }
+        }
 
         LocalDateTime endDate = startDate.plusDays(auctionAddDto.getDuration());
 
@@ -246,12 +252,67 @@ public class AuctionServiceImpl implements AuctionService {
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+
+        if (auction.getEndDate().isBefore(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)) ||
+                auction.getStartDate().isAfter(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))) {
+            String bidPlaceInvalidDateMessage = messageService.getMessage("exception.bidPlaceInvalidDateException");
+
+            throw new InvalidDateException(bidPlaceInvalidDateMessage);
+        }
+
+        if (auction.getUser().getUsername().equals(bidPlaceDto.getUsername())) {
+            String auctionOwnerMessage = messageService.getMessage("exception.auctionOwnerException");
+
+            throw new AuctionOwnerException(auctionOwnerMessage);
+        }
+
+        BigDecimal currentPrice;
+
+        bidPlaceDto.setPrice(bidPlaceDto.getPrice().setScale(2, RoundingMode.DOWN));
+
+        if (auction.getBids().size() > 0) {
+            currentPrice = auction.getBids().stream()
+                    .map(Bid::getPrice)
+                    .min(Comparator.naturalOrder())
+                    .orElse(BigDecimal.ZERO);
+        } else {
+            currentPrice = auction.getStartingPrice();
+        }
+
+        if (bidPlaceDto.getPrice().compareTo(currentPrice) <= 0) {
+            String invalidBidPriceMessage = messageService.getMessage("exception.invalidBidPriceException");
+
+            throw new InvalidBidPriceException(invalidBidPriceMessage);
+        }
+
         LocalDateTime date = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
-        Bid bid = new Bid(date, bidPlaceDto.getPrice().setScale(2, RoundingMode.DOWN), user, auction);
+        Bid bid = new Bid(date, bidPlaceDto.getPrice(), user, auction);
 
         Bid savedBid = bidRepository.save(bid);
 
         return savedBid.getId();
+    }
+
+    @Override
+    @PreAuthorize("hasRole('MANAGER')")
+    public void deleteAuctionById(Long auctionId, String username) throws ApplicationException {
+        String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
+        Auction auction =
+                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+
+        if (!auction.getUser().getUsername().equals(username)) {
+            String accessForbiddenMessage = messageService.getMessage("exception.accessForbiddenException");
+
+            throw new AccessForbiddenException(accessForbiddenMessage);
+        }
+
+        if (auction.getStartDate().isBefore(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))) {
+            String deletionInvalidDateMessage = messageService.getMessage("exception.deletionInvalidDateException");
+
+            throw new InvalidDateException(deletionInvalidDateMessage);
+        }
+
+        auctionRepository.delete(auction);
     }
 }

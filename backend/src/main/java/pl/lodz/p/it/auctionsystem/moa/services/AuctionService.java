@@ -94,4 +94,12 @@ public interface AuctionService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     Long addBid(Long auctionId, BidPlaceDto bidPlaceDto) throws ApplicationException;
+
+    /**
+     * Usuwa aukcję o podanym id.
+     *
+     * @param auctionId id aukcji
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    void deleteAuctionById(Long auctionId, String username) throws ApplicationException;
 }

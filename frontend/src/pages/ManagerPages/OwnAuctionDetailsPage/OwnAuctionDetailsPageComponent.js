@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Image, Spin, Statistic, Tabs, Timeline, Tooltip} from 'antd';
+import {Button, Image, Popconfirm, Spin, Statistic, Tabs, Timeline, Tooltip} from 'antd';
 import AppLayout from '../../../components/AppLayout';
 import {useTranslation} from 'react-i18next';
 import i18n from "../../../utils/i18n"
@@ -14,6 +14,7 @@ const {Countdown} = Statistic;
 const {TabPane} = Tabs;
 
 const OwnAuctionDetailsPage = (props) => {
+    const [visible, setVisible] = useState(false);
     const {t} = useTranslation();
     const history = useHistory();
     const auctionDetails = props.auctionDetails;
@@ -31,6 +32,19 @@ const OwnAuctionDetailsPage = (props) => {
         const currentLocation = history.location.pathname;
 
         history.push(`${currentLocation}/edit`);
+    }
+
+    const showPopconfirm = () => {
+        setVisible(true);
+    }
+
+    const handleCancel = () => {
+        setVisible(false);
+    }
+
+    const handleOk = () => {
+        setVisible(false);
+        props.handleDelete();
     }
 
     const getDate = (date) => {
@@ -105,15 +119,38 @@ const OwnAuctionDetailsPage = (props) => {
             <>
                 <div className="extra">
                     {isDisabled ? (
-                        <Tooltip title={t('text.auctionAlreadyStarted')} color={"red"}>
-                            <Button type="primary" disabled={true} block>
+                        <>
+                            <Tooltip title={t('text.auctionAlreadyStarted')} color={"red"}>
+                                <Button type="primary" disabled={true}>
+                                    {t('text.edit')}
+                                </Button>
+                            </Tooltip>
+                            <Tooltip title={t('text.auctionAlreadyStartedDeletion')} color={"red"}>
+                                <Button style={{marginLeft: "15px"}} type="primary" disabled={true} danger={true}>
+                                    {t('text.delete')}
+                                </Button>
+                            </Tooltip>
+                        </>
+                    ) : (
+                        <>
+                            <Button type="primary" loading={props.isSubmitting} onClick={handleEditClick}>
                                 {t('text.edit')}
                             </Button>
-                        </Tooltip>
-                    ) : (
-                        <Button type="primary" onClick={handleEditClick} block>
-                            {t('text.edit')}
-                        </Button>
+                            <Popconfirm
+                                title={t('text.areYouSure')}
+                                visible={visible}
+                                onConfirm={handleOk}
+                                onCancel={handleCancel}
+                                okText={t('text.yes')}
+                                cancelText={t('text.no')}
+                            >
+                                <Button style={{marginLeft: "15px"}} type="primary" loading={props.isSubmitting}
+                                        onClick={showPopconfirm}
+                                        danger={true}>
+                                    {t('text.delete')}
+                                </Button>
+                            </Popconfirm>
+                        </>
                     )}
                 </div>
             </>

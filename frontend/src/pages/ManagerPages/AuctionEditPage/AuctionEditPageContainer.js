@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import AuctionEditPage from './AuctionEditPageComponent'
 import {toast} from 'react-toastify';
 import {getOwnAuctionDetailsRequest, updateAuctionRequest} from "../../../utils/api";
-import NotFoundPage from "../../SharedPages/NotFoundPage";
 
 export default class AuctionEditPageContainer extends Component {
     constructor(props) {
@@ -10,8 +9,7 @@ export default class AuctionEditPageContainer extends Component {
         this.state = {
             auctionId: this.props.match.params.auctionId,
             auctionDetails: null,
-            isSubmitting: false,
-            error: false
+            isSubmitting: false
         };
     }
 
@@ -22,13 +20,6 @@ export default class AuctionEditPageContainer extends Component {
     getOwnAuctionDetails = () => {
         getOwnAuctionDetailsRequest(this.state.auctionId).then((res) => {
             this.setState({auctionDetails: res.data});
-        }).catch(e => {
-            this.setState({error: true});
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
         });
     }
 
@@ -41,6 +32,7 @@ export default class AuctionEditPageContainer extends Component {
                 autoClose: 3000,
                 closeOnClick: true
             });
+
             this.props.history.goBack();
         }).catch(e => {
             this.setState({isSubmitting: false});
@@ -57,11 +49,8 @@ export default class AuctionEditPageContainer extends Component {
         const isSubmitting = this.state.isSubmitting;
 
         return (
-            <>
-                {this.state.error ? <NotFoundPage/> :
-                    <AuctionEditPage auctionDetails={auctionDetails} onSubmit={this.handleEdit}
-                                     isSubmitting={isSubmitting}/>}
-            </>
+            <AuctionEditPage auctionDetails={auctionDetails} onSubmit={this.handleEdit}
+                             isSubmitting={isSubmitting}/>
         );
     }
 }

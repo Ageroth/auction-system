@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {logOut} from '../actions/userActions';
+import {history} from "./history";
 
 const interceptor = (store) => {
     axios.interceptors.request.use(
@@ -34,6 +35,18 @@ const interceptor = (store) => {
 
             if (error.response.status === 401 && isLoggedIn) {
                 store.dispatch(logOut());
+            }
+
+            if (error.response.status === 403 && isLoggedIn) {
+                history.push("/403")
+            }
+
+            if (error.response.status === 404) {
+                history.push("/404")
+            }
+
+            if (error.response.status === 500) {
+                history.push("/500")
             }
 
             return Promise.reject(error);

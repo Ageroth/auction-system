@@ -7,8 +7,6 @@ import './AppBreadcrumbs.css'
 
 const routes = [
     {path: '/', breadcrumb: 'pageName.home'},
-    {path: '/login', breadcrumb: null},
-    {path: '/signup', breadcrumb: null},
     {path: '/users', breadcrumb: 'pageName.users'},
     {path: '/users/add', breadcrumb: 'pageName.userAdd'},
     {path: '/users/:id/edit', breadcrumb: 'pageName.edit'},
@@ -17,10 +15,7 @@ const routes = [
     {path: '/my_profile/edit', breadcrumb: 'pageName.edit'},
     {path: '/my_profile/password_change', breadcrumb: 'pageName.passwordChange'},
     {path: '/my_profile', breadcrumb: 'pageName.myProfile'},
-    {path: '/password_reset', breadcrumb: null},
     {path: '/password_reset/:resetPasswordCode', breadcrumb: 'pageName.passwordReset'},
-    {path: '/activation', breadcrumb: null},
-    {path: '/activation/:activationCode', breadcrumb: null},
     {path: '/auctions', breadcrumb: 'pageName.auctions'},
     {path: '/auctions/:auctionId/edit', breadcrumb: 'pageName.edit'},
     {path: '/auctions/:auctionId', breadcrumb: 'pageName.auctionDetails'},
@@ -29,8 +24,7 @@ const routes = [
     {path: '/my_auctions/:auctionId/edit', breadcrumb: 'pageName.edit'},
     {path: '/my_auctions/:auctionId', breadcrumb: 'pageName.auctionDetails'},
     {path: '/my_biddings', breadcrumb: 'pageName.myBiddings'},
-    {path: '/my_biddings/:auctionId', breadcrumb: 'pageName.auctionDetails'}
-
+    {path: '/my_biddings/:auctionId', breadcrumb: 'pageName.auctionDetails'},
 ];
 
 const AppBreadcrumbs = ({breadcrumbs}) => {
@@ -57,4 +51,4 @@ const AppBreadcrumbs = ({breadcrumbs}) => {
     );
 };
 
-export default withBreadcrumbs(routes)(AppBreadcrumbs);
+export default withBreadcrumbs(routes, {disableDefaults: true})(AppBreadcrumbs);

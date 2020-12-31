@@ -60,7 +60,7 @@ export function changeUserPasswordRequest(value, payload) {
 }
 
 export function updateUserDetailsRequest(value, payload) {
-    return axios.put(`/users/${value}/details`, JSON.stringify(payload));
+    return axios.patch(`/users/${value}/details`, JSON.stringify(payload));
 }
 
 export function getOwnDetailsRequest() {
@@ -72,7 +72,7 @@ export function changeOwnPasswordRequest(payload) {
 }
 
 export function updateOwnDetailsRequest(payload) {
-    return axios.put('/users/me/details', JSON.stringify(payload));
+    return axios.patch('/users/me/details', JSON.stringify(payload));
 }
 
 export function getAllAccessLevelsRequest() {
@@ -134,4 +134,8 @@ export function getOwnBiddingDetailsRequest(value) {
 
 export function placeABidRequest(value, payload) {
     return axios.post(`/auctions/${value}`, JSON.stringify(payload));
+}
+
+export function deleteAuctionRequest(value) {
+    return axios.delete(`/auctions/${value}`);
 }

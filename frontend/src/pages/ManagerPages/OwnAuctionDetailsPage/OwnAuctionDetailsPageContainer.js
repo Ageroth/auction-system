@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import OwnAuctionDetailsPage from './OwnAuctionDetailsPageComponent';
-import NotFoundPage from '../../SharedPages/NotFoundPage'
 import {toast} from 'react-toastify';
-import {getOwnAuctionDetailsRequest} from '../../../utils/api';
+import {deleteAuctionRequest, getOwnAuctionDetailsRequest} from '../../../utils/api';
 
 export default class OwnAuctionDetailsPageContainer extends Component {
     constructor(props) {
@@ -10,8 +9,7 @@ export default class OwnAuctionDetailsPageContainer extends Component {
         this.state = {
             auctionId: this.props.match.params.auctionId,
             auctionDetails: null,
-            isSubmitting: false,
-            error: false
+            isSubmitting: false
         };
     }
 
@@ -22,8 +20,25 @@ export default class OwnAuctionDetailsPageContainer extends Component {
     getOwnAuctionDetails = () => {
         getOwnAuctionDetailsRequest(this.state.auctionId).then((res) => {
             this.setState({auctionDetails: res.data});
+        });
+    }
+
+    deleteAuction = () => {
+        this.setState({isSubmitting: true});
+
+        deleteAuctionRequest(this.state.auctionId).then((res) => {
+            this.setState({isSubmitting: false});
+
+            toast.success(res.data.message, {
+                position: "bottom-right",
+                autoClose: 3000,
+                closeOnClick: true
+            });
+
+            this.props.history.push("/my_auctions");
         }).catch(e => {
-            this.setState({error: true});
+            this.setState({isSubmitting: false});
+
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -35,12 +50,11 @@ export default class OwnAuctionDetailsPageContainer extends Component {
     render() {
         const auctionDetails = this.state.auctionDetails;
         const isSubmitting = this.state.isSubmitting;
+        const handleDelete = this.deleteAuction;
 
         return (
-            <>
-                {this.state.error ? <NotFoundPage/> :
-                    <OwnAuctionDetailsPage auctionDetails={auctionDetails} isSubmitting={isSubmitting}/>}
-            </>
+            <OwnAuctionDetailsPage auctionDetails={auctionDetails} handleDelete={handleDelete}
+                                   isSubmitting={isSubmitting}/>
         );
     }
 }

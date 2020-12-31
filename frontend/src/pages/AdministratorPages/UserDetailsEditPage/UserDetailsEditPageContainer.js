@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import UserDetailsEditPage from './UserDetailsEditPageComponent';
-import NotFoundPage from '../../SharedPages/NotFoundPage'
 import {toast} from 'react-toastify';
 import {getAllAccessLevelsRequest, getUserDetailsRequest, updateUserDetailsRequest} from '../../../utils/api';
 
@@ -11,8 +10,7 @@ export default class UserDetailsEditPageContainer extends Component {
             userId: this.props.match.params.userId,
             userDetails: null,
             accessLevels: [],
-            isSubmitting: false,
-            error: false
+            isSubmitting: false
         };
     }
 
@@ -36,13 +34,6 @@ export default class UserDetailsEditPageContainer extends Component {
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).then(res => {
             this.setState({userDetails: res.data});
-        }).catch(e => {
-            this.setState({error: true});
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
         });
     }
 
@@ -72,11 +63,8 @@ export default class UserDetailsEditPageContainer extends Component {
         const isSubmitting = this.state.isSubmitting;
 
         return (
-            <>
-                {this.state.error ? <NotFoundPage/> :
-                    <UserDetailsEditPage userDetails={userDetails} accessLevels={accessLevels}
-                                         onSubmit={this.handleEdit} isSubmitting={isSubmitting}/>}
-            </>
+            <UserDetailsEditPage userDetails={userDetails} accessLevels={accessLevels}
+                                 onSubmit={this.handleEdit} isSubmitting={isSubmitting}/>
         );
     }
 }

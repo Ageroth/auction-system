@@ -40,7 +40,7 @@ const AuctionDetailsPage = (props) => {
 
     const onFinish = (values) => {
         const payload = Object.assign({}, values);
-        props.onSubmit(payload);
+        props.handleBidPlace(payload);
     }
 
     const showPopconfirm = () => {
@@ -54,6 +54,11 @@ const AuctionDetailsPage = (props) => {
     const handleOk = () => {
         setVisible(false);
         form.submit();
+    }
+
+    const handleDeletionOk = () => {
+        setVisible(false);
+        props.handleDelete();
     }
 
     const getDate = (date) => {
@@ -129,15 +134,38 @@ const AuctionDetailsPage = (props) => {
                 <>
                     <div className="extra">
                         {isDisabled ? (
-                            <Tooltip title={t('text.editForbidden')} color={"red"}>
-                                <Button type="primary" disabled={true} block>
+                            <>
+                                <Tooltip title={t('text.editForbidden')} color={"red"}>
+                                    <Button type="primary" disabled={true}>
+                                        {t('text.edit')}
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title={t('text.deleteForbidden')} color={"red"}>
+                                    <Button style={{marginLeft: "15px"}} type="primary" disabled={true} danger={true}>
+                                        {t('text.delete')}
+                                    </Button>
+                                </Tooltip>
+                            </>
+                        ) : (
+                            <>
+                                <Button type="primary" loading={props.isSubmitting} onClick={handleEditClick}>
                                     {t('text.edit')}
                                 </Button>
-                            </Tooltip>
-                        ) : (
-                            <Button type="primary" onClick={handleEditClick} block>
-                                {t('text.edit')}
-                            </Button>
+                                <Popconfirm
+                                    title={t('text.areYouSure')}
+                                    visible={visible}
+                                    onConfirm={handleDeletionOk}
+                                    onCancel={handleCancel}
+                                    okText={t('text.yes')}
+                                    cancelText={t('text.no')}
+                                >
+                                    <Button style={{marginLeft: "15px"}} type="primary" loading={props.isSubmitting}
+                                            onClick={showPopconfirm}
+                                            danger={true}>
+                                        {t('text.delete')}
+                                    </Button>
+                                </Popconfirm>
+                            </>
                         )}
                     </div>
                 </>

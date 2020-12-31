@@ -3,7 +3,6 @@ package pl.lodz.p.it.auctionsystem.utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -172,14 +171,35 @@ public class CustomExceptionHandler {
     }
 
     /**
-     * Obsługuje wyjątek {@link AccessDeniedException}.
+     * Obsługuje wyjątek {@link InvalidDateException}.
      *
-     * @return Kod odpowiedzi HTTP 403 z obiektem {@link ApiResponseDto}
+     * @param ex obiekt wyjątku
+     * @return Kod odpowiedzi HTTP 400 z obiektem {@link ApiResponseDto}
      */
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> handleAccessDeniedException() {
-        String accessDeniedMessage = messageService.getMessage("exception.accessForbiddenException");
+    @ExceptionHandler(InvalidDateException.class)
+    public ResponseEntity<?> handleInvalidDateException(InvalidDateException ex) {
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 
-        return new ResponseEntity<>(new ApiResponseDto(false, accessDeniedMessage), HttpStatus.FORBIDDEN);
+    /**
+     * Obsługuje wyjątek {@link AuctionOwnerException}.
+     *
+     * @param ex obiekt wyjątku
+     * @return Kod odpowiedzi HTTP 400 z obiektem {@link ApiResponseDto}
+     */
+    @ExceptionHandler(AuctionOwnerException.class)
+    public ResponseEntity<?> handleAuctionOwnerException(AuctionOwnerException ex) {
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Obsługuje wyjątek {@link InvalidBidPriceException}.
+     *
+     * @param ex obiekt wyjątku
+     * @return Kod odpowiedzi HTTP 400 z obiektem {@link ApiResponseDto}
+     */
+    @ExceptionHandler(InvalidBidPriceException.class)
+    public ResponseEntity<?> handleInvalidBidPriceException(InvalidBidPriceException ex) {
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

@@ -6,7 +6,9 @@ import ActivationPage from '../pages/SharedPages/ActivationPage';
 import PasswordResetPage from '../pages/SharedPages/PasswordResetPage'
 import UserTablePage from '../pages/AdministratorPages/UserTablePage'
 import UserDetailsPage from '../pages/AdministratorPages/UserDetailsPage'
+import ForbiddenPage from "../pages/SharedPages/ForbiddenPage";
 import NotFoundPage from '../pages/SharedPages/NotFoundPage'
+import InternalServerErrorPage from "../pages/SharedPages/InternalServerErrorPage";
 import UserPasswordChangePage from '../pages/AdministratorPages/UserPasswordChangePage'
 import UserDetailsEditPage from '../pages/AdministratorPages/UserDetailsEditPage'
 import OwnDetailsPage from '../pages/SharedPages/OwnDetailsPage'
@@ -48,5 +50,8 @@ export const routes = [
     {path: '/my_auctions/:auctionId/edit', component: AuctionEditPage, canAccess: [MANAGER]},
     {path: '/my_biddings', component: BiddingTablePage, canAccess: [CLIENT]},
     {path: '/my_biddings/:auctionId', component: BiddingDetailsPage, canAccess: [CLIENT]},
+    {path: '/403', component: ForbiddenPage, public: true},
+    {path: '/404', component: NotFoundPage, public: true},
+    {path: '/500', component: InternalServerErrorPage, public: true},
     {path: '*', component: NotFoundPage, public: true},
 ];
