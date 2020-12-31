@@ -61,8 +61,15 @@ public class AuctionServiceImpl implements AuctionService {
 
         if (auctionAddDto.getStartDate() == null)
             startDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-        else
+        else {
             startDate = auctionAddDto.getStartDate().truncatedTo(ChronoUnit.MINUTES);
+
+            if (startDate.isBefore(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))) {
+                String addingInvalidDateMessage = messageService.getMessage("exception.addingInvalidDateException");
+
+                throw new InvalidDateException(addingInvalidDateMessage);
+            }
+        }
 
         LocalDateTime endDate = startDate.plusDays(auctionAddDto.getDuration());
 
