@@ -41,6 +41,7 @@ export default class AuctionEditPageContainer extends Component {
                 autoClose: 3000,
                 closeOnClick: true
             });
+
             this.props.history.goBack();
         }).catch(e => {
             this.setState({isSubmitting: false});

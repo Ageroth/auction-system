@@ -135,3 +135,7 @@ export function getOwnBiddingDetailsRequest(value) {
 export function placeABidRequest(value, payload) {
     return axios.post(`/auctions/${value}`, JSON.stringify(payload));
 }
+
+export function deleteAuctionRequest(value) {
+    return axios.delete(`/auctions/${value}`);
+}

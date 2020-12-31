@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import AuctionDetailsPage from './AuctionDetailsPageComponent';
 import NotFoundPage from '../NotFoundPage'
 import {toast} from 'react-toastify';
-import {getAuctionDetailsRequest, placeABidRequest} from '../../../utils/api';
+import {deleteAuctionRequest, getAuctionDetailsRequest, placeABidRequest} from '../../../utils/api';
 
 export default class AuctionDetailsPageContainer extends Component {
     constructor(props) {
@@ -32,10 +32,12 @@ export default class AuctionDetailsPageContainer extends Component {
         });
     }
 
-    handleBidPlace = (payload) => {
+    placeBid = (payload) => {
         this.setState({isSubmitting: true});
-        placeABidRequest(this.state.auctionId, payload).then(res => {
+
+        placeABidRequest(this.state.auctionId, payload).then((res) => {
             this.setState({isSubmitting: false});
+
             toast.success(res.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -43,6 +45,7 @@ export default class AuctionDetailsPageContainer extends Component {
             });
         }).catch(e => {
             this.setState({isSubmitting: false});
+
             toast.error(e.response.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
@@ -51,14 +54,41 @@ export default class AuctionDetailsPageContainer extends Component {
         })
     }
 
+    deleteAuction = () => {
+        this.setState({isSubmitting: true});
+
+        deleteAuctionRequest(this.state.auctionId).then((res) => {
+            this.setState({isSubmitting: false});
+
+            toast.success(res.data.message, {
+                position: "bottom-right",
+                autoClose: 3000,
+                closeOnClick: true
+            });
+
+            this.props.history.push("/auctions");
+        }).catch(e => {
+            this.setState({isSubmitting: false});
+
+            toast.error(e.response.data.message, {
+                position: "bottom-right",
+                autoClose: 3000,
+                closeOnClick: true
+            });
+        });
+    }
+
     render() {
         const auctionDetails = this.state.auctionDetails;
         const isSubmitting = this.state.isSubmitting;
+        const handleBidPlace = this.placeBid;
+        const handleDelete = this.deleteAuction;
 
         return (
             <>
                 {this.state.error ? <NotFoundPage/> :
-                    <AuctionDetailsPage auctionDetails={auctionDetails} onSubmit={this.handleBidPlace}
+                    <AuctionDetailsPage auctionDetails={auctionDetails} handleBidPlace={handleBidPlace}
+                                        handleDelete={handleDelete}
                                         isSubmitting={isSubmitting}/>}
             </>
         );

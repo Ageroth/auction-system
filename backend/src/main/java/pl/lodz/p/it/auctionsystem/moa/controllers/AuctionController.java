@@ -246,4 +246,25 @@ public class AuctionController {
 
         return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
     }
+
+    /**
+     * Usuwa aukcję o podanym id.
+     *
+     * @param auctionId      id aukcji
+     * @param authentication obiekt typu {@link Authentication}
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @DeleteMapping("/{auctionId}")
+    public ResponseEntity<?> deleteAuction(@PathVariable(value = "auctionId") Long auctionId,
+                                           Authentication authentication) throws ApplicationException {
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
+
+        auctionService.deleteAuctionById(auctionId, username);
+
+        String message = messageService.getMessage("info.auctionDeleted");
+
+        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+    }
 }

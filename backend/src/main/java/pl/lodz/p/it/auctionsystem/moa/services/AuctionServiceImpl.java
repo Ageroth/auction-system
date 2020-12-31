@@ -18,6 +18,7 @@ import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.AccessForbiddenException;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.exceptions.EntityNotFoundException;
+import pl.lodz.p.it.auctionsystem.exceptions.InvalidDateException;
 import pl.lodz.p.it.auctionsystem.moa.dtos.*;
 import pl.lodz.p.it.auctionsystem.moa.repositories.AuctionRepository;
 import pl.lodz.p.it.auctionsystem.moa.repositories.BidRepository;
@@ -253,5 +254,27 @@ public class AuctionServiceImpl implements AuctionService {
         Bid savedBid = bidRepository.save(bid);
 
         return savedBid.getId();
+    }
+
+    @Override
+    @PreAuthorize("hasRole('MANAGER')")
+    public void deleteAuctionById(Long auctionId, String username) throws ApplicationException {
+        String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
+        Auction auction =
+                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+
+        if (!auction.getUser().getUsername().equals(username)) {
+            String accessForbiddenMessage = messageService.getMessage("exception.accessForbiddenException");
+
+            throw new AccessForbiddenException(accessForbiddenMessage);
+        }
+
+        if (auction.getStartDate().isBefore(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))) {
+            String invalidDateMessage = messageService.getMessage("exception.invalidDateExceptionDeleting");
+
+            throw new InvalidDateException(invalidDateMessage);
+        }
+
+        auctionRepository.delete(auction);
     }
 }
