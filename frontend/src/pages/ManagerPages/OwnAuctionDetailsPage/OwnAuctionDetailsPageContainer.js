@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import OwnAuctionDetailsPage from './OwnAuctionDetailsPageComponent';
-import NotFoundPage from '../../SharedPages/NotFoundPage'
 import {toast} from 'react-toastify';
 import {deleteAuctionRequest, getOwnAuctionDetailsRequest} from '../../../utils/api';
 
@@ -10,8 +9,7 @@ export default class OwnAuctionDetailsPageContainer extends Component {
         this.state = {
             auctionId: this.props.match.params.auctionId,
             auctionDetails: null,
-            isSubmitting: false,
-            error: false
+            isSubmitting: false
         };
     }
 
@@ -22,13 +20,6 @@ export default class OwnAuctionDetailsPageContainer extends Component {
     getOwnAuctionDetails = () => {
         getOwnAuctionDetailsRequest(this.state.auctionId).then((res) => {
             this.setState({auctionDetails: res.data});
-        }).catch(e => {
-            this.setState({error: true});
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
         });
     }
 
@@ -62,11 +53,8 @@ export default class OwnAuctionDetailsPageContainer extends Component {
         const handleDelete = this.deleteAuction;
 
         return (
-            <>
-                {this.state.error ? <NotFoundPage/> :
-                    <OwnAuctionDetailsPage auctionDetails={auctionDetails} handleDelete={handleDelete}
-                                           isSubmitting={isSubmitting}/>}
-            </>
+            <OwnAuctionDetailsPage auctionDetails={auctionDetails} handleDelete={handleDelete}
+                                   isSubmitting={isSubmitting}/>
         );
     }
 }

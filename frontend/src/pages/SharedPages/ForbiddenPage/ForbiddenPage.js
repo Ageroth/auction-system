@@ -1,19 +1,19 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import AppLayout from '../../../components/AppLayout'
 import {useTranslation} from 'react-i18next';
 import {Button, Result} from 'antd';
+import {Link} from "react-router-dom";
 
-const NotFoundPage = () => {
+const ForbiddenPage = () => {
     const {t} = useTranslation();
 
     return (
         <AppLayout>
-            <div className="not-found-page-wrapper">
+            <div className="forbidden-page-wrapper">
                 <Result
-                    status="404"
-                    title="404"
-                    subTitle={t('text.404')}
+                    status="403"
+                    title="403"
+                    subTitle={t('text.403')}
                     extra={<Link to={"/"}><Button type="primary">{t('text.home')}</Button></Link>}
                 />
             </div>
@@ -21,4 +21,4 @@ const NotFoundPage = () => {
     );
 }
 
-export default NotFoundPage;
+export default ForbiddenPage;

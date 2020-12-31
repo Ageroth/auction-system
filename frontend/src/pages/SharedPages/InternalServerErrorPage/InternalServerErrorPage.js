@@ -4,16 +4,16 @@ import AppLayout from '../../../components/AppLayout'
 import {useTranslation} from 'react-i18next';
 import {Button, Result} from 'antd';
 
-const NotFoundPage = () => {
+const InternalServerErrorPage = () => {
     const {t} = useTranslation();
 
     return (
         <AppLayout>
-            <div className="not-found-page-wrapper">
+            <div className="internal-server-error-page-wrapper">
                 <Result
-                    status="404"
-                    title="404"
-                    subTitle={t('text.404')}
+                    status="500"
+                    title="500"
+                    subTitle={t('text.500')}
                     extra={<Link to={"/"}><Button type="primary">{t('text.home')}</Button></Link>}
                 />
             </div>
@@ -21,4 +21,4 @@ const NotFoundPage = () => {
     );
 }
 
-export default NotFoundPage;
+export default InternalServerErrorPage;
