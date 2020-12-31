@@ -3,7 +3,6 @@ package pl.lodz.p.it.auctionsystem.utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -169,18 +168,6 @@ public class CustomExceptionHandler {
     @ExceptionHandler(AccessForbiddenException.class)
     public ResponseEntity<?> handleAccessForbiddenException(AccessForbiddenException ex) {
         return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.FORBIDDEN);
-    }
-
-    /**
-     * Obsługuje wyjątek {@link AccessDeniedException}.
-     *
-     * @return Kod odpowiedzi HTTP 403 z obiektem {@link ApiResponseDto}
-     */
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> handleAccessDeniedException() {
-        String accessDeniedMessage = messageService.getMessage("exception.accessForbiddenException");
-
-        return new ResponseEntity<>(new ApiResponseDto(false, accessDeniedMessage), HttpStatus.FORBIDDEN);
     }
 
     /**
