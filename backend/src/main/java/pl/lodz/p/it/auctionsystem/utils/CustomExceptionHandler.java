@@ -182,4 +182,37 @@ public class CustomExceptionHandler {
 
         return new ResponseEntity<>(new ApiResponseDto(false, accessDeniedMessage), HttpStatus.FORBIDDEN);
     }
+
+    /**
+     * Obsługuje wyjątek {@link InvalidDateException}.
+     *
+     * @param ex obiekt wyjątku
+     * @return Kod odpowiedzi HTTP 400 z obiektem {@link ApiResponseDto}
+     */
+    @ExceptionHandler(InvalidDateException.class)
+    public ResponseEntity<?> handleInvalidDateException(InvalidDateException ex) {
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Obsługuje wyjątek {@link AuctionOwnerException}.
+     *
+     * @param ex obiekt wyjątku
+     * @return Kod odpowiedzi HTTP 400 z obiektem {@link ApiResponseDto}
+     */
+    @ExceptionHandler(AuctionOwnerException.class)
+    public ResponseEntity<?> handleAuctionOwnerException(AuctionOwnerException ex) {
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Obsługuje wyjątek {@link InvalidBidPriceException}.
+     *
+     * @param ex obiekt wyjątku
+     * @return Kod odpowiedzi HTTP 400 z obiektem {@link ApiResponseDto}
+     */
+    @ExceptionHandler(InvalidBidPriceException.class)
+    public ResponseEntity<?> handleInvalidBidPriceException(InvalidBidPriceException ex) {
+        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 }
