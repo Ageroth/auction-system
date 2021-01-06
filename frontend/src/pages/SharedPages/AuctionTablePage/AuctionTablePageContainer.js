@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import AuctionTablePage from './AuctionTablePageComponent'
-import {toast} from 'react-toastify';
 import {getAuctionsRequest} from '../../../utils/api';
 
 export default class AuctionTablePageContainer extends Component {
@@ -33,13 +32,8 @@ export default class AuctionTablePageContainer extends Component {
                     total: res.data.totalItems,
                 }
             });
-        }).catch(e => {
+        }).catch(() => {
             this.setState({isLoading: false})
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
         });
     }
 

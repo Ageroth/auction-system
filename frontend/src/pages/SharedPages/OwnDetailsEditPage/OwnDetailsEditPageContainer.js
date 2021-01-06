@@ -19,12 +19,6 @@ export default class OwnDetailsEditPageContainer extends Component {
     getOwnDetails = () => {
         getOwnDetailsRequest().then(res => {
             this.setState({myDetails: res.data});
-        }).catch(e => {
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
         });
     }
 
@@ -38,14 +32,9 @@ export default class OwnDetailsEditPageContainer extends Component {
                 closeOnClick: true
             });
             this.props.history.goBack();
-        }).catch(e => {
+        }).catch(() => {
             this.setState({isSubmitting: false});
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
-        })
+        });
     }
 
     render() {

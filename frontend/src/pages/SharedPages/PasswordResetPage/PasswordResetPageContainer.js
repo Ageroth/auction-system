@@ -23,13 +23,8 @@ class PasswordResetPageContainer extends Component {
                 isSubmitting: false,
                 emailSent: true
             });
-        }).catch(e => {
+        }).catch(() => {
             this.setState({isSubmitting: false});
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
         });
     }
 
@@ -40,13 +35,8 @@ class PasswordResetPageContainer extends Component {
                 autoClose: 3000,
                 closeOnClick: true
             });
+
             this.props.history.push("/login");
-        }).catch(e => {
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
         });
     }
 

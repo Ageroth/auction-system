@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import UserTablePage from './UserTablePageComponent'
-import {toast} from 'react-toastify';
 import {getUsersRequest} from '../../../utils/api';
 
 export default class UserTablePageContainer extends Component {
@@ -30,13 +29,8 @@ export default class UserTablePageContainer extends Component {
                     total: res.data.totalItems,
                 }
             });
-        }).catch(e => {
+        }).catch(() => {
             this.setState({isLoading: false})
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
         });
     }
 
