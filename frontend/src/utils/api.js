@@ -59,8 +59,12 @@ export function changeUserPasswordRequest(value, payload) {
     return axios.patch(`/users/${value}/password`, JSON.stringify(payload));
 }
 
-export function updateUserDetailsRequest(value, payload) {
-    return axios.patch(`/users/${value}/details`, JSON.stringify(payload));
+export function updateUserDetailsRequest(value, payload, eTag) {
+    return axios.patch(`/users/${value}/details`, JSON.stringify(payload), {
+        headers: {
+            'If-Match': eTag
+        }
+    });
 }
 
 export function getOwnDetailsRequest() {
@@ -71,8 +75,12 @@ export function changeOwnPasswordRequest(payload) {
     return axios.patch('/users/me/password', JSON.stringify(payload));
 }
 
-export function updateOwnDetailsRequest(payload) {
-    return axios.patch('/users/me/details', JSON.stringify(payload));
+export function updateOwnDetailsRequest(payload, eTag) {
+    return axios.patch('/users/me/details', JSON.stringify(payload), {
+        headers: {
+            'If-Match': eTag
+        }
+    });
 }
 
 export function getAllAccessLevelsRequest() {

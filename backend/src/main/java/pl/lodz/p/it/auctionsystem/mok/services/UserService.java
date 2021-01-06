@@ -34,10 +34,10 @@ public interface UserService {
      * Zwraca użytkownika o podanej nazwie użytkownika.
      *
      * @param username nazwa użytkownika
-     * @return obiekt typu {@link OwnAccountDetailsDto}
+     * @return obiekt typu {@link UserDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    OwnAccountDetailsDto getUserByUsername(String username) throws ApplicationException;
+    UserDto getUserByUsername(String username) throws ApplicationException;
 
     /**
      * Zwraca użytkowników spełniających zadane kryteria.
@@ -45,16 +45,16 @@ public interface UserService {
      * @param userCriteria obiekt typu {@link UserCriteria}
      * @return obiekt typu {@link Page}
      */
-    Page<UserDto> getUsers(UserCriteria userCriteria);
+    Page<BasicUserDto> getUsers(UserCriteria userCriteria);
 
     /**
      * Zwraca użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return obiekt typu {@link UserAccountDetailsDto}
+     * @return obiekt typu {@link UserDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    UserAccountDetailsDto getUserById(Long userId) throws ApplicationException;
+    UserDto getUserById(Long userId) throws ApplicationException;
 
     /**
      * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie użytkownika.
@@ -104,7 +104,8 @@ public interface UserService {
      * @param ownAccountDetailsUpdateDto obiekt typu {@link OwnAccountDetailsUpdateDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto) throws ApplicationException;
+    void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
+                                 String ifMatch) throws ApplicationException;
 
     /**
      * Aktualizuje dane personalne użytkownika o podanym id.

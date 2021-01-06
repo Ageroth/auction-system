@@ -1,6 +1,7 @@
 package pl.lodz.p.it.auctionsystem.utils;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -201,5 +202,19 @@ public class CustomExceptionHandler {
     @ExceptionHandler(InvalidBidPriceException.class)
     public ResponseEntity<?> handleInvalidBidPriceException(InvalidBidPriceException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(false, ex.getMessage()));
+    }
+
+    /**
+     * Obsługuje wyjątek {@link OptimisticLockingFailureException}.
+     *
+     * @return Kod odpowiedzi HTTP 412 z obiektem {@link ApiResponseDto}
+     */
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<?> handleOptimisticLockingFailureException() {
+        String optimisticLockingFailureExceptionMessage = messageService.getMessage("exception" +
+                ".optimisticLockingFailureException");
+
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(new ApiResponseDto(false,
+                optimisticLockingFailureExceptionMessage));
     }
 }

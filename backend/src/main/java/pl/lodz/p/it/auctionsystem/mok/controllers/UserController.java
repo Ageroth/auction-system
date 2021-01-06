@@ -2,6 +2,7 @@ package pl.lodz.p.it.auctionsystem.mok.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -83,10 +84,9 @@ public class UserController {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        OwnAccountDetailsDto ownAccountDetailsDto =
-                userService.getUserByUsername(username);
+        UserDto userDto = userService.getUserByUsername(username);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ownAccountDetailsDto);
+        return ResponseEntity.status(HttpStatus.OK).eTag(String.valueOf(userDto.getVersion())).body(new OwnAccountDetailsDto(userDto));
     }
 
     /**
@@ -99,10 +99,10 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<?> getUsers(UserCriteria userCriteria) {
-        Page<UserDto> userDtoPage = userService.getUsers(userCriteria);
+        Page<BasicUserDto> userDtoPage = userService.getUsers(userCriteria);
 
         if (userDtoPage.getContent().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             Map<String, Object> response = new HashMap<>();
 
@@ -123,9 +123,9 @@ public class UserController {
      */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserDetails(@PathVariable(value = "userId") Long userId) throws ApplicationException {
-        UserAccountDetailsDto userAccountDetailsDto = userService.getUserById(userId);
+        UserDto userDto = userService.getUserById(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(userAccountDetailsDto);
+        return ResponseEntity.status(HttpStatus.OK).eTag(String.valueOf(userDto.getVersion())).body(new UserAccountDetailsDto(userDto));
     }
 
     /**
@@ -210,11 +210,12 @@ public class UserController {
      */
     @PatchMapping("/me/details")
     public ResponseEntity<?> updateOwnDetails(@Valid @RequestBody OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
+                                              @RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch,
                                               Authentication authentication) throws ApplicationException {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        userService.updateDetailsByUsername(username, ownAccountDetailsUpdateDto);
+        userService.updateDetailsByUsername(username, ownAccountDetailsUpdateDto, ifMatch.replace("\"", ""));
 
         String message = messageService.getMessage("info.yourDetailsUpdated");
 
@@ -252,7 +253,8 @@ public class UserController {
      */
     @PatchMapping("/{userId}/details")
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
-                                               @Valid @RequestBody UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException {
+                                               @Valid @RequestBody UserAccountDetailsUpdateDto userAccountDetailsUpdateDto,
+                                               @RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch) throws ApplicationException {
         userService.updateUserDetailsById(userId, userAccountDetailsUpdateDto);
         userAccessLevelService.modifyUserAccessLevels(userId, userAccountDetailsUpdateDto.getAccessLevelIds());
 

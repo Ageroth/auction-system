@@ -10,7 +10,8 @@ export default class UserDetailsEditPageContainer extends Component {
             userId: this.props.match.params.userId,
             userDetails: null,
             accessLevels: [],
-            isSubmitting: false
+            isSubmitting: false,
+            eTag: null
         };
     }
 
@@ -27,14 +28,18 @@ export default class UserDetailsEditPageContainer extends Component {
 
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).then(res => {
-            this.setState({userDetails: res.data});
+            const eTagValue = res.headers.etag
+
+            this.setState({userDetails: res.data, eTag: eTagValue});
         });
     }
 
     handleEdit = (payload) => {
         this.setState({isSubmitting: true});
-        updateUserDetailsRequest(this.state.userId, payload).then(res => {
+
+        updateUserDetailsRequest(this.state.userId, payload, this.state.eTag).then(res => {
             this.setState({isSubmitting: false});
+
             toast.success(res.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,

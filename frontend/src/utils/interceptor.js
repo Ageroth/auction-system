@@ -8,16 +8,18 @@ const interceptor = (store) => {
         (config) => {
             const token = store.getState().user.token;
 
-            if (token) {
+            if (config.headers['If-Match'])
                 config.headers = {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    'If-Match': config.headers['If-Match']
                 }
-            } else {
-                config.headers = {
-                    'Content-Type': 'application/json'
-                }
-            }
+            else config.headers = {}
+
+            config.headers['Content-Type'] = 'application/json';
+
+            if (token)
+                config.headers['Authorization'] = `Bearer ${token}`;
+
+            console.log(config.headers)
 
             config.baseURL = 'http://localhost:8080/api';
 

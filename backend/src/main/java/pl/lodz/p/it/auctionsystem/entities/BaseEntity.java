@@ -23,4 +23,9 @@ public abstract class BaseEntity {
     public BaseEntity() {
         this.businessKey = UUID.randomUUID();
     }
+
+    public BaseEntity(Long version, UUID businessKey) {
+        this.version = version;
+        this.businessKey = businessKey;
+    }
 }

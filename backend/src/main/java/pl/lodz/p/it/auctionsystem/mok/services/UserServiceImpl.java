@@ -98,17 +98,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public OwnAccountDetailsDto getUserByUsername(String username) throws ApplicationException {
+    public UserDto getUserByUsername(String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        return modelMapper.map(user, OwnAccountDetailsDto.class);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public Page<UserDto> getUsers(UserCriteria userCriteria) {
+    public Page<BasicUserDto> getUsers(UserCriteria userCriteria) {
         Pageable pageable;
         Page<User> userPage;
 
@@ -129,32 +129,33 @@ public class UserServiceImpl implements UserService {
                     userRepositoryMok.findAll(containsTextInName(userCriteria.getQuery()).and(isActive(userCriteria.getStatus())), pageable);
 
         return userPage.map(user -> {
-            UserDto userDto = modelMapper.map(user, UserDto.class);
+            BasicUserDto basicUserDto = modelMapper.map(user, BasicUserDto.class);
 
-            userDto.setUserAccessLevelNames(user.getUserAccessLevels().stream()
+            basicUserDto.setUserAccessLevelNames(user.getUserAccessLevels().stream()
                     .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
                     .collect(Collectors.toList()));
 
-            userDto.getUserAccessLevelNames().sort((Comparator.comparingInt(o -> AccessLevelEnum.valueOf((String) o).ordinal())).reversed());
+            basicUserDto.getUserAccessLevelNames().sort((Comparator.comparingInt(o -> AccessLevelEnum.valueOf((String) o).ordinal())).reversed());
 
-            return userDto;
+            return basicUserDto;
         });
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public UserAccountDetailsDto getUserById(Long userId) throws ApplicationException {
+    public UserDto getUserById(Long userId) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
 
-        User user = userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+        User user =
+                userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        UserAccountDetailsDto userAccountDetailsDto = modelMapper.map(user, UserAccountDetailsDto.class);
+        UserDto userDto = modelMapper.map(user, UserDto.class);
 
-        userAccountDetailsDto.setAccessLevelIds(user.getUserAccessLevels().stream()
+        userDto.setAccessLevelIds(user.getUserAccessLevels().stream()
                 .map(userAccessLevel -> userAccessLevel.getAccessLevel().getId())
                 .collect(Collectors.toList()));
 
-        return userAccountDetailsDto;
+        return userDto;
     }
 
     @Override
@@ -219,14 +220,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto) throws ApplicationException {
+    public void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
+                                        String ifMatch) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        user.setFirstName(ownAccountDetailsUpdateDto.getFirstName());
-        user.setLastName(ownAccountDetailsUpdateDto.getLastName());
-        user.setPhoneNumber(ownAccountDetailsUpdateDto.getPhoneNumber());
+        User userCopy = new User(Long.parseLong(ifMatch), user.getBusinessKey(), user.getId(), user.getUsername(),
+                user.getPassword(), user.getEmail(), user.isActivated(), user.getCreatedAt(),
+                user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
+                ownAccountDetailsUpdateDto.getFirstName(), ownAccountDetailsUpdateDto.getLastName(),
+                ownAccountDetailsUpdateDto.getPhoneNumber());
+
+        userRepositoryMok.saveAndFlush(userCopy);
     }
 
     @Override

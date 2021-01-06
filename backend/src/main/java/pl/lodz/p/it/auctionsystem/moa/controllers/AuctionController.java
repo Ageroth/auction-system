@@ -81,7 +81,7 @@ public class AuctionController {
         Page<AuctionDto> auctionDtoPage = auctionService.getAuctions(auctionCriteria);
 
         if (auctionDtoPage.getContent().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             Map<String, Object> response = new HashMap<>();
 
@@ -109,7 +109,7 @@ public class AuctionController {
         Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUsername(auctionCriteria, username);
 
         if (auctionDtoPage.getContent().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             Map<String, Object> response = new HashMap<>();
 
@@ -137,7 +137,7 @@ public class AuctionController {
         Page<AuctionDto> auctionDtoPage = auctionService.getParticipatedAuctions(auctionCriteria, username);
 
         if (auctionDtoPage.getContent().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             Map<String, Object> response = new HashMap<>();
 
