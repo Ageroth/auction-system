@@ -48,7 +48,7 @@ public class UserController {
                 .buildAndExpand(userId).toUri();
         String message = messageService.getMessage("info.userRegistered");
 
-        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.CREATED).location(location).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -68,7 +68,7 @@ public class UserController {
 
         String message = messageService.getMessage("info.userAdded");
 
-        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.CREATED).location(location).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -86,7 +86,7 @@ public class UserController {
         OwnAccountDetailsDto ownAccountDetailsDto =
                 userService.getUserByUsername(username);
 
-        return new ResponseEntity<>(ownAccountDetailsDto, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(ownAccountDetailsDto);
     }
 
     /**
@@ -102,7 +102,7 @@ public class UserController {
         Page<UserDto> userDtoPage = userService.getUsers(userCriteria);
 
         if (userDtoPage.getContent().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } else {
             Map<String, Object> response = new HashMap<>();
 
@@ -110,7 +110,7 @@ public class UserController {
             response.put("currentPage", userDtoPage.getNumber());
             response.put("totalItems", userDtoPage.getTotalElements());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
 
@@ -125,7 +125,7 @@ public class UserController {
     public ResponseEntity<?> getUserDetails(@PathVariable(value = "userId") Long userId) throws ApplicationException {
         UserAccountDetailsDto userAccountDetailsDto = userService.getUserById(userId);
 
-        return new ResponseEntity<>(userAccountDetailsDto, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(userAccountDetailsDto);
     }
 
     /**
@@ -136,8 +136,7 @@ public class UserController {
      */
     @GetMapping("/username-availability")
     public ResponseEntity<?> checkUsernameAvailability(@RequestParam(value = "username") String username) {
-        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByUsername(username)),
-                HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(new UserIdentityAvailabilityDto(!userService.existsByUsername(username)));
     }
 
     /**
@@ -148,7 +147,7 @@ public class UserController {
      */
     @GetMapping("/email-availability")
     public ResponseEntity<?> checkEmailAvailability(@RequestParam(value = "email") String email) {
-        return new ResponseEntity<>(new UserIdentityAvailabilityDto(!userService.existsByEmail(email)), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(new UserIdentityAvailabilityDto(!userService.existsByEmail(email)));
     }
 
     /**
@@ -164,7 +163,7 @@ public class UserController {
 
         String message = messageService.getMessage("info.userActivated");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -180,7 +179,7 @@ public class UserController {
 
         String message = messageService.getMessage("info.passwordResetLinkSent");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -198,7 +197,7 @@ public class UserController {
 
         String message = messageService.getMessage("info.passwordReset");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -219,7 +218,7 @@ public class UserController {
 
         String message = messageService.getMessage("info.yourDetailsUpdated");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -240,7 +239,7 @@ public class UserController {
 
         String message = messageService.getMessage("info.yourPasswordChanged");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -259,7 +258,7 @@ public class UserController {
 
         String message = messageService.getMessage("info.userDetailsUpdated");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -277,6 +276,6 @@ public class UserController {
 
         String message = messageService.getMessage("info.userPasswordChanged");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 }

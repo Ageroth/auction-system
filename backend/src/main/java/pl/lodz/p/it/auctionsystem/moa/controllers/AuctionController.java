@@ -66,7 +66,7 @@ public class AuctionController {
 
         String message = messageService.getMessage("info.auctionAdded");
 
-        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.CREATED).location(location).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -81,7 +81,7 @@ public class AuctionController {
         Page<AuctionDto> auctionDtoPage = auctionService.getAuctions(auctionCriteria);
 
         if (auctionDtoPage.getContent().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } else {
             Map<String, Object> response = new HashMap<>();
 
@@ -89,7 +89,7 @@ public class AuctionController {
             response.put("currentPage", auctionDtoPage.getNumber());
             response.put("totalItems", auctionDtoPage.getTotalElements());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
 
@@ -109,7 +109,7 @@ public class AuctionController {
         Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUsername(auctionCriteria, username);
 
         if (auctionDtoPage.getContent().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } else {
             Map<String, Object> response = new HashMap<>();
 
@@ -117,7 +117,7 @@ public class AuctionController {
             response.put("currentPage", auctionDtoPage.getNumber());
             response.put("totalItems", auctionDtoPage.getTotalElements());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
 
@@ -137,7 +137,7 @@ public class AuctionController {
         Page<AuctionDto> auctionDtoPage = auctionService.getParticipatedAuctions(auctionCriteria, username);
 
         if (auctionDtoPage.getContent().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } else {
             Map<String, Object> response = new HashMap<>();
 
@@ -145,7 +145,7 @@ public class AuctionController {
             response.put("currentPage", auctionDtoPage.getNumber());
             response.put("totalItems", auctionDtoPage.getTotalElements());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
 
@@ -160,7 +160,7 @@ public class AuctionController {
     public ResponseEntity<?> getAuctionDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
         AuctionDetailsDto auctionDetailsDto = auctionService.getAuctionById(auctionId);
 
-        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(auctionDetailsDto);
     }
 
     /**
@@ -174,7 +174,7 @@ public class AuctionController {
     public ResponseEntity<?> getOwnAuctionDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
         AuctionDetailsDto auctionDetailsDto = auctionService.getOwnAuctionById(auctionId);
 
-        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(auctionDetailsDto);
     }
 
     /**
@@ -193,7 +193,7 @@ public class AuctionController {
 
         AuctionDetailsDto auctionDetailsDto = auctionService.getOwnBiddingById(auctionId, username);
 
-        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(auctionDetailsDto);
     }
 
     /**
@@ -216,7 +216,7 @@ public class AuctionController {
 
         String message = messageService.getMessage("info.auctionUpdated");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -244,7 +244,7 @@ public class AuctionController {
 
         String message = messageService.getMessage("info.bidPlaced");
 
-        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.CREATED).location(location).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -265,6 +265,6 @@ public class AuctionController {
 
         String message = messageService.getMessage("info.auctionDeleted");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 }

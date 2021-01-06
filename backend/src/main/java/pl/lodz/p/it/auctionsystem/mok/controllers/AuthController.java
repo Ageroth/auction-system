@@ -1,6 +1,7 @@
 package pl.lodz.p.it.auctionsystem.mok.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,6 +53,6 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(new JwtTokenDto(jwt, userDetails.getUsername(), accessLevels));
+        return ResponseEntity.status(HttpStatus.OK).body(new JwtTokenDto(jwt, userDetails.getUsername(), accessLevels));
     }
 }

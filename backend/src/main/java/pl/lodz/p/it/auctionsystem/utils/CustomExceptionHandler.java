@@ -31,7 +31,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex) {
-        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseDto(false, ex.getMessage()));
     }
 
     /**
@@ -42,7 +42,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(IncorrectPasswordException.class)
     public ResponseEntity<?> handleIncorrectPasswordException(IncorrectPasswordException ex) {
-        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(false, ex.getMessage()));
     }
 
     /**
@@ -53,7 +53,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(InvalidParameterException.class)
     public ResponseEntity<?> handleInvalidParameterException(InvalidParameterException ex) {
-        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(false, ex.getMessage()));
     }
 
     /**
@@ -64,7 +64,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(PasswordResetCodeExpiredException.class)
     public ResponseEntity<?> handlePasswordResetCodeExpiredException(PasswordResetCodeExpiredException ex) {
-        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(false, ex.getMessage()));
     }
 
     /**
@@ -75,7 +75,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(UserAccessLevelAlreadyExistsException.class)
     public ResponseEntity<?> handleUserAccessLevelAlreadyExistsException(UserAccessLevelAlreadyExistsException ex) {
-        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(false, ex.getMessage()));
     }
 
     /**
@@ -86,7 +86,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(ValueNotUniqueException.class)
     public ResponseEntity<?> handleValueNotUniqueException(ValueNotUniqueException ex) {
-        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new ApiResponseDto(false, ex.getMessage()));
     }
 
     /**
@@ -106,8 +106,8 @@ public class CustomExceptionHandler {
             stringBuilder.append(fieldName).append(':').append(errorMessage).append("\n");
         });
 
-        return new ResponseEntity<>(new ApiResponseDto(false, stringBuilder.toString()),
-                HttpStatus.UNPROCESSABLE_ENTITY);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new ApiResponseDto(false,
+                stringBuilder.toString()));
     }
 
     /**
@@ -119,7 +119,7 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> handleAuthenticationException() {
         String authenticationMessage = messageService.getMessage("exception.authenticationException");
 
-        return new ResponseEntity<>(new ApiResponseDto(false, authenticationMessage), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(false, authenticationMessage));
     }
 
     /**
@@ -131,8 +131,8 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> handleInsufficientAuthenticationException() {
         String insufficientAuthenticationMessage = messageService.getMessage("exception.insufficientAuthentication");
 
-        return new ResponseEntity<>(new ApiResponseDto(false, insufficientAuthenticationMessage),
-                HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponseDto(false,
+                insufficientAuthenticationMessage));
     }
 
     /**
@@ -144,7 +144,7 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> handleBadCredentialsException() {
         String badCredentialsMessage = messageService.getMessage("exception.badCredentials");
 
-        return new ResponseEntity<>(new ApiResponseDto(false, badCredentialsMessage), HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponseDto(false, badCredentialsMessage));
     }
 
     /**
@@ -156,7 +156,7 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> handleDisabledException() {
         String disabledMessage = messageService.getMessage("exception.disabledException");
 
-        return new ResponseEntity<>(new ApiResponseDto(false, disabledMessage), HttpStatus.FORBIDDEN);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponseDto(false, disabledMessage));
     }
 
     /**
@@ -167,7 +167,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(AccessForbiddenException.class)
     public ResponseEntity<?> handleAccessForbiddenException(AccessForbiddenException ex) {
-        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.FORBIDDEN);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponseDto(false, ex.getMessage()));
     }
 
     /**
@@ -178,7 +178,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(InvalidDateException.class)
     public ResponseEntity<?> handleInvalidDateException(InvalidDateException ex) {
-        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(false, ex.getMessage()));
     }
 
     /**
@@ -189,7 +189,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(AuctionOwnerException.class)
     public ResponseEntity<?> handleAuctionOwnerException(AuctionOwnerException ex) {
-        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(false, ex.getMessage()));
     }
 
     /**
@@ -200,6 +200,6 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(InvalidBidPriceException.class)
     public ResponseEntity<?> handleInvalidBidPriceException(InvalidBidPriceException ex) {
-        return new ResponseEntity<>(new ApiResponseDto(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto(false, ex.getMessage()));
     }
 }

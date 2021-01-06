@@ -30,6 +30,6 @@ public class AccessLevelController {
     public ResponseEntity<?> getAllAccessLevels() {
         List<AccessLevelDto> accessLevelDtos = accessLevelService.getAllAccessLevels();
 
-        return new ResponseEntity<>(accessLevelDtos, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(accessLevelDtos);
     }
 }
