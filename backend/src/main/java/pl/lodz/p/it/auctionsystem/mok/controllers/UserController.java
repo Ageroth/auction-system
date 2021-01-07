@@ -129,6 +129,20 @@ public class UserController {
     }
 
     /**
+     * Zwraca dane konta użytkownika o podanym kodzie resetu hasła.
+     *
+     * @param passwordResetCode kod resetu hasła przypisany do użytkownika
+     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link UserAccountDetailsDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    @GetMapping("/password-reset/{passwordResetCode}")
+    public ResponseEntity<?> getUser(@PathVariable(value = "passwordResetCode") String passwordResetCode) throws ApplicationException {
+        UserDto userDto = userService.getUserByPasswordResetCode(passwordResetCode);
+
+        return ResponseEntity.status(HttpStatus.OK).eTag(String.valueOf(userDto.getVersion())).build();
+    }
+
+    /**
      * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie.
      *
      * @param username nazwa użytkownika
@@ -157,7 +171,7 @@ public class UserController {
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @PatchMapping("/me/activation/{activationCode}")
+    @PatchMapping("/activation/{activationCode}")
     public ResponseEntity<?> activateUser(@PathVariable(value = "activationCode") String activationCode) throws ApplicationException {
         userService.activateUser(activationCode);
 
@@ -173,7 +187,7 @@ public class UserController {
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @PatchMapping("/me/password-reset")
+    @PatchMapping("/password-reset")
     public ResponseEntity<?> sendPasswordResetEmail(@Valid @RequestBody PasswordResetEmailDto passwordResetEmailDto) throws ApplicationException {
         userService.sendPasswordResetEmail(passwordResetEmailDto);
 
@@ -187,13 +201,15 @@ public class UserController {
      *
      * @param passwordResetCode kod resetu hasła przypisany do użytkownika
      * @param passwordResetDto  obiekt typu {@link PasswordResetDto}
+     * @param ifMatch           wartość pola wersji
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    @PatchMapping("/me/password-reset/{passwordResetCode}")
+    @PatchMapping("/password-reset/{passwordResetCode}")
     public ResponseEntity<?> resetPassword(@PathVariable(value = "passwordResetCode") String passwordResetCode,
-                                           @Valid @RequestBody PasswordResetDto passwordResetDto) throws ApplicationException {
-        userService.resetPassword(passwordResetCode, passwordResetDto);
+                                           @Valid @RequestBody PasswordResetDto passwordResetDto,
+                                           @RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch) throws ApplicationException {
+        userService.resetPassword(passwordResetCode, passwordResetDto, ifMatch);
 
         String message = messageService.getMessage("info.passwordReset");
 
@@ -204,6 +220,7 @@ public class UserController {
      * Aktualizuje nasze dane personalne.
      *
      * @param ownAccountDetailsUpdateDto obiekt typu {@link UserAccountDetailsUpdateDto}
+     * @param ifMatch                    wartość pola wersji
      * @param authentication             obiekt typu {@link Authentication}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
@@ -215,7 +232,7 @@ public class UserController {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        userService.updateDetailsByUsername(username, ownAccountDetailsUpdateDto, ifMatch.replace("\"", ""));
+        userService.updateDetailsByUsername(username, ownAccountDetailsUpdateDto, ifMatch);
 
         String message = messageService.getMessage("info.yourDetailsUpdated");
 
@@ -226,17 +243,19 @@ public class UserController {
      * Zmienia nasze hasło.
      *
      * @param ownPasswordChangeDto obiekt typu {@link OwnPasswordChangeDto}
+     * @param ifMatch              wartość pola wersji
      * @param authentication       obiekt typu {@link Authentication}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/me/password")
     public ResponseEntity<?> changeOwnPassword(@Valid @RequestBody OwnPasswordChangeDto ownPasswordChangeDto,
+                                               @RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch,
                                                Authentication authentication) throws ApplicationException {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        userService.changePasswordByUsername(username, ownPasswordChangeDto);
+        userService.changePasswordByUsername(username, ownPasswordChangeDto, ifMatch);
 
         String message = messageService.getMessage("info.yourPasswordChanged");
 
@@ -248,6 +267,7 @@ public class UserController {
      *
      * @param userId                      id użytkownika
      * @param userAccountDetailsUpdateDto obiekt typu {@link UserAccountDetailsUpdateDto}
+     * @param ifMatch                     wartość pola wersji obiektu
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
@@ -255,7 +275,7 @@ public class UserController {
     public ResponseEntity<?> updateUserDetails(@PathVariable(value = "userId") Long userId,
                                                @Valid @RequestBody UserAccountDetailsUpdateDto userAccountDetailsUpdateDto,
                                                @RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch) throws ApplicationException {
-        userService.updateUserDetailsById(userId, userAccountDetailsUpdateDto);
+        userService.updateUserDetailsById(userId, userAccountDetailsUpdateDto, ifMatch);
         userAccessLevelService.modifyUserAccessLevels(userId, userAccountDetailsUpdateDto.getAccessLevelIds());
 
         String message = messageService.getMessage("info.userDetailsUpdated");
@@ -268,13 +288,15 @@ public class UserController {
      *
      * @param userId                id użytkownika
      * @param userPasswordChangeDto obiekt typu {@link UserPasswordChangeDto}
+     * @param ifMatch               wartość pola wersji obiektu
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @PatchMapping("/{userId}/password")
     public ResponseEntity<?> changeUserPassword(@PathVariable(value = "userId") Long userId,
+                                                @RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch,
                                                 @Valid @RequestBody UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException {
-        userService.changePasswordById(userId, userPasswordChangeDto);
+        userService.changePasswordById(userId, userPasswordChangeDto, ifMatch);
 
         String message = messageService.getMessage("info.userPasswordChanged");
 

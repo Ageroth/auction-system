@@ -25,15 +25,23 @@ export function checkEmailAvailabilityRequest(value) {
 }
 
 export function activateUserRequest(value) {
-    return axios.patch(`/users/me/activation/${value}`);
+    return axios.patch(`/users/activation/${value}`);
+}
+
+export function getUserRequest(value) {
+    return axios.get(`/users/password-reset/${value}`);
 }
 
 export function sendPasswordResetEmailRequest(payload) {
-    return axios.patch('/users/me/password-reset', JSON.stringify(payload));
+    return axios.patch('/users/password-reset', JSON.stringify(payload));
 }
 
-export function resetPasswordRequest(value, payload) {
-    return axios.patch(`/users/me/password-reset/${value}`, JSON.stringify(payload));
+export function resetPasswordRequest(value, payload, version) {
+    return axios.patch(`/users/password-reset/${value}`, JSON.stringify(payload), {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
 
 export function getUsersRequest(values) {
@@ -55,14 +63,18 @@ export function getUserDetailsRequest(value) {
     return axios.get(`/users/${value}`);
 }
 
-export function changeUserPasswordRequest(value, payload) {
-    return axios.patch(`/users/${value}/password`, JSON.stringify(payload));
+export function changeUserPasswordRequest(value, payload, version) {
+    return axios.patch(`/users/${value}/password`, JSON.stringify(payload), {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
 
-export function updateUserDetailsRequest(value, payload, eTag) {
+export function updateUserDetailsRequest(value, payload, version) {
     return axios.patch(`/users/${value}/details`, JSON.stringify(payload), {
         headers: {
-            'If-Match': eTag
+            'If-Match': version
         }
     });
 }
@@ -71,14 +83,18 @@ export function getOwnDetailsRequest() {
     return axios.get('/users/me');
 }
 
-export function changeOwnPasswordRequest(payload) {
-    return axios.patch('/users/me/password', JSON.stringify(payload));
+export function changeOwnPasswordRequest(payload, version) {
+    return axios.patch('/users/me/password', JSON.stringify(payload), {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
 
-export function updateOwnDetailsRequest(payload, eTag) {
+export function updateOwnDetailsRequest(payload, version) {
     return axios.patch('/users/me/details', JSON.stringify(payload), {
         headers: {
-            'If-Match': eTag
+            'If-Match': version
         }
     });
 }

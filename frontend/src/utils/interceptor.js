@@ -19,8 +19,6 @@ const interceptor = (store) => {
             if (token)
                 config.headers['Authorization'] = `Bearer ${token}`;
 
-            console.log(config.headers)
-
             config.baseURL = 'http://localhost:8080/api';
 
             return config;

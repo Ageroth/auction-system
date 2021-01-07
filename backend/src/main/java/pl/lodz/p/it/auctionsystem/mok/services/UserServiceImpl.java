@@ -160,6 +160,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("permitAll()")
+    public UserDto getUserByPasswordResetCode(String passwordResetCode) throws ApplicationException {
+        String passwordResetCodeInvalidMessage = messageService.getMessage("exception.passwordResetCodeInvalid");
+        User user =
+                userRepositoryMok.findByPasswordResetCode(passwordResetCode).orElseThrow(() -> new
+                        InvalidParameterException(passwordResetCodeInvalidMessage));
+
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    @PreAuthorize("permitAll()")
     public boolean existsByUsername(String username) {
         return userRepositoryMok.existsByUsernameIgnoreCase(username);
     }
@@ -197,7 +208,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("permitAll()")
-    public void resetPassword(String passwordResetCode, PasswordResetDto passwordResetDto) throws ApplicationException {
+    public void resetPassword(String passwordResetCode, PasswordResetDto passwordResetDto, String ifMatch) throws ApplicationException {
         String passwordResetCodeInvalidMessage = messageService.getMessage("exception.passwordResetCodeInvalid");
         User user =
                 userRepositoryMok.findByPasswordResetCode(passwordResetCode).orElseThrow(() -> new
@@ -213,9 +224,13 @@ public class UserServiceImpl implements UserService {
 
         String passwordHash = passwordEncoder.encode(passwordResetDto.getNewPassword());
 
-        user.setPassword(passwordHash);
-        user.setPasswordResetCode(null);
-        user.setPasswordResetCodeAddDate(null);
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+                user.getUsername(), passwordHash, user.getEmail(), user.isActivated(), user.getCreatedAt(),
+                user.getActivationCode(), null, null,
+                user.getFirstName(), user.getLastName(),
+                user.getPhoneNumber());
+
+        userRepositoryMok.saveAndFlush(userCopy);
     }
 
     @Override
@@ -226,8 +241,8 @@ public class UserServiceImpl implements UserService {
         User user =
                 userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        User userCopy = new User(Long.parseLong(ifMatch), user.getBusinessKey(), user.getId(), user.getUsername(),
-                user.getPassword(), user.getEmail(), user.isActivated(), user.getCreatedAt(),
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+                user.getUsername(), user.getPassword(), user.getEmail(), user.isActivated(), user.getCreatedAt(),
                 user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
                 ownAccountDetailsUpdateDto.getFirstName(), ownAccountDetailsUpdateDto.getLastName(),
                 ownAccountDetailsUpdateDto.getPhoneNumber());
@@ -237,19 +252,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public void updateUserDetailsById(Long userId, UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException {
+    public void updateUserDetailsById(Long userId, UserAccountDetailsUpdateDto userAccountDetailsUpdateDto,
+                                      String ifMatch) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        user.setFirstName(userAccountDetailsUpdateDto.getFirstName());
-        user.setLastName(userAccountDetailsUpdateDto.getLastName());
-        user.setPhoneNumber(userAccountDetailsUpdateDto.getPhoneNumber());
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+                user.getUsername(), user.getPassword(), user.getEmail(), user.isActivated(), user.getCreatedAt(),
+                user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
+                userAccountDetailsUpdateDto.getFirstName(), userAccountDetailsUpdateDto.getLastName(),
+                userAccountDetailsUpdateDto.getPhoneNumber());
+
+        userRepositoryMok.saveAndFlush(userCopy);
     }
 
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public void changePasswordByUsername(String username, OwnPasswordChangeDto ownPasswordChangeDto) throws ApplicationException {
+    public void changePasswordByUsername(String username, OwnPasswordChangeDto ownPasswordChangeDto, String ifMatch) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
@@ -268,18 +288,30 @@ public class UserServiceImpl implements UserService {
 
         String passwordHash = passwordEncoder.encode(ownPasswordChangeDto.getNewPassword());
 
-        user.setPassword(passwordHash);
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+                user.getUsername(), passwordHash, user.getEmail(), user.isActivated(), user.getCreatedAt(),
+                user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
+                user.getFirstName(), user.getLastName(),
+                user.getPhoneNumber());
+
+        userRepositoryMok.saveAndFlush(userCopy);
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public void changePasswordById(Long userId, UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException {
+    public void changePasswordById(Long userId, UserPasswordChangeDto userPasswordChangeDto, String ifMatch) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordHash = passwordEncoder.encode(userPasswordChangeDto.getNewPassword());
 
-        user.setPassword(passwordHash);
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+                user.getUsername(), passwordHash, user.getEmail(), user.isActivated(), user.getCreatedAt(),
+                user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
+                user.getFirstName(), user.getLastName(),
+                user.getPhoneNumber());
+
+        userRepositoryMok.saveAndFlush(userCopy);
     }
 
     private User createUser(User user) throws ApplicationException {

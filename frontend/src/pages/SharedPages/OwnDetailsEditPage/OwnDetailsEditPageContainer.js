@@ -9,7 +9,7 @@ export default class OwnDetailsEditPageContainer extends Component {
         this.state = {
             myDetails: null,
             isSubmitting: false,
-            eTag: null
+            version: null
         };
     }
 
@@ -21,14 +21,14 @@ export default class OwnDetailsEditPageContainer extends Component {
         getOwnDetailsRequest().then(res => {
             const eTagValue = res.headers.etag
 
-            this.setState({myDetails: res.data, eTag: eTagValue});
+            this.setState({myDetails: res.data, version: eTagValue});
         });
     }
 
     handleEdit = (payload) => {
         this.setState({isSubmitting: true});
 
-        updateOwnDetailsRequest(payload, this.state.eTag).then((res) => {
+        updateOwnDetailsRequest(payload, this.state.version).then((res) => {
             this.setState({isSubmitting: false});
 
             toast.success(res.data.message, {
