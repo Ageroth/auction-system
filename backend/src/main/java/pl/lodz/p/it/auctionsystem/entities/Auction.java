@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 @Entity
 @Table(name = "auction")
@@ -18,6 +19,9 @@ import java.util.Collection;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class Auction extends BaseEntity {
+
+    @OneToMany(mappedBy = "auction")
+    private final Collection<Bid> bids = new ArrayList<>();
 
     @Id
     @SequenceGenerator(name = "AuctionSeqGen", sequenceName = "auction_id_seq", allocationSize = 1)
@@ -48,11 +52,19 @@ public class Auction extends BaseEntity {
     @NotNull
     private Item item;
 
-    @OneToMany(mappedBy = "auction")
-    private final Collection<Bid> bids = new ArrayList<>();
-
     public Auction(BigDecimal startingPrice, LocalDateTime startDate,
                    LocalDateTime endDate, User user, Item item) {
+        this.startingPrice = startingPrice;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.user = user;
+        this.item = item;
+    }
+
+    public Auction(Long version, UUID businessKey, Long id, BigDecimal startingPrice,
+                   LocalDateTime startDate, LocalDateTime endDate, User user, Item item) {
+        super(version, businessKey);
+        this.id = id;
         this.startingPrice = startingPrice;
         this.startDate = startDate;
         this.endDate = endDate;

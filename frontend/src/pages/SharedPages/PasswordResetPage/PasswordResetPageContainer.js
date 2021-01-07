@@ -27,8 +27,8 @@ class PasswordResetPageContainer extends Component {
 
             this.setState({version: eTagValue});
         }).catch(() => {
-            this.props.history.goBack();
-        });
+            this.props.history.push("/password_reset")
+        })
     }
 
     handlePasswordResetEmailSending = (payload) => {

@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Entity
 @Table(name = "item")
@@ -39,6 +40,14 @@ public class Item extends BaseEntity {
     private byte[] image;
 
     public Item(String name, String description, byte[] image) {
+        this.name = name;
+        this.description = description;
+        this.image = image;
+    }
+
+    public Item(Long version, UUID businessKey, Long id, String name, String description, byte[] image) {
+        super(version, businessKey);
+        this.id = id;
         this.name = name;
         this.description = description;
         this.image = image;

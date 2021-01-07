@@ -22,37 +22,47 @@ public class User extends BaseEntity {
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE}, mappedBy = "user")
     private final Collection<UserAccessLevel> userAccessLevels = new ArrayList<>();
+
     @Id
     @SequenceGenerator(name = "UserSeqGen", sequenceName = "user_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserSeqGen")
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private Long id;
+
     @Column(name = "username", nullable = false, unique = true, updatable = false, length = 32)
     @NotNull
     private String username;
+
     @Column(name = "password", nullable = false, length = 64)
     @NotNull
     @Setter
     private String password;
+
     @Column(name = "email", nullable = false, unique = true, updatable = false, length = 64)
     @NotNull
     private String email;
+
     @Column(name = "activated", nullable = false)
     @NotNull
     @Setter
     private boolean activated;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @NotNull
     private LocalDateTime createdAt;
+
     @Column(name = "activation_code", unique = true, length = 128)
     @Setter
     private String activationCode;
+
     @Column(name = "password_reset_code", unique = true, length = 64)
     @Setter
     private String passwordResetCode;
+
     @Column(name = "password_reset_code_add_date")
     @Setter
     private LocalDateTime passwordResetCodeAddDate;
+
     @Column(name = "first_name", table = "user_details", nullable = false, length = 32)
     @NotNull
     @Setter
@@ -68,8 +78,8 @@ public class User extends BaseEntity {
     @Setter
     private String phoneNumber;
 
-    public User(String username, String password, String email, String firstName, String lastName, String phoneNumber
-            , LocalDateTime createdAt) {
+    public User(String username, String password, String email, String firstName, String lastName, String phoneNumber,
+                LocalDateTime createdAt) {
         super();
         this.username = username;
         this.password = password;
@@ -81,10 +91,9 @@ public class User extends BaseEntity {
         this.createdAt = createdAt;
     }
 
-    public User(Long version, UUID businessKey, Long id, String username, String password,
-                String email, boolean activated, LocalDateTime createdAt,
-                String activationCode, String passwordResetCode, LocalDateTime passwordResetCodeAddDate,
-                String firstName, String lastName, String phoneNumber) {
+    public User(Long version, UUID businessKey, Long id, String username, String password, String email,
+                boolean activated, LocalDateTime createdAt, String activationCode, String passwordResetCode,
+                LocalDateTime passwordResetCodeAddDate, String firstName, String lastName, String phoneNumber) {
         super(version, businessKey);
         this.id = id;
         this.username = username;

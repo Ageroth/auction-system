@@ -27,7 +27,7 @@ public interface AuctionService {
      * @param auctionCriteria obiekt typu {@link AuctionCriteria}
      * @return obiekt typu {@link Page}
      */
-    Page<AuctionDto> getAuctions(AuctionCriteria auctionCriteria);
+    Page<BasicAuctionDto> getAuctions(AuctionCriteria auctionCriteria);
 
     /**
      * Zwraca aukcje danego użykownika, spełniające zadane kryteria.
@@ -36,7 +36,7 @@ public interface AuctionService {
      * @param username        nazwa użytkownika
      * @return obiekt typu {@link Page}
      */
-    Page<AuctionDto> getAuctionsByUsername(AuctionCriteria auctionCriteria, String username);
+    Page<BasicAuctionDto> getAuctionsByUsername(AuctionCriteria auctionCriteria, String username);
 
     /**
      * Zwraca aukcje, w których dany użytkownik bierze udział, spełniające zadane kryteria.
@@ -45,35 +45,35 @@ public interface AuctionService {
      * @param username        nazwa użytkownika
      * @return obiekt typu {@link Page}
      */
-    Page<AuctionDto> getParticipatedAuctions(AuctionCriteria auctionCriteria, String username);
+    Page<BasicAuctionDto> getParticipatedAuctions(AuctionCriteria auctionCriteria, String username);
 
     /**
      * Zwraca aukcję o podanym id.
      *
      * @param auctionId id aukcji
-     * @return obiekt typu {@link AuctionDetailsDto}
+     * @return obiekt typu {@link AuctionDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    AuctionDetailsDto getAuctionById(Long auctionId) throws ApplicationException;
+    AuctionDto getAuctionById(Long auctionId) throws ApplicationException;
 
     /**
      * Zwraca własną aukcję o podanym id.
      *
      * @param auctionId id aukcji
-     * @return obiekt typu {@link AuctionDetailsDto}
+     * @return obiekt typu {@link AuctionDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    AuctionDetailsDto getOwnAuctionById(Long auctionId) throws ApplicationException;
+    AuctionDto getOwnAuctionById(Long auctionId) throws ApplicationException;
 
     /**
      * Zwraca aukcję o podanym id, w której użytkownik bierze udział.
      *
      * @param auctionId id aukcji
      * @param username  nazwa użytkownika
-     * @return obiekt typu {@link AuctionDetailsDto}
+     * @return obiekt typu {@link AuctionDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    AuctionDetailsDto getOwnBiddingById(Long auctionId, String username) throws ApplicationException;
+    AuctionDto getOwnBiddingById(Long auctionId, String username) throws ApplicationException;
 
     /**
      * Aktualizuje dane aukcji o podanym id.
@@ -81,9 +81,10 @@ public interface AuctionService {
      * @param auctionId        id aukcji
      * @param auctionUpdateDto obiekt typu {@link AuctionUpdateDto}
      * @param username         nazwa aktualnie zalogowanego użytkownika
+     * @param ifMatch          wartość nagłówka If-Match będącego wartością pola wersji obiektu
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateAuctionById(Long auctionId, AuctionUpdateDto auctionUpdateDto, String username) throws ApplicationException;
+    void updateAuctionById(Long auctionId, AuctionUpdateDto auctionUpdateDto, String username, String ifMatch) throws ApplicationException;
 
     /**
      * Dodaje nową ofertę do aukcji o podanym id.
