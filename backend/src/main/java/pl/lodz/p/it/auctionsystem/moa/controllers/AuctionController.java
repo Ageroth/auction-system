@@ -57,9 +57,7 @@ public class AuctionController {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        auctionAddDto.setUsername(username);
-
-        Long result = auctionService.addAuction(auctionAddDto);
+        Long result = auctionService.addAuction(auctionAddDto, username);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/auctions/{auctionId}")
@@ -237,9 +235,7 @@ public class AuctionController {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        bidPlaceDto.setUsername(username);
-
-        Long result = auctionService.addBid(auctionId, bidPlaceDto);
+        Long result = auctionService.addBid(auctionId, bidPlaceDto, username);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/auctions/{auctionId}")
@@ -255,16 +251,18 @@ public class AuctionController {
      *
      * @param auctionId      id aukcji
      * @param authentication obiekt typu {@link Authentication}
+     * @param ifMatch        wartość pola wersji
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @DeleteMapping("/{auctionId}")
     public ResponseEntity<?> deleteAuction(@PathVariable(value = "auctionId") Long auctionId,
+                                           @RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch,
                                            Authentication authentication) throws ApplicationException {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        auctionService.deleteAuctionById(auctionId, username);
+        auctionService.deleteAuctionById(auctionId, username, ifMatch);
 
         String message = messageService.getMessage("info.auctionDeleted");
 

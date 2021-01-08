@@ -250,7 +250,11 @@ const AuctionDetailsPage = (props) => {
                         <div className="details">
                             <div className="main">
                                 <h1 style={{fontWeight: "bold"}}>{auctionDetails.itemName}</h1>
-                                <span>{t('text.seller')}: {auctionDetails.userUsername}</span>
+                                {auctionDetails.userUsername !== username ? (
+                                    <span>{t('text.seller')}: {auctionDetails.userUsername}</span>
+                                ) : (
+                                    <span>{t('text.seller')}: {t('text.you')}</span>
+                                )}
                             </div>
                             <hr className="divider"/>
                             <div className="countdown">

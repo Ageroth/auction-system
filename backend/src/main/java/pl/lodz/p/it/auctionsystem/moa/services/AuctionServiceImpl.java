@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
 import pl.lodz.p.it.auctionsystem.entities.Bid;
-import pl.lodz.p.it.auctionsystem.entities.Item;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.*;
 import pl.lodz.p.it.auctionsystem.moa.dtos.*;
@@ -52,11 +51,10 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     @PreAuthorize("hasRole('MANAGER')")
-    public Long addAuction(AuctionAddDto auctionAddDto) throws ApplicationException {
+    public Long addAuction(AuctionAddDto auctionAddDto, String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMoa.findByUsernameIgnoreCase(auctionAddDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
-        Item item = new Item(auctionAddDto.getItemName(), auctionAddDto.getItemDescription(), auctionAddDto.getImage());
+                userRepositoryMoa.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         LocalDateTime startDate;
 
         if (auctionAddDto.getStartDate() == null)
@@ -74,7 +72,8 @@ public class AuctionServiceImpl implements AuctionService {
         LocalDateTime endDate = startDate.plusDays(auctionAddDto.getDuration());
 
         Auction auction = new Auction(auctionAddDto.getStartingPrice().setScale(2, RoundingMode.DOWN), startDate,
-                endDate, user, item);
+                endDate, user, auctionAddDto.getItemName(), auctionAddDto.getItemDescription(),
+                auctionAddDto.getImage());
 
         return auctionRepository.save(auction).getId();
     }
@@ -238,25 +237,20 @@ public class AuctionServiceImpl implements AuctionService {
             throw new AccessForbiddenException(accessForbiddenMessage);
         }
 
-        auction.setStartingPrice(auctionUpdateDto.getStartingPrice());
-        auction.getItem().setName(auctionUpdateDto.getItemName());
-        auction.getItem().setDescription(auctionUpdateDto.getItemDescription());
-
         Auction auctionCopy = new Auction(Long.parseLong(ifMatch.replace("\"", "")), auction.getBusinessKey(),
-                auction.getId(), auctionUpdateDto.getStartingPrice(), auction.getStartDate(), auction.getEndDate(),
-                auction.getUser(), new Item(Long.parseLong(ifMatch.replace("\"", "")),
-                auction.getItem().getBusinessKey(), auction.getItem().getId(), auctionUpdateDto.getItemName(),
-                auctionUpdateDto.getItemDescription(), auction.getItem().getImage()));
+                auction.getId(), auctionUpdateDto.getStartingPrice().setScale(2, RoundingMode.DOWN),
+                auction.getStartDate(), auction.getEndDate(), auction.getUser(), auctionUpdateDto.getItemName(),
+                auctionUpdateDto.getItemDescription(), auction.getItemImage());
 
         auctionRepository.saveAndFlush(auctionCopy);
     }
 
     @Override
     @PreAuthorize("hasRole('CLIENT')")
-    public Long addBid(Long auctionId, BidPlaceDto bidPlaceDto) throws ApplicationException {
+    public Long addBid(Long auctionId, BidPlaceDto bidPlaceDto, String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMoa.findByUsernameIgnoreCase(bidPlaceDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMoa.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
@@ -268,15 +262,14 @@ public class AuctionServiceImpl implements AuctionService {
             throw new InvalidDateException(bidPlaceInvalidDateMessage);
         }
 
-        if (auction.getUser().getUsername().equals(bidPlaceDto.getUsername())) {
+        if (auction.getUser().getUsername().equals(username)) {
             String auctionOwnerMessage = messageService.getMessage("exception.auctionOwnerException");
 
             throw new AuctionOwnerException(auctionOwnerMessage);
         }
 
         BigDecimal currentPrice;
-
-        bidPlaceDto.setPrice(bidPlaceDto.getPrice().setScale(2, RoundingMode.DOWN));
+        BigDecimal bidPrice = bidPlaceDto.getPrice().setScale(2, RoundingMode.DOWN);
 
         if (auction.getBids().size() > 0) {
             currentPrice = auction.getBids().stream()
@@ -287,7 +280,7 @@ public class AuctionServiceImpl implements AuctionService {
             currentPrice = auction.getStartingPrice();
         }
 
-        if (bidPlaceDto.getPrice().compareTo(currentPrice) <= 0) {
+        if (bidPrice.compareTo(currentPrice) <= 0) {
             String invalidBidPriceMessage = messageService.getMessage("exception.invalidBidPriceException");
 
             throw new InvalidBidPriceException(invalidBidPriceMessage);
@@ -295,16 +288,14 @@ public class AuctionServiceImpl implements AuctionService {
 
         LocalDateTime date = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
-        Bid bid = new Bid(date, bidPlaceDto.getPrice(), user, auction);
+        Bid bid = new Bid(date, bidPrice, user, auction);
 
-        Bid savedBid = bidRepository.save(bid);
-
-        return savedBid.getId();
+        return bidRepository.save(bid).getId();
     }
 
     @Override
     @PreAuthorize("hasRole('MANAGER')")
-    public void deleteAuctionById(Long auctionId, String username) throws ApplicationException {
+    public void deleteAuctionById(Long auctionId, String username, String ifMatch) throws ApplicationException {
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
@@ -321,6 +312,10 @@ public class AuctionServiceImpl implements AuctionService {
             throw new InvalidDateException(deletionInvalidDateMessage);
         }
 
-        auctionRepository.delete(auction);
+        Auction auctionCopy = new Auction(Long.parseLong(ifMatch.replace("\"", "")), auction.getBusinessKey(),
+                auction.getId(), auction.getStartingPrice(), auction.getStartDate(), auction.getEndDate(),
+                auction.getUser(), auction.getItemName(), auction.getItemDescription(), auction.getItemImage());
+
+        auctionRepository.delete(auctionCopy);
     }
 }

@@ -137,8 +137,12 @@ export function getOwnAuctionDetailsRequest(value) {
     return axios.get(`/auctions/selling/${value}`);
 }
 
-export function updateAuctionRequest(value, payload) {
-    return axios.patch(`/auctions/selling/${value}`, JSON.stringify(payload));
+export function updateAuctionRequest(value, payload, version) {
+    return axios.patch(`/auctions/selling/${value}`, JSON.stringify(payload), {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
 
 export function getOwnBiddingsRequest(values) {
@@ -160,6 +164,10 @@ export function placeABidRequest(value, payload) {
     return axios.post(`/auctions/${value}`, JSON.stringify(payload));
 }
 
-export function deleteAuctionRequest(value) {
-    return axios.delete(`/auctions/${value}`);
+export function deleteAuctionRequest(value, version) {
+    return axios.delete(`/auctions/${value}`, {
+        headers: {
+            'If-Match': version
+        }
+    });
 }

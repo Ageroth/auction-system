@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "auction")
+@SecondaryTable(name = "item", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"))
 @NoArgsConstructor
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -47,28 +49,45 @@ public class Auction extends BaseEntity {
     @NotNull
     private User user;
 
-    @JoinColumn(name = "item_id", referencedColumnName = "id", updatable = false, nullable = false)
-    @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @Column(name = "name", table = "item", nullable = false, length = 32)
     @NotNull
-    private Item item;
+    @Setter
+    private String itemName;
+
+    @Column(name = "description", table = "item", nullable = false, length = 4096)
+    @NotNull
+    @Setter
+    private String itemDescription;
+
+    @Column(name = "image", table = "item", nullable = false, updatable = false)
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
+    @NotNull
+    private byte[] itemImage;
 
     public Auction(BigDecimal startingPrice, LocalDateTime startDate,
-                   LocalDateTime endDate, User user, Item item) {
+                   LocalDateTime endDate, User user, String itemName,
+                   String itemDescription, byte[] itemImage) {
         this.startingPrice = startingPrice;
         this.startDate = startDate;
         this.endDate = endDate;
         this.user = user;
-        this.item = item;
+        this.itemName = itemName;
+        this.itemDescription = itemDescription;
+        this.itemImage = itemImage;
     }
 
     public Auction(Long version, UUID businessKey, Long id, BigDecimal startingPrice,
-                   LocalDateTime startDate, LocalDateTime endDate, User user, Item item) {
+                   LocalDateTime startDate, LocalDateTime endDate, User user,
+                   String itemName, String itemDescription, byte[] itemImage) {
         super(version, businessKey);
         this.id = id;
         this.startingPrice = startingPrice;
         this.startDate = startDate;
         this.endDate = endDate;
         this.user = user;
-        this.item = item;
+        this.itemName = itemName;
+        this.itemDescription = itemDescription;
+        this.itemImage = itemImage;
     }
 }

@@ -5,16 +5,13 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
- * DTO zawierające wszelkie dane encji aukcji wraz z jej wersją.
+ * DTO zawierające dane aukcji, wykorzystywane do wyświetlania ich listy.
  */
 @Getter
 @Setter
-public class AuctionDto {
-
-    private Long version;
+public class BasicAuctionDto {
 
     private Long id;
 
@@ -24,6 +21,10 @@ public class AuctionDto {
 
     private LocalDateTime endDate;
 
+    private int bidsNumber;
+
+    private BigDecimal currentPrice;
+
     private String userUsername;
 
     private String itemName;
@@ -32,5 +33,5 @@ public class AuctionDto {
 
     private byte[] itemImage;
 
-    private List<BidDto> bids;
+    private String topBidderName;
 }

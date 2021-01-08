@@ -9,7 +9,8 @@ export default class AuctionEditPageContainer extends Component {
         this.state = {
             auctionId: this.props.match.params.auctionId,
             auctionDetails: null,
-            isSubmitting: false
+            isSubmitting: false,
+            version: null
         };
     }
 
@@ -19,14 +20,18 @@ export default class AuctionEditPageContainer extends Component {
 
     getOwnAuctionDetails = () => {
         getOwnAuctionDetailsRequest(this.state.auctionId).then((res) => {
-            this.setState({auctionDetails: res.data});
+            const eTagValue = res.headers.etag
+
+            this.setState({auctionDetails: res.data, version: eTagValue});
         });
     }
 
     handleEdit = (payload) => {
         this.setState({isSubmitting: true});
-        updateAuctionRequest(this.state.auctionId, payload).then(res => {
+
+        updateAuctionRequest(this.state.auctionId, payload, this.state.version).then(res => {
             this.setState({isSubmitting: false});
+
             toast.success(res.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
