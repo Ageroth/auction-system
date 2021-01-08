@@ -247,7 +247,7 @@ const BiddingDetailsPage = (props) => {
                             <TabPane tab={t('text.bidHistory')} key="2">
                                 <div className="history">
                                     <Timeline>
-                                        {auctionDetails.bids.reverse().map(bid => {
+                                        {auctionDetails.bids.map(bid => {
                                             return (
                                                 <Timeline.Item
                                                     key={bid.id}>{moment(bid.date).format('dddd, DD MMMM YYYY, HH:mm')} - {bid.userUsername} {t('text.bid')} {bid.price} PLN</Timeline.Item>

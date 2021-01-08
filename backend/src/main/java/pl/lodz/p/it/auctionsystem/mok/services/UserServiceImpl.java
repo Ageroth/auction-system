@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
 import pl.lodz.p.it.auctionsystem.entities.User;
@@ -32,7 +33,7 @@ import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.containsTextInName;
 import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.isActive;
 
 @Service
-@Transactional(rollbackFor = ApplicationException.class)
+@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = ApplicationException.class)
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 

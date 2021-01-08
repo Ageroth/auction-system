@@ -12,7 +12,7 @@ import java.util.Optional;
  * Interfejs definiujący dozwolone operacje na encji {@link User}.
  */
 @Repository
-@Transactional(propagation = Propagation.REQUIRED)
+@Transactional(propagation = Propagation.MANDATORY)
 public interface UserRepositoryMoa extends JpaRepository<User, Long> {
 
     /**

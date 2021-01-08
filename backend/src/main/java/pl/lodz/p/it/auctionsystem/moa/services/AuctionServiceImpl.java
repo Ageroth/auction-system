@@ -7,9 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
 import pl.lodz.p.it.auctionsystem.entities.Bid;
@@ -32,7 +33,7 @@ import java.util.Optional;
 import static pl.lodz.p.it.auctionsystem.moa.utils.AuctionSpecs.*;
 
 @Service
-@Transactional(rollbackFor = ApplicationException.class)
+@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = ApplicationException.class)
 @RequiredArgsConstructor
 public class AuctionServiceImpl implements AuctionService {
 
@@ -199,11 +200,16 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     @PreAuthorize("hasRole('MANAGER')")
-    @PostAuthorize("returnObject.userUsername == authentication.principal.username")
-    public AuctionDto getOwnAuctionById(Long auctionId) throws ApplicationException {
+    public AuctionDto getOwnAuctionById(Long auctionId, String username) throws ApplicationException {
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+
+        if (!auction.getUser().getUsername().equals(username)) {
+            String accessForbiddenMessage = messageService.getMessage("exception.accessForbiddenException");
+
+            throw new AccessForbiddenException(accessForbiddenMessage);
+        }
 
         return modelMapper.map(auction, AuctionDto.class);
     }
@@ -246,6 +252,8 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE, rollbackFor =
+            ApplicationException.class)
     @PreAuthorize("hasRole('CLIENT')")
     public Long addBid(Long auctionId, BidPlaceDto bidPlaceDto, String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
@@ -274,7 +282,7 @@ public class AuctionServiceImpl implements AuctionService {
         if (auction.getBids().size() > 0) {
             currentPrice = auction.getBids().stream()
                     .map(Bid::getPrice)
-                    .min(Comparator.naturalOrder())
+                    .max(Comparator.naturalOrder())
                     .orElse(BigDecimal.ZERO);
         } else {
             currentPrice = auction.getStartingPrice();

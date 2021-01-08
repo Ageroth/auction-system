@@ -163,21 +163,26 @@ public class AuctionController {
     }
 
     /**
-     * Zwraca szczegóły aukcji o podanym id.
+     * Zwraca własną aukcję o podanym id.
      *
-     * @param auctionId id aukcji
+     * @param auctionId      id aukcji
+     * @param authentication obiekt typu {@link Authentication}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link AuctionDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/selling/{auctionId}")
-    public ResponseEntity<?> getOwnAuctionDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
-        AuctionDto auctionDto = auctionService.getOwnAuctionById(auctionId);
+    public ResponseEntity<?> getOwnAuctionDetails(@PathVariable(value = "auctionId") Long auctionId,
+                                                  Authentication authentication) throws ApplicationException {
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
+
+        AuctionDto auctionDto = auctionService.getOwnAuctionById(auctionId, username);
 
         return ResponseEntity.status(HttpStatus.OK).eTag(String.valueOf(auctionDto.getVersion())).body(new AuctionDetailsDto(auctionDto));
     }
 
     /**
-     * Zwraca szczegóły aukcji o podanym id.
+     * Zwraca aukcję o podanym id, w której aktualnie zalogowany użytkownik bierze udział.
      *
      * @param auctionId      id aukcji
      * @param authentication obiekt typu {@link Authentication}

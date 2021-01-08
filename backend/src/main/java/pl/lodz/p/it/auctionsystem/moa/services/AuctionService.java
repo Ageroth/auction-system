@@ -61,10 +61,11 @@ public interface AuctionService {
      * Zwraca własną aukcję o podanym id.
      *
      * @param auctionId id aukcji
+     * @param username  nazwa aktualnie zalogowanego użytkownika
      * @return obiekt typu {@link AuctionDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    AuctionDto getOwnAuctionById(Long auctionId) throws ApplicationException;
+    AuctionDto getOwnAuctionById(Long auctionId, String username) throws ApplicationException;
 
     /**
      * Zwraca aukcję o podanym id, w której aktualnie zalogowany użytkownik bierze udział.
