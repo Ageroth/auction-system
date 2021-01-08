@@ -25,6 +25,17 @@ public class CustomExceptionHandler {
     private final MessageService messageService;
 
     /**
+     * Obsługuje wyjątek {@link MailException}.
+     *
+     * @param ex obiekt wyjątku
+     * @return Kod odpowiedzi HTTP 500 z obiektem {@link ApiResponseDto}
+     */
+    @ExceptionHandler(MailException.class)
+    public ResponseEntity<?> handleMailException(MailException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponseDto(false, ex.getMessage()));
+    }
+
+    /**
      * Obsługuje wyjątek {@link EntityNotFoundException}.
      *
      * @param ex obiekt wyjątku
