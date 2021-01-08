@@ -18,7 +18,7 @@ export default class UserDetailsPageContainer extends Component {
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).then((res) => {
             this.setState({userDetails: res.data});
-        });
+        }).catch();
     }
 
     render() {

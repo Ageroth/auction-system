@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = ApplicationException.class)
+@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = ApplicationException.class)
 @RequiredArgsConstructor
 public class AccessLevelServiceImpl implements AccessLevelService {
 

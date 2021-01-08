@@ -25,4 +25,14 @@ public class OwnAccountDetailsDto {
     private String lastName;
 
     private String phoneNumber;
+
+    public OwnAccountDetailsDto(UserDto userDto) {
+        this.username = userDto.getUsername();
+        this.email = userDto.getEmail();
+        this.activated = userDto.isActivated();
+        this.createdAt = userDto.getCreatedAt();
+        this.firstName = userDto.getFirstName();
+        this.lastName = userDto.getLastName();
+        this.phoneNumber = userDto.getPhoneNumber();
+    }
 }

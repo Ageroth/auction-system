@@ -2,6 +2,7 @@ package pl.lodz.p.it.auctionsystem.moa.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,9 +57,7 @@ public class AuctionController {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        auctionAddDto.setUsername(username);
-
-        Long result = auctionService.addAuction(auctionAddDto);
+        Long result = auctionService.addAuction(auctionAddDto, username);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/auctions/{auctionId}")
@@ -66,7 +65,7 @@ public class AuctionController {
 
         String message = messageService.getMessage("info.auctionAdded");
 
-        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.CREATED).location(location).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -78,10 +77,10 @@ public class AuctionController {
      */
     @GetMapping
     public ResponseEntity<?> getAuctions(AuctionCriteria auctionCriteria) {
-        Page<AuctionDto> auctionDtoPage = auctionService.getAuctions(auctionCriteria);
+        Page<BasicAuctionDto> auctionDtoPage = auctionService.getAuctions(auctionCriteria);
 
         if (auctionDtoPage.getContent().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             Map<String, Object> response = new HashMap<>();
 
@@ -89,7 +88,7 @@ public class AuctionController {
             response.put("currentPage", auctionDtoPage.getNumber());
             response.put("totalItems", auctionDtoPage.getTotalElements());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
 
@@ -106,10 +105,10 @@ public class AuctionController {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        Page<AuctionDto> auctionDtoPage = auctionService.getAuctionsByUsername(auctionCriteria, username);
+        Page<BasicAuctionDto> auctionDtoPage = auctionService.getAuctionsByUsername(auctionCriteria, username);
 
         if (auctionDtoPage.getContent().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             Map<String, Object> response = new HashMap<>();
 
@@ -117,7 +116,7 @@ public class AuctionController {
             response.put("currentPage", auctionDtoPage.getNumber());
             response.put("totalItems", auctionDtoPage.getTotalElements());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
 
@@ -134,10 +133,10 @@ public class AuctionController {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        Page<AuctionDto> auctionDtoPage = auctionService.getParticipatedAuctions(auctionCriteria, username);
+        Page<BasicAuctionDto> auctionDtoPage = auctionService.getParticipatedAuctions(auctionCriteria, username);
 
         if (auctionDtoPage.getContent().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             Map<String, Object> response = new HashMap<>();
 
@@ -145,7 +144,7 @@ public class AuctionController {
             response.put("currentPage", auctionDtoPage.getNumber());
             response.put("totalItems", auctionDtoPage.getTotalElements());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
 
@@ -158,27 +157,32 @@ public class AuctionController {
      */
     @GetMapping("/{auctionId}")
     public ResponseEntity<?> getAuctionDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
-        AuctionDetailsDto auctionDetailsDto = auctionService.getAuctionById(auctionId);
+        AuctionDto auctionDto = auctionService.getAuctionById(auctionId);
 
-        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).eTag(String.valueOf(auctionDto.getVersion())).body(new AuctionDetailsDto(auctionDto));
     }
 
     /**
-     * Zwraca szczegóły aukcji o podanym id.
+     * Zwraca własną aukcję o podanym id.
      *
-     * @param auctionId id aukcji
+     * @param auctionId      id aukcji
+     * @param authentication obiekt typu {@link Authentication}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link AuctionDetailsDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/selling/{auctionId}")
-    public ResponseEntity<?> getOwnAuctionDetails(@PathVariable(value = "auctionId") Long auctionId) throws ApplicationException {
-        AuctionDetailsDto auctionDetailsDto = auctionService.getOwnAuctionById(auctionId);
+    public ResponseEntity<?> getOwnAuctionDetails(@PathVariable(value = "auctionId") Long auctionId,
+                                                  Authentication authentication) throws ApplicationException {
+        String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
+                null;
 
-        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+        AuctionDto auctionDto = auctionService.getOwnAuctionById(auctionId, username);
+
+        return ResponseEntity.status(HttpStatus.OK).eTag(String.valueOf(auctionDto.getVersion())).body(new AuctionDetailsDto(auctionDto));
     }
 
     /**
-     * Zwraca szczegóły aukcji o podanym id.
+     * Zwraca aukcję o podanym id, w której aktualnie zalogowany użytkownik bierze udział.
      *
      * @param auctionId      id aukcji
      * @param authentication obiekt typu {@link Authentication}
@@ -191,9 +195,9 @@ public class AuctionController {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        AuctionDetailsDto auctionDetailsDto = auctionService.getOwnBiddingById(auctionId, username);
+        AuctionDto auctionDto = auctionService.getOwnBiddingById(auctionId, username);
 
-        return new ResponseEntity<>(auctionDetailsDto, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).eTag(String.valueOf(auctionDto.getVersion())).body(new AuctionDetailsDto(auctionDto));
     }
 
     /**
@@ -201,6 +205,7 @@ public class AuctionController {
      *
      * @param auctionId        id aukcji
      * @param auctionUpdateDto obiekt typu {@link AuctionUpdateDto}
+     * @param ifMatch          wartość pola wersji
      * @param authentication   obiekt typu {@link Authentication}
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
@@ -208,15 +213,16 @@ public class AuctionController {
     @PatchMapping("/selling/{auctionId}")
     public ResponseEntity<?> updateAuctionDetails(@PathVariable(value = "auctionId") Long auctionId,
                                                   @Valid @RequestBody AuctionUpdateDto auctionUpdateDto,
+                                                  @RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch,
                                                   Authentication authentication) throws ApplicationException {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        auctionService.updateAuctionById(auctionId, auctionUpdateDto, username);
+        auctionService.updateAuctionById(auctionId, auctionUpdateDto, username, ifMatch);
 
         String message = messageService.getMessage("info.auctionUpdated");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -234,9 +240,7 @@ public class AuctionController {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        bidPlaceDto.setUsername(username);
-
-        Long result = auctionService.addBid(auctionId, bidPlaceDto);
+        Long result = auctionService.addBid(auctionId, bidPlaceDto, username);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/auctions/{auctionId}")
@@ -244,7 +248,7 @@ public class AuctionController {
 
         String message = messageService.getMessage("info.bidPlaced");
 
-        return ResponseEntity.created(location).body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.CREATED).location(location).body(new ApiResponseDto(true, message));
     }
 
     /**
@@ -252,19 +256,21 @@ public class AuctionController {
      *
      * @param auctionId      id aukcji
      * @param authentication obiekt typu {@link Authentication}
+     * @param ifMatch        wartość pola wersji
      * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link ApiResponseDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @DeleteMapping("/{auctionId}")
     public ResponseEntity<?> deleteAuction(@PathVariable(value = "auctionId") Long auctionId,
+                                           @RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch,
                                            Authentication authentication) throws ApplicationException {
         String username = authentication != null ? ((UserDetailsImpl) authentication.getPrincipal()).getUsername() :
                 null;
 
-        auctionService.deleteAuctionById(auctionId, username);
+        auctionService.deleteAuctionById(auctionId, username, ifMatch);
 
         String message = messageService.getMessage("info.auctionDeleted");
 
-        return ResponseEntity.ok().body(new ApiResponseDto(true, message));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(true, message));
     }
 }

@@ -25,8 +25,6 @@ public class AuctionAddDto {
 
     private Integer duration;
 
-    private String username;
-
     @NotBlank(message = "{validation.notBlank}")
     @Size(max = 32, message = "{validation.max32chars}")
     private String itemName;
@@ -34,6 +32,7 @@ public class AuctionAddDto {
     @NotBlank(message = "{validation.notBlank}")
     @Size(max = 4096, message = "{validation.max4096chars}")
     private String itemDescription;
+
 
     private byte[] image;
 }

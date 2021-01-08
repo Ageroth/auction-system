@@ -8,7 +8,8 @@ export default class UserPasswordChangePageContainer extends Component {
         super(props);
         this.state = {
             userId: this.props.match.params.userId,
-            isSubmitting: false
+            isSubmitting: false,
+            version: null
         };
     }
 
@@ -17,28 +18,28 @@ export default class UserPasswordChangePageContainer extends Component {
     }
 
     getUserDetails = () => {
-        getUserDetailsRequest(this.state.userId).catch(() => {
-        });
+        getUserDetailsRequest(this.state.userId).then(res => {
+            const eTagValue = res.headers.etag
+
+            this.setState({version: eTagValue});
+        }).catch();
     }
 
     handleUserPasswordChange = (payload) => {
         this.setState({isSubmitting: true});
 
-        changeUserPasswordRequest(this.state.userId, payload).then(res => {
+        changeUserPasswordRequest(this.state.userId, payload, this.state.version).then(res => {
             this.setState({isSubmitting: false});
-            this.props.history.goBack();
+
             toast.success(res.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
                 closeOnClick: true
             });
-        }).catch(e => {
+
+            this.props.history.goBack();
+        }).catch(() => {
             this.setState({isSubmitting: false});
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
         });
     }
 

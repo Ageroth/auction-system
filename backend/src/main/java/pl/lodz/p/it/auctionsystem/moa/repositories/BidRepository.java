@@ -10,6 +10,6 @@ import pl.lodz.p.it.auctionsystem.entities.Bid;
  * Interfejs definiujący dozwolone operacje na encji {@link Bid}.
  */
 @Repository
-@Transactional(propagation = Propagation.REQUIRED)
+@Transactional(propagation = Propagation.MANDATORY)
 public interface BidRepository extends JpaRepository<Bid, Long> {
 }

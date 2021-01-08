@@ -9,7 +9,8 @@ export default class AuctionDetailsPageContainer extends Component {
         this.state = {
             auctionId: this.props.match.params.auctionId,
             auctionDetails: null,
-            isSubmitting: false
+            isSubmitting: false,
+            version: null
         };
     }
 
@@ -19,8 +20,10 @@ export default class AuctionDetailsPageContainer extends Component {
 
     getAuctionDetails = () => {
         getAuctionDetailsRequest(this.state.auctionId).then((res) => {
-            this.setState({auctionDetails: res.data});
-        });
+            const eTagValue = res.headers.etag
+
+            this.setState({auctionDetails: res.data, version: eTagValue});
+        }).catch();
     }
 
     placeBid = (payload) => {
@@ -34,21 +37,15 @@ export default class AuctionDetailsPageContainer extends Component {
                 autoClose: 3000,
                 closeOnClick: true
             });
-        }).catch(e => {
+        }).catch(() => {
             this.setState({isSubmitting: false});
-
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
-        })
+        });
     }
 
     deleteAuction = () => {
         this.setState({isSubmitting: true});
 
-        deleteAuctionRequest(this.state.auctionId).then((res) => {
+        deleteAuctionRequest(this.state.auctionId, this.state.version).then((res) => {
             this.setState({isSubmitting: false});
 
             toast.success(res.data.message, {
@@ -58,14 +55,8 @@ export default class AuctionDetailsPageContainer extends Component {
             });
 
             this.props.history.push("/auctions");
-        }).catch(e => {
+        }).catch(() => {
             this.setState({isSubmitting: false});
-
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
         });
     }
 

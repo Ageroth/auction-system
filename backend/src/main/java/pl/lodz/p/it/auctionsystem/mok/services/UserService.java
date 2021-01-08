@@ -34,10 +34,10 @@ public interface UserService {
      * Zwraca użytkownika o podanej nazwie użytkownika.
      *
      * @param username nazwa użytkownika
-     * @return obiekt typu {@link OwnAccountDetailsDto}
+     * @return obiekt typu {@link UserDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    OwnAccountDetailsDto getUserByUsername(String username) throws ApplicationException;
+    UserDto getUserByUsername(String username) throws ApplicationException;
 
     /**
      * Zwraca użytkowników spełniających zadane kryteria.
@@ -45,16 +45,25 @@ public interface UserService {
      * @param userCriteria obiekt typu {@link UserCriteria}
      * @return obiekt typu {@link Page}
      */
-    Page<UserDto> getUsers(UserCriteria userCriteria);
+    Page<BasicUserDto> getUsers(UserCriteria userCriteria);
 
     /**
      * Zwraca użytkownika o podanym id.
      *
      * @param userId id użytkownika
-     * @return obiekt typu {@link UserAccountDetailsDto}
+     * @return obiekt typu {@link UserDto}
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    UserAccountDetailsDto getUserById(Long userId) throws ApplicationException;
+    UserDto getUserById(Long userId) throws ApplicationException;
+
+    /**
+     * Zwraca użytkownika o podanym kodzie resetującym hasła.
+     *
+     * @param passwordResetCode kod resetujący hasło
+     * @return obiekt typu {@link UserDto}
+     * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
+     */
+    UserDto getUserByPasswordResetCode(String passwordResetCode) throws ApplicationException;
 
     /**
      * Sprawdza czy w bazie istnieje użytkownik o podanej nazwie użytkownika.
@@ -93,43 +102,49 @@ public interface UserService {
      *
      * @param passwordResetCode kod resetujący hasło
      * @param passwordResetDto  obiekt typu {@link PasswordResetDto}
+     * @param ifMatch           wartość nagłówka If-Match będącego wartością pola wersji obiektu
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void resetPassword(String passwordResetCode, PasswordResetDto passwordResetDto) throws ApplicationException;
+    void resetPassword(String passwordResetCode, PasswordResetDto passwordResetDto, String ifMatch) throws ApplicationException;
 
     /**
      * Umożliwia aktualizację danych personalnych użytkownika o podanej nazwie.
      *
      * @param username                   nazwa użytkownika
      * @param ownAccountDetailsUpdateDto obiekt typu {@link OwnAccountDetailsUpdateDto}
+     * @param ifMatch                    wartość nagłówka If-Match będącego wartością pola wersji obiektu
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto) throws ApplicationException;
+    void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
+                                 String ifMatch) throws ApplicationException;
 
     /**
      * Aktualizuje dane personalne użytkownika o podanym id.
      *
      * @param userId                      id użytkownika
      * @param userAccountDetailsUpdateDto obiekt typu {@link UserAccountDetailsUpdateDto}
+     * @param ifMatch                     wartość nagłówka If-Match będącego wartością pola wersji obiektu
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void updateUserDetailsById(Long userId, UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException;
+    void updateUserDetailsById(Long userId, UserAccountDetailsUpdateDto userAccountDetailsUpdateDto, String ifMatch) throws ApplicationException;
 
     /**
      * Zmienia hasło użytkownika o podanej nazwie.
      *
      * @param username             nazwa użytkownika
      * @param ownPasswordChangeDto obiekt typu {@link OwnPasswordChangeDto}
+     * @param ifMatch              wartość nagłówka If-Match będącego wartością pola wersji obiektu
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void changePasswordByUsername(String username, OwnPasswordChangeDto ownPasswordChangeDto) throws ApplicationException;
+    void changePasswordByUsername(String username, OwnPasswordChangeDto ownPasswordChangeDto, String ifMatch) throws ApplicationException;
 
     /**
      * Zmienia hasło użytkownika o podanym id.
      *
      * @param userId                id użytkownika
      * @param userPasswordChangeDto obiekt typu {@link UserPasswordChangeDto}
+     * @param ifMatch               wartość nagłówka If-Match będącego wartością pola wersji obiektu
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
-    void changePasswordById(Long userId, UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException;
+    void changePasswordById(Long userId, UserPasswordChangeDto userPasswordChangeDto, String ifMatch) throws ApplicationException;
 }

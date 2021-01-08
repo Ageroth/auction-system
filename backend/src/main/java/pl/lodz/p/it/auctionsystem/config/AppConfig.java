@@ -37,6 +37,8 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")
+                .allowedHeaders("*")
+                .exposedHeaders("ETag")
                 .maxAge(MAX_AGE_SECS);
     }
 

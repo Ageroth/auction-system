@@ -10,7 +10,8 @@ export default class UserDetailsEditPageContainer extends Component {
             userId: this.props.match.params.userId,
             userDetails: null,
             accessLevels: [],
-            isSubmitting: false
+            isSubmitting: false,
+            version: null
         };
     }
 
@@ -22,39 +23,33 @@ export default class UserDetailsEditPageContainer extends Component {
     getAllAccessLevels = () => {
         getAllAccessLevelsRequest().then(res => {
             this.setState({accessLevels: res.data});
-        }).catch(e => {
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
-        });
+        }).catch();
     }
 
     getUserDetails = () => {
         getUserDetailsRequest(this.state.userId).then(res => {
-            this.setState({userDetails: res.data});
-        });
+            const eTagValue = res.headers.etag
+
+            this.setState({userDetails: res.data, version: eTagValue});
+        }).catch();
     }
 
     handleEdit = (payload) => {
         this.setState({isSubmitting: true});
-        updateUserDetailsRequest(this.state.userId, payload).then(res => {
+
+        updateUserDetailsRequest(this.state.userId, payload, this.state.version).then(res => {
             this.setState({isSubmitting: false});
+
             toast.success(res.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
                 closeOnClick: true
             });
+
             this.props.history.goBack();
-        }).catch(e => {
+        }).catch(() => {
             this.setState({isSubmitting: false});
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
-        })
+        });
     }
 
     render() {

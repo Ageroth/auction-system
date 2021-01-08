@@ -20,7 +20,7 @@ export default class BiddingDetailsPageContainer extends Component {
     getAuctionDetails = () => {
         getOwnBiddingDetailsRequest(this.state.auctionId).then((res) => {
             this.setState({auctionDetails: res.data});
-        });
+        }).catch();
     }
 
     handleBidPlace = (payload) => {
@@ -32,14 +32,9 @@ export default class BiddingDetailsPageContainer extends Component {
                 autoClose: 3000,
                 closeOnClick: true
             });
-        }).catch(e => {
+        }).catch(() => {
             this.setState({isSubmitting: false});
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
-        })
+        });
     }
 
     render() {

@@ -28,4 +28,15 @@ public class UserAccountDetailsDto {
     private String lastName;
 
     private String phoneNumber;
+
+    public UserAccountDetailsDto(UserDto userDto) {
+        this.username = userDto.getUsername();
+        this.email = userDto.getEmail();
+        this.activated = userDto.isActivated();
+        this.createdAt = userDto.getCreatedAt();
+        this.accessLevelIds = userDto.getAccessLevelIds();
+        this.firstName = userDto.getFirstName();
+        this.lastName = userDto.getLastName();
+        this.phoneNumber = userDto.getPhoneNumber();
+    }
 }

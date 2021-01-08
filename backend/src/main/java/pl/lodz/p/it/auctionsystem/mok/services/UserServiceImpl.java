@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
 import pl.lodz.p.it.auctionsystem.entities.User;
@@ -32,7 +33,7 @@ import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.containsTextInName;
 import static pl.lodz.p.it.auctionsystem.mok.utils.UserSpecs.isActive;
 
 @Service
-@Transactional(rollbackFor = ApplicationException.class)
+@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = ApplicationException.class)
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -98,17 +99,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public OwnAccountDetailsDto getUserByUsername(String username) throws ApplicationException {
+    public UserDto getUserByUsername(String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        return modelMapper.map(user, OwnAccountDetailsDto.class);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public Page<UserDto> getUsers(UserCriteria userCriteria) {
+    public Page<BasicUserDto> getUsers(UserCriteria userCriteria) {
         Pageable pageable;
         Page<User> userPage;
 
@@ -129,32 +130,44 @@ public class UserServiceImpl implements UserService {
                     userRepositoryMok.findAll(containsTextInName(userCriteria.getQuery()).and(isActive(userCriteria.getStatus())), pageable);
 
         return userPage.map(user -> {
-            UserDto userDto = modelMapper.map(user, UserDto.class);
+            BasicUserDto basicUserDto = modelMapper.map(user, BasicUserDto.class);
 
-            userDto.setUserAccessLevelNames(user.getUserAccessLevels().stream()
+            basicUserDto.setUserAccessLevelNames(user.getUserAccessLevels().stream()
                     .map(userAccessLevel -> userAccessLevel.getAccessLevel().getName().toString())
                     .collect(Collectors.toList()));
 
-            userDto.getUserAccessLevelNames().sort((Comparator.comparingInt(o -> AccessLevelEnum.valueOf((String) o).ordinal())).reversed());
+            basicUserDto.getUserAccessLevelNames().sort((Comparator.comparingInt(o -> AccessLevelEnum.valueOf((String) o).ordinal())).reversed());
 
-            return userDto;
+            return basicUserDto;
         });
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public UserAccountDetailsDto getUserById(Long userId) throws ApplicationException {
+    public UserDto getUserById(Long userId) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
 
-        User user = userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+        User user =
+                userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        UserAccountDetailsDto userAccountDetailsDto = modelMapper.map(user, UserAccountDetailsDto.class);
+        UserDto userDto = modelMapper.map(user, UserDto.class);
 
-        userAccountDetailsDto.setAccessLevelIds(user.getUserAccessLevels().stream()
+        userDto.setAccessLevelIds(user.getUserAccessLevels().stream()
                 .map(userAccessLevel -> userAccessLevel.getAccessLevel().getId())
                 .collect(Collectors.toList()));
 
-        return userAccountDetailsDto;
+        return userDto;
+    }
+
+    @Override
+    @PreAuthorize("permitAll()")
+    public UserDto getUserByPasswordResetCode(String passwordResetCode) throws ApplicationException {
+        String passwordResetCodeInvalidMessage = messageService.getMessage("exception.passwordResetCodeInvalid");
+        User user =
+                userRepositoryMok.findByPasswordResetCode(passwordResetCode).orElseThrow(() -> new
+                        InvalidParameterException(passwordResetCodeInvalidMessage));
+
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
@@ -196,7 +209,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("permitAll()")
-    public void resetPassword(String passwordResetCode, PasswordResetDto passwordResetDto) throws ApplicationException {
+    public void resetPassword(String passwordResetCode, PasswordResetDto passwordResetDto, String ifMatch) throws ApplicationException {
         String passwordResetCodeInvalidMessage = messageService.getMessage("exception.passwordResetCodeInvalid");
         User user =
                 userRepositoryMok.findByPasswordResetCode(passwordResetCode).orElseThrow(() -> new
@@ -212,38 +225,52 @@ public class UserServiceImpl implements UserService {
 
         String passwordHash = passwordEncoder.encode(passwordResetDto.getNewPassword());
 
-        user.setPassword(passwordHash);
-        user.setPasswordResetCode(null);
-        user.setPasswordResetCodeAddDate(null);
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+                user.getUsername(), passwordHash, user.getEmail(), user.isActivated(), user.getCreatedAt(),
+                user.getActivationCode(), null, null,
+                user.getFirstName(), user.getLastName(),
+                user.getPhoneNumber());
+
+        userRepositoryMok.saveAndFlush(userCopy);
     }
 
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto) throws ApplicationException {
+    public void updateDetailsByUsername(String username, OwnAccountDetailsUpdateDto ownAccountDetailsUpdateDto,
+                                        String ifMatch) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        user.setFirstName(ownAccountDetailsUpdateDto.getFirstName());
-        user.setLastName(ownAccountDetailsUpdateDto.getLastName());
-        user.setPhoneNumber(ownAccountDetailsUpdateDto.getPhoneNumber());
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+                user.getUsername(), user.getPassword(), user.getEmail(), user.isActivated(), user.getCreatedAt(),
+                user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
+                ownAccountDetailsUpdateDto.getFirstName(), ownAccountDetailsUpdateDto.getLastName(),
+                ownAccountDetailsUpdateDto.getPhoneNumber());
+
+        userRepositoryMok.saveAndFlush(userCopy);
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public void updateUserDetailsById(Long userId, UserAccountDetailsUpdateDto userAccountDetailsUpdateDto) throws ApplicationException {
+    public void updateUserDetailsById(Long userId, UserAccountDetailsUpdateDto userAccountDetailsUpdateDto,
+                                      String ifMatch) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        user.setFirstName(userAccountDetailsUpdateDto.getFirstName());
-        user.setLastName(userAccountDetailsUpdateDto.getLastName());
-        user.setPhoneNumber(userAccountDetailsUpdateDto.getPhoneNumber());
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+                user.getUsername(), user.getPassword(), user.getEmail(), user.isActivated(), user.getCreatedAt(),
+                user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
+                userAccountDetailsUpdateDto.getFirstName(), userAccountDetailsUpdateDto.getLastName(),
+                userAccountDetailsUpdateDto.getPhoneNumber());
+
+        userRepositoryMok.saveAndFlush(userCopy);
     }
 
     @Override
     @PreAuthorize("hasAnyRole('ADMINISTRATOR','MANAGER','CLIENT')")
-    public void changePasswordByUsername(String username, OwnPasswordChangeDto ownPasswordChangeDto) throws ApplicationException {
+    public void changePasswordByUsername(String username, OwnPasswordChangeDto ownPasswordChangeDto, String ifMatch) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
@@ -262,18 +289,30 @@ public class UserServiceImpl implements UserService {
 
         String passwordHash = passwordEncoder.encode(ownPasswordChangeDto.getNewPassword());
 
-        user.setPassword(passwordHash);
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+                user.getUsername(), passwordHash, user.getEmail(), user.isActivated(), user.getCreatedAt(),
+                user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
+                user.getFirstName(), user.getLastName(),
+                user.getPhoneNumber());
+
+        userRepositoryMok.saveAndFlush(userCopy);
     }
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public void changePasswordById(Long userId, UserPasswordChangeDto userPasswordChangeDto) throws ApplicationException {
+    public void changePasswordById(Long userId, UserPasswordChangeDto userPasswordChangeDto, String ifMatch) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
                 userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordHash = passwordEncoder.encode(userPasswordChangeDto.getNewPassword());
 
-        user.setPassword(passwordHash);
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+                user.getUsername(), passwordHash, user.getEmail(), user.isActivated(), user.getCreatedAt(),
+                user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
+                user.getFirstName(), user.getLastName(),
+                user.getPhoneNumber());
+
+        userRepositoryMok.saveAndFlush(userCopy);
     }
 
     private User createUser(User user) throws ApplicationException {

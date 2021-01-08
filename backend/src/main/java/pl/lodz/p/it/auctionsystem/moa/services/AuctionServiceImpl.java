@@ -7,13 +7,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
 import pl.lodz.p.it.auctionsystem.entities.Bid;
-import pl.lodz.p.it.auctionsystem.entities.Item;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.*;
 import pl.lodz.p.it.auctionsystem.moa.dtos.*;
@@ -33,7 +33,7 @@ import java.util.Optional;
 import static pl.lodz.p.it.auctionsystem.moa.utils.AuctionSpecs.*;
 
 @Service
-@Transactional(rollbackFor = ApplicationException.class)
+@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = ApplicationException.class)
 @RequiredArgsConstructor
 public class AuctionServiceImpl implements AuctionService {
 
@@ -52,11 +52,10 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     @PreAuthorize("hasRole('MANAGER')")
-    public Long addAuction(AuctionAddDto auctionAddDto) throws ApplicationException {
+    public Long addAuction(AuctionAddDto auctionAddDto, String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMoa.findByUsernameIgnoreCase(auctionAddDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
-        Item item = new Item(auctionAddDto.getItemName(), auctionAddDto.getItemDescription(), auctionAddDto.getImage());
+                userRepositoryMoa.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         LocalDateTime startDate;
 
         if (auctionAddDto.getStartDate() == null)
@@ -74,14 +73,15 @@ public class AuctionServiceImpl implements AuctionService {
         LocalDateTime endDate = startDate.plusDays(auctionAddDto.getDuration());
 
         Auction auction = new Auction(auctionAddDto.getStartingPrice().setScale(2, RoundingMode.DOWN), startDate,
-                endDate, user, item);
+                endDate, user, auctionAddDto.getItemName(), auctionAddDto.getItemDescription(),
+                auctionAddDto.getImage());
 
         return auctionRepository.save(auction).getId();
     }
 
     @Override
     @PreAuthorize("hasAnyRole('MANAGER','CLIENT')")
-    public Page<AuctionDto> getAuctions(AuctionCriteria auctionCriteria) {
+    public Page<BasicAuctionDto> getAuctions(AuctionCriteria auctionCriteria) {
         Pageable pageable;
         Page<Auction> auctionPage;
 
@@ -103,19 +103,19 @@ public class AuctionServiceImpl implements AuctionService {
                     auctionRepository.findAll(containsTextInName(auctionCriteria.getQuery()).and(hasStatus(auctionCriteria.getStatus())), pageable);
 
         return auctionPage.map(auction -> {
-            AuctionDto auctionDto = modelMapper.map(auction, AuctionDto.class);
+            BasicAuctionDto basicAuctionDto = modelMapper.map(auction, BasicAuctionDto.class);
             Optional<Bid> highestBid = auction.getBids().stream().max(Comparator.comparing(Bid::getPrice));
 
-            auctionDto.setBidsNumber(auction.getBids().size());
-            auctionDto.setCurrentPrice(highestBid.map(Bid::getPrice).orElse(null));
+            basicAuctionDto.setBidsNumber(auction.getBids().size());
+            basicAuctionDto.setCurrentPrice(highestBid.map(Bid::getPrice).orElse(null));
 
-            return auctionDto;
+            return basicAuctionDto;
         });
     }
 
     @Override
     @PreAuthorize("hasRole('MANAGER')")
-    public Page<AuctionDto> getAuctionsByUsername(AuctionCriteria auctionCriteria, String username) {
+    public Page<BasicAuctionDto> getAuctionsByUsername(AuctionCriteria auctionCriteria, String username) {
         Pageable pageable;
         Page<Auction> auctionPage;
 
@@ -140,19 +140,19 @@ public class AuctionServiceImpl implements AuctionService {
                     auctionRepository.findAll(isOwner(username).and(containsTextInName(auctionCriteria.getQuery()).and(hasStatus(auctionCriteria.getStatus()))), pageable);
 
         return auctionPage.map(auction -> {
-            AuctionDto auctionDto = modelMapper.map(auction, AuctionDto.class);
+            BasicAuctionDto basicAuctionDto = modelMapper.map(auction, BasicAuctionDto.class);
             Optional<Bid> highestBid = auction.getBids().stream().max(Comparator.comparing(Bid::getPrice));
 
-            auctionDto.setBidsNumber(auction.getBids().size());
-            auctionDto.setCurrentPrice(highestBid.map(Bid::getPrice).orElse(null));
+            basicAuctionDto.setBidsNumber(auction.getBids().size());
+            basicAuctionDto.setCurrentPrice(highestBid.map(Bid::getPrice).orElse(null));
 
-            return auctionDto;
+            return basicAuctionDto;
         });
     }
 
     @Override
     @PreAuthorize("hasRole('CLIENT')")
-    public Page<AuctionDto> getParticipatedAuctions(AuctionCriteria auctionCriteria, String username) {
+    public Page<BasicAuctionDto> getParticipatedAuctions(AuctionCriteria auctionCriteria, String username) {
         Pageable pageable;
         Page<Auction> auctionPage;
 
@@ -177,57 +177,30 @@ public class AuctionServiceImpl implements AuctionService {
                     auctionRepository.findAll(hasBid(username).and(containsTextInName(auctionCriteria.getQuery()).and(hasStatus(auctionCriteria.getStatus()))), pageable);
 
         return auctionPage.map(auction -> {
-            AuctionDto auctionDto = modelMapper.map(auction, AuctionDto.class);
+            BasicAuctionDto basicAuctionDto = modelMapper.map(auction, BasicAuctionDto.class);
             Optional<Bid> highestBid = auction.getBids().stream().max(Comparator.comparing(Bid::getPrice));
 
-            auctionDto.setBidsNumber(auction.getBids().size());
-            auctionDto.setCurrentPrice(highestBid.map(Bid::getPrice).orElse(null));
-            auctionDto.setTopBidderName(highestBid.map(bid -> bid.getUser().getUsername()).orElse(null));
+            basicAuctionDto.setBidsNumber(auction.getBids().size());
+            basicAuctionDto.setCurrentPrice(highestBid.map(Bid::getPrice).orElse(null));
+            basicAuctionDto.setTopBidderName(highestBid.map(bid -> bid.getUser().getUsername()).orElse(null));
 
-            return auctionDto;
+            return basicAuctionDto;
         });
     }
 
     @Override
     @PreAuthorize("hasAnyRole('MANAGER','CLIENT')")
-    public AuctionDetailsDto getAuctionById(Long auctionId) throws ApplicationException {
+    public AuctionDto getAuctionById(Long auctionId) throws ApplicationException {
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
 
-        return modelMapper.map(auction, AuctionDetailsDto.class);
+        return modelMapper.map(auction, AuctionDto.class);
     }
 
     @Override
     @PreAuthorize("hasRole('MANAGER')")
-    @PostAuthorize("returnObject.userUsername == authentication.principal.username")
-    public AuctionDetailsDto getOwnAuctionById(Long auctionId) throws ApplicationException {
-        String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
-        Auction auction =
-                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
-
-        return modelMapper.map(auction, AuctionDetailsDto.class);
-    }
-
-    @Override
-    @PreAuthorize("hasRole('CLIENT')")
-    public AuctionDetailsDto getOwnBiddingById(Long auctionId, String username) throws ApplicationException {
-        String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
-        Auction auction =
-                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
-
-        if (auction.getBids().stream().noneMatch(bid -> bid.getUser().getUsername().equals(username))) {
-            String accessForbiddenMessage = messageService.getMessage("exception.accessForbiddenException");
-
-            throw new AccessForbiddenException(accessForbiddenMessage);
-        }
-
-        return modelMapper.map(auction, AuctionDetailsDto.class);
-    }
-
-    @Override
-    @PreAuthorize("hasRole('MANAGER')")
-    public void updateAuctionById(Long auctionId, AuctionUpdateDto auctionUpdateDto, String username) throws ApplicationException {
+    public AuctionDto getOwnAuctionById(Long auctionId, String username) throws ApplicationException {
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
@@ -238,17 +211,54 @@ public class AuctionServiceImpl implements AuctionService {
             throw new AccessForbiddenException(accessForbiddenMessage);
         }
 
-        auction.setStartingPrice(auctionUpdateDto.getStartingPrice());
-        auction.getItem().setName(auctionUpdateDto.getItemName());
-        auction.getItem().setDescription(auctionUpdateDto.getItemDescription());
+        return modelMapper.map(auction, AuctionDto.class);
     }
 
     @Override
     @PreAuthorize("hasRole('CLIENT')")
-    public Long addBid(Long auctionId, BidPlaceDto bidPlaceDto) throws ApplicationException {
+    public AuctionDto getOwnBiddingById(Long auctionId, String username) throws ApplicationException {
+        String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
+        Auction auction =
+                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+
+        if (auction.getBids().stream().noneMatch(bid -> bid.getUser().getUsername().equals(username))) {
+            String accessForbiddenMessage = messageService.getMessage("exception.accessForbiddenException");
+
+            throw new AccessForbiddenException(accessForbiddenMessage);
+        }
+
+        return modelMapper.map(auction, AuctionDto.class);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('MANAGER')")
+    public void updateAuctionById(Long auctionId, AuctionUpdateDto auctionUpdateDto, String username, String ifMatch) throws ApplicationException {
+        String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
+        Auction auction =
+                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+
+        if (!auction.getUser().getUsername().equals(username)) {
+            String accessForbiddenMessage = messageService.getMessage("exception.accessForbiddenException");
+
+            throw new AccessForbiddenException(accessForbiddenMessage);
+        }
+
+        Auction auctionCopy = new Auction(Long.parseLong(ifMatch.replace("\"", "")), auction.getBusinessKey(),
+                auction.getId(), auctionUpdateDto.getStartingPrice().setScale(2, RoundingMode.DOWN),
+                auction.getStartDate(), auction.getEndDate(), auction.getUser(), auctionUpdateDto.getItemName(),
+                auctionUpdateDto.getItemDescription(), auction.getItemImage());
+
+        auctionRepository.saveAndFlush(auctionCopy);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE, rollbackFor =
+            ApplicationException.class)
+    @PreAuthorize("hasRole('CLIENT')")
+    public Long addBid(Long auctionId, BidPlaceDto bidPlaceDto, String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMoa.findByUsernameIgnoreCase(bidPlaceDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMoa.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
@@ -260,26 +270,25 @@ public class AuctionServiceImpl implements AuctionService {
             throw new InvalidDateException(bidPlaceInvalidDateMessage);
         }
 
-        if (auction.getUser().getUsername().equals(bidPlaceDto.getUsername())) {
+        if (auction.getUser().getUsername().equals(username)) {
             String auctionOwnerMessage = messageService.getMessage("exception.auctionOwnerException");
 
             throw new AuctionOwnerException(auctionOwnerMessage);
         }
 
         BigDecimal currentPrice;
-
-        bidPlaceDto.setPrice(bidPlaceDto.getPrice().setScale(2, RoundingMode.DOWN));
+        BigDecimal bidPrice = bidPlaceDto.getPrice().setScale(2, RoundingMode.DOWN);
 
         if (auction.getBids().size() > 0) {
             currentPrice = auction.getBids().stream()
                     .map(Bid::getPrice)
-                    .min(Comparator.naturalOrder())
+                    .max(Comparator.naturalOrder())
                     .orElse(BigDecimal.ZERO);
         } else {
             currentPrice = auction.getStartingPrice();
         }
 
-        if (bidPlaceDto.getPrice().compareTo(currentPrice) <= 0) {
+        if (bidPrice.compareTo(currentPrice) <= 0) {
             String invalidBidPriceMessage = messageService.getMessage("exception.invalidBidPriceException");
 
             throw new InvalidBidPriceException(invalidBidPriceMessage);
@@ -287,16 +296,14 @@ public class AuctionServiceImpl implements AuctionService {
 
         LocalDateTime date = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
-        Bid bid = new Bid(date, bidPlaceDto.getPrice(), user, auction);
+        Bid bid = new Bid(date, bidPrice, user, auction);
 
-        Bid savedBid = bidRepository.save(bid);
-
-        return savedBid.getId();
+        return bidRepository.save(bid).getId();
     }
 
     @Override
     @PreAuthorize("hasRole('MANAGER')")
-    public void deleteAuctionById(Long auctionId, String username) throws ApplicationException {
+    public void deleteAuctionById(Long auctionId, String username, String ifMatch) throws ApplicationException {
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
                 auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
@@ -313,6 +320,10 @@ public class AuctionServiceImpl implements AuctionService {
             throw new InvalidDateException(deletionInvalidDateMessage);
         }
 
-        auctionRepository.delete(auction);
+        Auction auctionCopy = new Auction(Long.parseLong(ifMatch.replace("\"", "")), auction.getBusinessKey(),
+                auction.getId(), auction.getStartingPrice(), auction.getStartDate(), auction.getEndDate(),
+                auction.getUser(), auction.getItemName(), auction.getItemDescription(), auction.getItemImage());
+
+        auctionRepository.delete(auctionCopy);
     }
 }

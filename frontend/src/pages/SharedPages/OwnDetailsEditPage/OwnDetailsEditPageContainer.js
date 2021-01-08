@@ -8,7 +8,8 @@ export default class OwnDetailsEditPageContainer extends Component {
         super(props);
         this.state = {
             myDetails: null,
-            isSubmitting: false
+            isSubmitting: false,
+            version: null
         };
     }
 
@@ -18,34 +19,28 @@ export default class OwnDetailsEditPageContainer extends Component {
 
     getOwnDetails = () => {
         getOwnDetailsRequest().then(res => {
-            this.setState({myDetails: res.data});
-        }).catch(e => {
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
-        });
+            const eTagValue = res.headers.etag
+
+            this.setState({myDetails: res.data, version: eTagValue});
+        }).catch();
     }
 
     handleEdit = (payload) => {
         this.setState({isSubmitting: true});
-        updateOwnDetailsRequest(payload).then((res) => {
+
+        updateOwnDetailsRequest(payload, this.state.version).then((res) => {
             this.setState({isSubmitting: false});
+
             toast.success(res.data.message, {
                 position: "bottom-right",
                 autoClose: 3000,
                 closeOnClick: true
             });
+
             this.props.history.goBack();
-        }).catch(e => {
+        }).catch(() => {
             this.setState({isSubmitting: false});
-            toast.error(e.response.data.message, {
-                position: "bottom-right",
-                autoClose: 3000,
-                closeOnClick: true
-            });
-        })
+        });
     }
 
     render() {

@@ -6,6 +6,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import pl.lodz.p.it.auctionsystem.entities.User;
+import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
+import pl.lodz.p.it.auctionsystem.exceptions.MailException;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
 
 import javax.mail.MessagingException;
@@ -35,7 +37,7 @@ public class MailService {
      * @param text    ciało wiadomości
      * @param to      odbiorca wiadomości
      */
-    private void sendMessage(String subject, String text, String to) {
+    private void sendMessage(String subject, String text, String to) throws ApplicationException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         try {
@@ -47,7 +49,9 @@ public class MailService {
             helper.setText(text);
             javaMailSender.send(message);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            String mailMessage = messageService.getMessage("exception.mailException");
+
+            throw new MailException(mailMessage);
         }
     }
 
@@ -56,7 +60,7 @@ public class MailService {
      *
      * @param user obiekt przechowujący dane
      */
-    public void sendAccountActivationMail(User user) {
+    public void sendAccountActivationMail(User user) throws ApplicationException {
         final String subject = messageService.getMessage("email.subject.accountActivation");
         final String url = baseUrl + "/activation/" + user.getActivationCode();
         final String text = messageService.getMessage("email.text.accountActivation");
@@ -70,7 +74,7 @@ public class MailService {
      *
      * @param user obiekt przechowujący dane
      */
-    public void sendPasswordResetEmail(User user) {
+    public void sendPasswordResetEmail(User user) throws ApplicationException {
         final String subject = messageService.getMessage("email.subject.passwordReset");
         final String url = baseUrl + "/password_reset/" + user.getPasswordResetCode();
         final String text = messageService.getMessage("email.text.passwordReset");

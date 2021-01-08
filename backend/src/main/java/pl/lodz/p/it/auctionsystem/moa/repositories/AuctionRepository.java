@@ -11,6 +11,6 @@ import pl.lodz.p.it.auctionsystem.entities.Auction;
  * Interfejs definiujący dozwolone operacje na encji {@link Auction}.
  */
 @Repository
-@Transactional(propagation = Propagation.REQUIRED)
+@Transactional(propagation = Propagation.MANDATORY)
 public interface AuctionRepository extends JpaRepository<Auction, Long>, JpaSpecificationExecutor<Auction> {
 }

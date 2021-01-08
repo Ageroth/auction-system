@@ -12,7 +12,8 @@ class ActivationPageContainer extends Component {
     };
 
     componentDidMount() {
-        if (this.state.activationCode) this.activateUser();
+        if (this.state.activationCode)
+            this.activateUser();
     }
 
     activateUser = () => {

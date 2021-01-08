@@ -17,6 +17,4 @@ public class BidPlaceDto {
     @NotNull(message = "{validation.notBlank}")
     @DecimalMin(value = "0.01", message = "{validation.decimalMin}")
     private BigDecimal price;
-
-    private String username;
 }

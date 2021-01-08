@@ -31,4 +31,16 @@ public class AuctionDetailsDto {
     private byte[] itemImage;
 
     private List<BidDto> bids;
+
+    public AuctionDetailsDto(AuctionDto auctionDto) {
+        this.id = auctionDto.getId();
+        this.startingPrice = auctionDto.getStartingPrice();
+        this.startDate = auctionDto.getStartDate();
+        this.endDate = auctionDto.getEndDate();
+        this.userUsername = auctionDto.getUserUsername();
+        this.itemName = auctionDto.getItemName();
+        this.itemDescription = auctionDto.getItemDescription();
+        this.itemImage = auctionDto.getItemImage();
+        this.bids = auctionDto.getBids();
+    }
 }

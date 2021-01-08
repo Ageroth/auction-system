@@ -25,15 +25,23 @@ export function checkEmailAvailabilityRequest(value) {
 }
 
 export function activateUserRequest(value) {
-    return axios.patch(`/users/me/activation/${value}`);
+    return axios.patch(`/users/activation/${value}`);
+}
+
+export function getUserRequest(value) {
+    return axios.get(`/users/password-reset/${value}`);
 }
 
 export function sendPasswordResetEmailRequest(payload) {
-    return axios.patch('/users/me/password-reset', JSON.stringify(payload));
+    return axios.patch('/users/password-reset', JSON.stringify(payload));
 }
 
-export function resetPasswordRequest(value, payload) {
-    return axios.patch(`/users/me/password-reset/${value}`, JSON.stringify(payload));
+export function resetPasswordRequest(value, payload, version) {
+    return axios.patch(`/users/password-reset/${value}`, JSON.stringify(payload), {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
 
 export function getUsersRequest(values) {
@@ -55,24 +63,40 @@ export function getUserDetailsRequest(value) {
     return axios.get(`/users/${value}`);
 }
 
-export function changeUserPasswordRequest(value, payload) {
-    return axios.patch(`/users/${value}/password`, JSON.stringify(payload));
+export function changeUserPasswordRequest(value, payload, version) {
+    return axios.patch(`/users/${value}/password`, JSON.stringify(payload), {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
 
-export function updateUserDetailsRequest(value, payload) {
-    return axios.patch(`/users/${value}/details`, JSON.stringify(payload));
+export function updateUserDetailsRequest(value, payload, version) {
+    return axios.patch(`/users/${value}/details`, JSON.stringify(payload), {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
 
 export function getOwnDetailsRequest() {
     return axios.get('/users/me');
 }
 
-export function changeOwnPasswordRequest(payload) {
-    return axios.patch('/users/me/password', JSON.stringify(payload));
+export function changeOwnPasswordRequest(payload, version) {
+    return axios.patch('/users/me/password', JSON.stringify(payload), {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
 
-export function updateOwnDetailsRequest(payload) {
-    return axios.patch('/users/me/details', JSON.stringify(payload));
+export function updateOwnDetailsRequest(payload, version) {
+    return axios.patch('/users/me/details', JSON.stringify(payload), {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
 
 export function getAllAccessLevelsRequest() {
@@ -113,8 +137,12 @@ export function getOwnAuctionDetailsRequest(value) {
     return axios.get(`/auctions/selling/${value}`);
 }
 
-export function updateAuctionRequest(value, payload) {
-    return axios.patch(`/auctions/selling/${value}`, JSON.stringify(payload));
+export function updateAuctionRequest(value, payload, version) {
+    return axios.patch(`/auctions/selling/${value}`, JSON.stringify(payload), {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
 
 export function getOwnBiddingsRequest(values) {
@@ -136,6 +164,10 @@ export function placeABidRequest(value, payload) {
     return axios.post(`/auctions/${value}`, JSON.stringify(payload));
 }
 
-export function deleteAuctionRequest(value) {
-    return axios.delete(`/auctions/${value}`);
+export function deleteAuctionRequest(value, version) {
+    return axios.delete(`/auctions/${value}`, {
+        headers: {
+            'If-Match': version
+        }
+    });
 }
