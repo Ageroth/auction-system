@@ -14,7 +14,7 @@ export default class OwnDetailsPageContainer extends Component {
     getOwnDetails = () => {
         getOwnDetailsRequest().then(res => {
             this.setState({myDetails: res.data});
-        });
+        }).catch();
     }
 
     render() {

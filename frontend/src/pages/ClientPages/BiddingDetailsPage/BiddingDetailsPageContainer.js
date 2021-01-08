@@ -20,7 +20,7 @@ export default class BiddingDetailsPageContainer extends Component {
     getAuctionDetails = () => {
         getOwnBiddingDetailsRequest(this.state.auctionId).then((res) => {
             this.setState({auctionDetails: res.data});
-        });
+        }).catch();
     }
 
     handleBidPlace = (payload) => {

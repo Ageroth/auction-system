@@ -23,7 +23,7 @@ export default class UserDetailsEditPageContainer extends Component {
     getAllAccessLevels = () => {
         getAllAccessLevelsRequest().then(res => {
             this.setState({accessLevels: res.data});
-        });
+        }).catch();
     }
 
     getUserDetails = () => {
@@ -31,7 +31,7 @@ export default class UserDetailsEditPageContainer extends Component {
             const eTagValue = res.headers.etag
 
             this.setState({userDetails: res.data, version: eTagValue});
-        });
+        }).catch();
     }
 
     handleEdit = (payload) => {

@@ -22,7 +22,7 @@ export default class OwnDetailsEditPageContainer extends Component {
             const eTagValue = res.headers.etag
 
             this.setState({myDetails: res.data, version: eTagValue});
-        });
+        }).catch();
     }
 
     handleEdit = (payload) => {

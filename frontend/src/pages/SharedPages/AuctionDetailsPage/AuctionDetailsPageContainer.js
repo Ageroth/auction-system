@@ -23,7 +23,7 @@ export default class AuctionDetailsPageContainer extends Component {
             const eTagValue = res.headers.etag
 
             this.setState({auctionDetails: res.data, version: eTagValue});
-        });
+        }).catch();
     }
 
     placeBid = (payload) => {
