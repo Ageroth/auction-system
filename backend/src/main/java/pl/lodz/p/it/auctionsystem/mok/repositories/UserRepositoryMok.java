@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface UserRepositoryMok extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     /**
-     * Sprawdza czy istnieje encja {@link User} o podanej nazwie użytkownika.
+     * Sprawdza czy istnieje encja {@link User} o podanej nazwie użytkownika ignorując przy tym wielkość znaków.
      *
      * @param username nazwa użytkownika
      * @return true jeśli istnieje, w przeciwnym wypadku false
@@ -25,7 +25,7 @@ public interface UserRepositoryMok extends JpaRepository<User, Long>, JpaSpecifi
     boolean existsByUsernameIgnoreCase(String username);
 
     /**
-     * Sprawdza czy istnieje encja {@link User} o podanym emailu ignorując wielkość znaków.
+     * Sprawdza czy istnieje encja {@link User} o podanym emailu ignorując przy tym wielkość znaków.
      *
      * @param email email użytkownika
      * @return true jeśli istnieje, w przeciwnym wypadku false
@@ -33,7 +33,7 @@ public interface UserRepositoryMok extends JpaRepository<User, Long>, JpaSpecifi
     boolean existsByEmailIgnoreCase(String email);
 
     /**
-     * Pobiera z bazy danych encję {@link User} o podanej nazwie użytkownika ignorując wielkość znaków.
+     * Pobiera z bazy danych encję {@link User} o podanej nazwie użytkownika ignorując przy tym wielkość znaków.
      *
      * @param username nazwa użytkownika
      * @return obiekt encji {@link User} opakowany w {@link Optional}
@@ -41,12 +41,20 @@ public interface UserRepositoryMok extends JpaRepository<User, Long>, JpaSpecifi
     Optional<User> findByUsernameIgnoreCase(String username);
 
     /**
-     * Pobiera z bazy danych encję {@link User} o podanym emailu.
+     * Pobiera z bazy danych encję {@link User} o podanym emailu ignorując przy tym wielkość znaków.
      *
      * @param email email użytkownika
      * @return obiekt encji {@link User} opakowany w {@link Optional}
      */
     Optional<User> findByEmailIgnoreCase(String email);
+
+    /**
+     * Pobiera z bazy danych encję {@link User} o podanej nazwie użytkownika.
+     *
+     * @param username nazwa użytkownika
+     * @return obiekt encji {@link User} opakowany w {@link Optional}
+     */
+    Optional<User> findByUsername(String username);
 
     /**
      * Pobiera z bazy danych encję {@link User} o podanym kodzie aktywacyjnym.

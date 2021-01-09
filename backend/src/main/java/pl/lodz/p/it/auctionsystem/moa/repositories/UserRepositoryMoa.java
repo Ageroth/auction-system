@@ -16,10 +16,10 @@ import java.util.Optional;
 public interface UserRepositoryMoa extends JpaRepository<User, Long> {
 
     /**
-     * Pobiera z bazy danych encję {@link User} o podanej nazwie użytkownika ignorując wielkość znaków.
+     * Pobiera z bazy danych encję {@link User} o podanej nazwie użytkownika.
      *
      * @param username nazwa użytkownika
      * @return obiekt encji {@link User} opakowany w {@link Optional}
      */
-    Optional<User> findByUsernameIgnoreCase(String username);
+    Optional<User> findByUsername(String username);
 }

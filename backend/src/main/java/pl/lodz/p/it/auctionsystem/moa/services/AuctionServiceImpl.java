@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
@@ -55,7 +54,7 @@ public class AuctionServiceImpl implements AuctionService {
     public Long addAuction(AuctionAddDto auctionAddDto, String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMoa.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMoa.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         LocalDateTime startDate;
 
         if (auctionAddDto.getStartDate() == null)
@@ -252,16 +251,14 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE, rollbackFor =
-            ApplicationException.class)
     @PreAuthorize("hasRole('CLIENT')")
     public Long addBid(Long auctionId, BidPlaceDto bidPlaceDto, String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMoa.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMoa.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
-                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+                auctionRepository.findByIdWithLock(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
 
         if (auction.getEndDate().isBefore(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)) ||
                 auction.getStartDate().isAfter(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))) {

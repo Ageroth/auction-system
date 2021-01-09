@@ -20,7 +20,8 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE}, mappedBy = "user")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE}, mappedBy = "user", fetch =
+            FetchType.LAZY)
     private final Collection<UserAccessLevel> userAccessLevels = new ArrayList<>();
 
     @Id

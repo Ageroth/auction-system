@@ -31,12 +31,12 @@ public class Bid extends BaseEntity {
     private BigDecimal price;
 
     @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false, nullable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     private User user;
 
     @JoinColumn(name = "auction_id", referencedColumnName = "id", updatable = false, nullable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     private Auction auction;
 

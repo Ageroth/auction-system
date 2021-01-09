@@ -21,12 +21,12 @@ public class UserAccessLevel extends BaseEntity {
     private Long id;
 
     @JoinColumn(name = "access_level_id", referencedColumnName = "id", nullable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     private AccessLevel accessLevel;
 
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     private User user;
 
