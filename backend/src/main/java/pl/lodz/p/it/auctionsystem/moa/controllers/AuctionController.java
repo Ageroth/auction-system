@@ -46,7 +46,7 @@ public class AuctionController {
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addAuction(@RequestPart("auction") @Valid AuctionAddDto auctionAddDto,
-                                        @RequestPart("file") @Valid @NotBlank MultipartFile file,
+                                        @RequestPart("image") @Valid @NotBlank MultipartFile file,
                                         Authentication authentication) throws ApplicationException {
         try {
             auctionAddDto.setImage(file.getBytes());
