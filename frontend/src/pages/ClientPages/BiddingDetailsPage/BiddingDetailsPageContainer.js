@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import BiddingDetailsPage from './BiddingDetailsPageComponent';
+import SockJS from "sockjs-client";
+import {Stomp} from "@stomp/stompjs";
 import {toast} from 'react-toastify';
 import {getOwnBiddingDetailsRequest, placeABidRequest} from '../../../utils/api';
 
@@ -9,18 +11,46 @@ export default class BiddingDetailsPageContainer extends Component {
         this.state = {
             auctionId: this.props.match.params.auctionId,
             auctionDetails: null,
-            isSubmitting: false
+            isSubmitting: false,
+            stompClient: null
         };
     }
 
     componentDidMount() {
         this.getAuctionDetails();
+        this.initSocket();
+    }
+
+    componentWillUnmount() {
+        this.state.stompClient.deactivate().then(() => {
+        });
+    }
+
+    initSocket() {
+        const auctionId = this.state.auctionId;
+        const self = this;
+        const stompClient = Stomp.client();
+
+        stompClient.webSocketFactory = () => {
+            return new SockJS('http://localhost:8080/ws');
+        }
+
+        stompClient.onConnect = () => {
+            stompClient.subscribe(`/auction/changes/${auctionId}`, () => {
+                self.getAuctionDetails();
+            });
+        }
+
+        stompClient.activate();
+
+        this.setState({stompClient: stompClient});
     }
 
     getAuctionDetails = () => {
         getOwnBiddingDetailsRequest(this.state.auctionId).then((res) => {
             this.setState({auctionDetails: res.data});
-        }).catch();
+        }).catch(() => {
+        });
     }
 
     handleBidPlace = (payload) => {

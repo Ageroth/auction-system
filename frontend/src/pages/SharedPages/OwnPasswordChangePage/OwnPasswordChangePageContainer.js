@@ -21,7 +21,8 @@ export default class OwnPasswordChangePageContainer extends Component {
             const eTagValue = res.headers.etag
 
             this.setState({version: eTagValue});
-        }).catch();
+        }).catch(() => {
+        });
     }
 
     handleOwnPasswordChange = (payload) => {

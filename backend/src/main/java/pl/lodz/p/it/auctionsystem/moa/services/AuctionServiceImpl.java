@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -45,6 +46,8 @@ public class AuctionServiceImpl implements AuctionService {
     private final MessageService messageService;
 
     private final ModelMapper modelMapper;
+
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Value("${page.size}")
     private int pageSize;
@@ -295,7 +298,11 @@ public class AuctionServiceImpl implements AuctionService {
 
         Bid bid = new Bid(date, bidPrice, user, auction);
 
-        return bidRepository.save(bid).getId();
+        Long savedBidId = bidRepository.saveAndFlush(bid).getId();
+
+        sendAuctionChange(auction);
+
+        return savedBidId;
     }
 
     @Override
@@ -322,5 +329,11 @@ public class AuctionServiceImpl implements AuctionService {
                 auction.getUser(), auction.getItemName(), auction.getItemDescription(), auction.getItemImage());
 
         auctionRepository.delete(auctionCopy);
+    }
+
+    private void sendAuctionChange(Auction auction) {
+        AuctionDto auctionDto = modelMapper.map(auction, AuctionDto.class);
+
+        this.simpMessagingTemplate.convertAndSend("/auction/changes/" + auctionDto.getId(), auctionDto);
     }
 }

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import OwnAuctionDetailsPage from './OwnAuctionDetailsPageComponent';
+import SockJS from "sockjs-client";
+import {Stomp} from "@stomp/stompjs";
 import {toast} from 'react-toastify';
 import {deleteAuctionRequest, getOwnAuctionDetailsRequest} from '../../../utils/api';
 
@@ -10,20 +12,48 @@ export default class OwnAuctionDetailsPageContainer extends Component {
             auctionId: this.props.match.params.auctionId,
             auctionDetails: null,
             isSubmitting: false,
-            version: null
+            version: null,
+            stompClient: null
         };
     }
 
     componentDidMount() {
-        this.getOwnAuctionDetails();
+        this.getAuctionDetails();
+        this.initSocket();
     }
 
-    getOwnAuctionDetails = () => {
+    componentWillUnmount() {
+        this.state.stompClient.deactivate().then(() => {
+        });
+    }
+
+    initSocket() {
+        const auctionId = this.state.auctionId;
+        const self = this;
+        const stompClient = Stomp.client();
+
+        stompClient.webSocketFactory = () => {
+            return new SockJS('http://localhost:8080/ws');
+        }
+
+        stompClient.onConnect = () => {
+            stompClient.subscribe(`/auction/changes/${auctionId}`, () => {
+                self.getAuctionDetails();
+            });
+        }
+
+        stompClient.activate();
+
+        this.setState({stompClient: stompClient});
+    }
+
+    getAuctionDetails = () => {
         getOwnAuctionDetailsRequest(this.state.auctionId).then((res) => {
             const eTagValue = res.headers.etag
 
             this.setState({auctionDetails: res.data, version: eTagValue});
-        }).catch();
+        }).catch(() => {
+        });
     }
 
     deleteAuction = () => {
