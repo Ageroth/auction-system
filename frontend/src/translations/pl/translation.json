@@ -26,8 +26,8 @@
     "bidsNumber": "Liczba ofert",
     "currentPrice": "Aktualna cena",
     "status": "Status",
-    "current": "Aktualne",
-    "finished": "Zakończone"
+    "current": "Obecna",
+    "finished": "Zakończona"
   },
   "validation": {
     "required": "To pole jest wymagane",

@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByUsername(String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMok.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
         return modelMapper.map(user, UserDto.class);
     }
@@ -240,7 +240,7 @@ public class UserServiceImpl implements UserService {
                                         String ifMatch) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMok.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
         User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
                 user.getUsername(), user.getPassword(), user.getEmail(), user.isActivated(), user.getCreatedAt(),
@@ -273,7 +273,7 @@ public class UserServiceImpl implements UserService {
     public void changePasswordByUsername(String username, OwnPasswordChangeDto ownPasswordChangeDto, String ifMatch) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMok.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMok.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
         if (!passwordEncoder.matches(ownPasswordChangeDto.getCurrentPassword(), user.getPassword())) {
             String passwordIncorrectMessage = messageService.getMessage("exception.passwordIncorrect");

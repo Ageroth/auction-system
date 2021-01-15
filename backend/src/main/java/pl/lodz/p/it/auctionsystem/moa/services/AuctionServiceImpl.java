@@ -7,9 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.Auction;
@@ -47,6 +47,8 @@ public class AuctionServiceImpl implements AuctionService {
 
     private final ModelMapper modelMapper;
 
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     @Value("${page.size}")
     private int pageSize;
 
@@ -55,7 +57,7 @@ public class AuctionServiceImpl implements AuctionService {
     public Long addAuction(AuctionAddDto auctionAddDto, String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMoa.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMoa.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         LocalDateTime startDate;
 
         if (auctionAddDto.getStartDate() == null)
@@ -252,16 +254,14 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE, rollbackFor =
-            ApplicationException.class)
     @PreAuthorize("hasRole('CLIENT')")
     public Long addBid(Long auctionId, BidPlaceDto bidPlaceDto, String username) throws ApplicationException {
         String userNotFoundMessage = messageService.getMessage("exception.userNotFound");
         User user =
-                userRepositoryMoa.findByUsernameIgnoreCase(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
+                userRepositoryMoa.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String auctionNotFoundMessage = messageService.getMessage("exception.auctionNotFound");
         Auction auction =
-                auctionRepository.findById(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
+                auctionRepository.findByIdWithLock(auctionId).orElseThrow(() -> new EntityNotFoundException(auctionNotFoundMessage));
 
         if (auction.getEndDate().isBefore(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)) ||
                 auction.getStartDate().isAfter(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))) {
@@ -298,7 +298,11 @@ public class AuctionServiceImpl implements AuctionService {
 
         Bid bid = new Bid(date, bidPrice, user, auction);
 
-        return bidRepository.save(bid).getId();
+        Long savedBidId = bidRepository.saveAndFlush(bid).getId();
+
+        sendAuctionChange(auction);
+
+        return savedBidId;
     }
 
     @Override
@@ -325,5 +329,11 @@ public class AuctionServiceImpl implements AuctionService {
                 auction.getUser(), auction.getItemName(), auction.getItemDescription(), auction.getItemImage());
 
         auctionRepository.delete(auctionCopy);
+    }
+
+    private void sendAuctionChange(Auction auction) {
+        AuctionDto auctionDto = modelMapper.map(auction, AuctionDto.class);
+
+        this.simpMessagingTemplate.convertAndSend("/auction/changes/" + auctionDto.getId(), auctionDto);
     }
 }

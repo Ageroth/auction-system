@@ -217,7 +217,7 @@ const OwnAuctionDetailsPage = (props) => {
                             <TabPane tab={t('text.bidHistory')} key="2">
                                 <div className="history">
                                     <Timeline>
-                                        {auctionDetails.bids.map(bid => {
+                                        {auctionDetails.bids.sort((a, b) => a.price > b.price ? -1 : 1).map(bid => {
                                             return (
                                                 <Timeline.Item
                                                     key={bid.id}>{moment(bid.date).format('dddd, DD MMMM YYYY, HH:mm')} - {bid.userUsername} {t('text.bid')} {bid.price} PLN</Timeline.Item>

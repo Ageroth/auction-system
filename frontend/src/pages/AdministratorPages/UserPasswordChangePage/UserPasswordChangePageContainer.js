@@ -22,7 +22,8 @@ export default class UserPasswordChangePageContainer extends Component {
             const eTagValue = res.headers.etag
 
             this.setState({version: eTagValue});
-        }).catch();
+        }).catch(() => {
+        });
     }
 
     handleUserPasswordChange = (payload) => {

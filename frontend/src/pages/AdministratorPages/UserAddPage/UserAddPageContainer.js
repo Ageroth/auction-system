@@ -19,7 +19,8 @@ export default class UserAddPageContainer extends Component {
     getAllAccessLevels = () => {
         getAllAccessLevelsRequest().then(res => {
             this.setState({accessLevels: res.data});
-        }).catch();
+        }).catch(() => {
+        });
     }
 
     handleAdd = (payload) => {

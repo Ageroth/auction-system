@@ -22,7 +22,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class Auction extends BaseEntity {
 
-    @OneToMany(mappedBy = "auction")
+    @OneToMany(mappedBy = "auction", fetch = FetchType.LAZY)
     private final Collection<Bid> bids = new ArrayList<>();
 
     @Id
@@ -45,7 +45,7 @@ public class Auction extends BaseEntity {
     private LocalDateTime endDate;
 
     @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false, nullable = false)
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
     @NotNull
     private User user;
 

@@ -6,6 +6,7 @@ import {LoadingOutlined, PlusOutlined} from '@ant-design/icons';
 import AppLayout from "../../../components/AppLayout";
 import 'antd/dist/antd.css'
 import './AuctionAddPage.css'
+import imageCompression from "browser-image-compression";
 
 const {TextArea} = Input;
 
@@ -25,21 +26,36 @@ const AuctionAddPage = (props) => {
     const isSubmitting = props.isSubmitting;
     const [isLoading, setIsLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
+    const [image, setImage] = useState(null)
     const [scheduleItemVisible, setScheduleItemVisible] = useState(false);
     const [visible, setVisible] = useState(false);
 
-    const handleChange = (info) => {
+    const handleChange = async (info) => {
         if (info.file.status === 'uploading') {
             setIsLoading(true);
             return;
         }
 
         if (info.file.status === 'done') {
-            getBase64(info.file.originFileObj, imageUrl => {
-                    setImageUrl(imageUrl);
-                    setIsLoading(false);
+            try {
+                const options = {
+                    maxSizeMB: 1,
+                    maxWidthOrHeight: 512,
+                    useWebWorker: true
                 }
-            );
+
+                const compressedFile = await imageCompression(info.file.originFileObj, options);
+
+                setImage(compressedFile);
+
+                getBase64(compressedFile, imageUrl => {
+                        setImageUrl(imageUrl);
+                        setIsLoading(false);
+                    }
+                );
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 
@@ -97,7 +113,7 @@ const AuctionAddPage = (props) => {
     const onFinish = (values) => {
         const formData = new FormData();
 
-        formData.append('file', values.itemImage.file.originFileObj);
+        formData.append('image', image);
         formData.append('auction', new Blob([JSON.stringify({
             "itemName": values.itemName,
             "itemDescription": values.itemDescription,
@@ -123,7 +139,7 @@ const AuctionAddPage = (props) => {
                     scrollToFirstError
                 >
                     <Form.Item
-                        valuePropName='file'
+                        valuePropName='image'
                         label={t('auctionLabels.itemImage')}
                         name="itemImage"
                         rules={[
