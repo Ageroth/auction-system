@@ -127,7 +127,8 @@ const BiddingTablePage = (props) => {
             render: (text, record) => record.endDate > moment().format() ? t('auctionLabels.current') : t('auctionLabels.finished')
         },
         {
-            title: 'Result',
+            width: '5%',
+            title: t('text.result'),
             dataIndex: 'topBidderName',
             key: 'topBidderName',
             render: (text, record) => record.topBidderName === username ? (
