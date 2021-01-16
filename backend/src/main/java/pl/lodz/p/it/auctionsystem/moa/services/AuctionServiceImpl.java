@@ -300,7 +300,7 @@ public class AuctionServiceImpl implements AuctionService {
 
         Long savedBidId = bidRepository.saveAndFlush(bid).getId();
 
-        sendAuctionChange(auction);
+        sendBidAddMessage(auction.getId());
 
         return savedBidId;
     }
@@ -331,9 +331,9 @@ public class AuctionServiceImpl implements AuctionService {
         auctionRepository.delete(auctionCopy);
     }
 
-    private void sendAuctionChange(Auction auction) {
-        AuctionDto auctionDto = modelMapper.map(auction, AuctionDto.class);
+    private void sendBidAddMessage(Long auctionId) {
+        String message = messageService.getMessage("info.bidPlaced");
 
-        this.simpMessagingTemplate.convertAndSend("/auction/changes/" + auctionDto.getId(), auctionDto);
+        this.simpMessagingTemplate.convertAndSend("/auction/changes/" + auctionId, message);
     }
 }
