@@ -102,7 +102,8 @@
     "winning": "WYGRYWASZ",
     "losing": "PRZEGRYWASZ",
     "lost": "PRZEGRANA",
-    "won": "ZWYCIĘSTWO"
+    "won": "ZWYCIĘSTWO",
+    "result": "Wynik"
   },
   "role": {
     "admin": "Administrator",

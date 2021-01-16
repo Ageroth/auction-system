@@ -17,6 +17,7 @@ const BiddingDetailsPage = (props) => {
     const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
     const {t} = useTranslation();
+    moment.locale(i18n.language);
     const auctionDetails = props.auctionDetails;
     const username = useSelector(state => state.user.username);
     const [timeItem, setTimeItem] = useState(null);
@@ -51,11 +52,6 @@ const BiddingDetailsPage = (props) => {
     const getDate = (date) => {
         const today = moment();
         const dateDay = moment(date).startOf('day');
-
-        if (i18n.language === 'pl')
-            moment.locale('pl');
-        else
-            moment.locale('en-gb');
 
         if (dateDay.isSame(today.startOf('day')))
             return (

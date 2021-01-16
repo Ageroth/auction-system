@@ -17,6 +17,7 @@ const OwnAuctionDetailsPage = (props) => {
     const [visible, setVisible] = useState(false);
     const {t} = useTranslation();
     const history = useHistory();
+    moment.locale(i18n.language);
     const auctionDetails = props.auctionDetails;
     const currentPrice = auctionDetails ? (
         auctionDetails.bids.length > 0 ? (
@@ -50,11 +51,6 @@ const OwnAuctionDetailsPage = (props) => {
     const getDate = (date) => {
         const today = moment();
         const dateDay = moment(date).startOf('day');
-
-        if (i18n.language === 'pl')
-            moment.locale('pl');
-        else
-            moment.locale('en-gb');
 
         if (dateDay.isSame(today.startOf('day')))
             return (
