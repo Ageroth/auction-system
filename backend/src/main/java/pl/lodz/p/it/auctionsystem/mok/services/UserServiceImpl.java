@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.auctionsystem.entities.AccessLevel;
@@ -78,6 +79,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE, rollbackFor =
+            ApplicationException.class)
     public Long addUser(UserAddDto userAddDto) throws ApplicationException {
         User user = createUser(new User(userAddDto.getUsername(), userAddDto.getPassword(),
                 userAddDto.getEmail(), userAddDto.getFirstName(), userAddDto.getLastName(),
