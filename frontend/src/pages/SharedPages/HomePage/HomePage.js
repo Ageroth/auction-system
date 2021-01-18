@@ -6,7 +6,7 @@ const HomePage = () => {
     return (
         <AppLayout>
             <div className="home-page-wrapper">
-                <img src={logo} alt="logo image"/>
+                <img src={logo} alt="logo"/>
             </div>
         </AppLayout>
     )
