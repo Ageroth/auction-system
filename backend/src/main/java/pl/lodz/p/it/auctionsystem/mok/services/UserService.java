@@ -147,4 +147,9 @@ public interface UserService {
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     void changePasswordById(Long userId, UserPasswordChangeDto userPasswordChangeDto, String ifMatch) throws ApplicationException;
+
+    /**
+     * Usuwa użytkowników, którzy nieaktywowali swojego konta w przeciągu 24h od momentu rejestracji.
+     */
+    void deleteInactiveUsers();
 }

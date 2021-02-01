@@ -27,6 +27,7 @@ import pl.lodz.p.it.auctionsystem.utils.SortDirection;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -316,6 +317,16 @@ public class UserServiceImpl implements UserService {
                 user.getPhoneNumber());
 
         userRepositoryMok.saveAndFlush(userCopy);
+    }
+
+    @Override
+    public void deleteInactiveUsers() {
+        List<User> inactiveUsers = userRepositoryMok.findAll(isActive(false));
+
+        for (User user : inactiveUsers) {
+            if (user.getCreatedAt().isBefore(LocalDateTime.now().minusDays(1)))
+                userRepositoryMok.delete(user);
+        }
     }
 
     private User createUser(User user) throws ApplicationException {
