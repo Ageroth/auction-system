@@ -132,7 +132,7 @@ public class UserController {
      * Zwraca dane konta użytkownika o podanym kodzie resetu hasła.
      *
      * @param passwordResetCode kod resetu hasła przypisany do użytkownika
-     * @return Kod odpowiedzi HTTP 200 z obiektem typu {@link UserAccountDetailsDto}
+     * @return Kod odpowiedzi HTTP 200 z nagłówkiem ETag
      * @throws ApplicationException wyjątek aplikacyjny w przypadku niepowodzenia
      */
     @GetMapping("/password-reset/{passwordResetCode}")

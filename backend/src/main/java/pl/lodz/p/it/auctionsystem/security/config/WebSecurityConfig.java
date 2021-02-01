@@ -3,6 +3,7 @@ package pl.lodz.p.it.auctionsystem.security.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -57,8 +58,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/*").denyAll();
+                .antMatchers("/api/auth/login", "/api/users/activation/*", "/api/users/email-availability", "/api" +
+                        "/users" +
+                        "/username-availability", "/api/users/password-reset/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/me").permitAll()
+                .antMatchers("/**").denyAll();
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
