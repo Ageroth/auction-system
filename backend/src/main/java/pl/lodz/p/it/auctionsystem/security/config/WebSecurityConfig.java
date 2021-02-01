@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/users" +
                         "/username-availability", "/api/users/password-reset/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users/me").permitAll()
-                .antMatchers("/**").denyAll();
+                .antMatchers("/**").authenticated();
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
