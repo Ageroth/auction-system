@@ -53,5 +53,5 @@ export const routes = [
     {path: '/403', component: ForbiddenPage, public: true},
     {path: '/404', component: NotFoundPage, public: true},
     {path: '/500', component: InternalServerErrorPage, public: true},
-    {path: '*', component: NotFoundPage, public: true},
+    {path: '*', component: NotFoundPage, public: true}
 ];

@@ -5,7 +5,7 @@ import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 /**
- * Kontroler obsługujący WebSockety.
+ * Kontroler obsługujący przesyłanie komunikatów.
  */
 @Controller
 public class WebSocketController {
