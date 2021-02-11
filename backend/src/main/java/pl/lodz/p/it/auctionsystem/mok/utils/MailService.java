@@ -24,8 +24,8 @@ public class MailService {
 
     private final MessageService messageService;
 
-    @Value("${base.url}")
-    private String baseUrl;
+    @Value("${base.frontend.url}")
+    private String baseFrontendUrl;
 
     @Value("${email}")
     private String email;
@@ -62,7 +62,7 @@ public class MailService {
      */
     public void sendAccountActivationMail(User user) throws ApplicationException {
         final String subject = messageService.getMessage("email.subject.accountActivation");
-        final String url = baseUrl + "/activation/" + user.getActivationCode();
+        final String url = baseFrontendUrl + "/activation/" + user.getActivationCode();
         final String text = messageService.getMessage("email.text.accountActivation");
         final String to = user.getEmail();
 
@@ -76,7 +76,7 @@ public class MailService {
      */
     public void sendPasswordResetEmail(User user) throws ApplicationException {
         final String subject = messageService.getMessage("email.subject.passwordReset");
-        final String url = baseUrl + "/password_reset/" + user.getPasswordResetCode();
+        final String url = baseFrontendUrl + "/password_reset/" + user.getPasswordResetCode();
         final String text = messageService.getMessage("email.text.passwordReset");
         final String to = user.getEmail();
 

@@ -6,6 +6,7 @@ import lombok.Getter;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
+import java.util.UUID;
 
 @MappedSuperclass
 @Getter
