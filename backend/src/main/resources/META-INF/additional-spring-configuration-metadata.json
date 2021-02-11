@@ -1,9 +1,9 @@
 {
   "properties": [
     {
-      "name": "base.url",
+      "name": "base.frontend.url",
       "type": "java.lang.String",
-      "description": "Base URL of the application to connect to."
+      "description": "Base URL of the frontend application."
     },
     {
       "name": "email",
