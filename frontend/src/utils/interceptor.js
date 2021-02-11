@@ -19,7 +19,7 @@ const interceptor = (store) => {
             if (token)
                 config.headers['Authorization'] = `Bearer ${token}`;
 
-            config.baseURL = 'https://localhost:8443/api';
+            config.baseURL = 'https://auction-system-backend.herokuapp.com/api';
 
             return config;
         },
