@@ -229,7 +229,7 @@ public class UserServiceImpl implements UserService {
 
         String passwordHash = passwordEncoder.encode(passwordResetDto.getNewPassword());
 
-        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getId(),
                 user.getUsername(), passwordHash, user.getEmail(), user.isActivated(), user.getCreatedAt(),
                 user.getActivationCode(), null, null,
                 user.getFirstName(), user.getLastName(),
@@ -246,7 +246,7 @@ public class UserServiceImpl implements UserService {
         User user =
                 userRepositoryMok.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getId(),
                 user.getUsername(), user.getPassword(), user.getEmail(), user.isActivated(), user.getCreatedAt(),
                 user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
                 ownAccountDetailsUpdateDto.getFirstName(), ownAccountDetailsUpdateDto.getLastName(),
@@ -263,7 +263,7 @@ public class UserServiceImpl implements UserService {
         User user =
                 userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
 
-        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getId(),
                 user.getUsername(), user.getPassword(), user.getEmail(), user.isActivated(), user.getCreatedAt(),
                 user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
                 userAccountDetailsUpdateDto.getFirstName(), userAccountDetailsUpdateDto.getLastName(),
@@ -293,11 +293,10 @@ public class UserServiceImpl implements UserService {
 
         String passwordHash = passwordEncoder.encode(ownPasswordChangeDto.getNewPassword());
 
-        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
-                user.getUsername(), passwordHash, user.getEmail(), user.isActivated(), user.getCreatedAt(),
-                user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
-                user.getFirstName(), user.getLastName(),
-                user.getPhoneNumber());
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getId(), user.getUsername(),
+                passwordHash, user.getEmail(), user.isActivated(), user.getCreatedAt(), user.getActivationCode(),
+                user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(), user.getFirstName(),
+                user.getLastName(), user.getPhoneNumber());
 
         userRepositoryMok.saveAndFlush(userCopy);
     }
@@ -310,7 +309,7 @@ public class UserServiceImpl implements UserService {
                 userRepositoryMok.findById(userId).orElseThrow(() -> new EntityNotFoundException(userNotFoundMessage));
         String passwordHash = passwordEncoder.encode(userPasswordChangeDto.getNewPassword());
 
-        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getBusinessKey(), user.getId(),
+        User userCopy = new User(Long.parseLong(ifMatch.replace("\"", "")), user.getId(),
                 user.getUsername(), passwordHash, user.getEmail(), user.isActivated(), user.getCreatedAt(),
                 user.getActivationCode(), user.getPasswordResetCode(), user.getPasswordResetCodeAddDate(),
                 user.getFirstName(), user.getLastName(),

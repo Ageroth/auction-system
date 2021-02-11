@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
 
 @Entity
 @Table(name = "auction")
@@ -77,10 +76,10 @@ public class Auction extends BaseEntity {
         this.itemImage = itemImage;
     }
 
-    public Auction(Long version, UUID businessKey, Long id, BigDecimal startingPrice,
+    public Auction(Long version, Long id, BigDecimal startingPrice,
                    LocalDateTime startDate, LocalDateTime endDate, User user,
                    String itemName, String itemDescription, byte[] itemImage) {
-        super(version, businessKey);
+        super(version);
         this.id = id;
         this.startingPrice = startingPrice;
         this.startDate = startDate;

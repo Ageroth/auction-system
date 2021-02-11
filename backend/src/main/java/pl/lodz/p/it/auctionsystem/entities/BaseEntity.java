@@ -6,7 +6,6 @@ import lombok.Getter;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
-import java.util.UUID;
 
 @MappedSuperclass
 @Getter
@@ -17,15 +16,9 @@ public abstract class BaseEntity {
     @Column(name = "version", nullable = false)
     private Long version;
 
-    @Column(name = "business_key", nullable = false, unique = true, updatable = false)
-    private final UUID businessKey;
+    public BaseEntity() {}
 
-    public BaseEntity() {
-        this.businessKey = UUID.randomUUID();
-    }
-
-    public BaseEntity(Long version, UUID businessKey) {
+    public BaseEntity(Long version) {
         this.version = version;
-        this.businessKey = businessKey;
     }
 }

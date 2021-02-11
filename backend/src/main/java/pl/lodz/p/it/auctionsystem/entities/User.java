@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
 
 @Entity
 @Table(name = "\"user\"")
@@ -92,10 +91,10 @@ public class User extends BaseEntity {
         this.createdAt = createdAt;
     }
 
-    public User(Long version, UUID businessKey, Long id, String username, String password, String email,
+    public User(Long version, Long id, String username, String password, String email,
                 boolean activated, LocalDateTime createdAt, String activationCode, String passwordResetCode,
                 LocalDateTime passwordResetCodeAddDate, String firstName, String lastName, String phoneNumber) {
-        super(version, businessKey);
+        super(version);
         this.id = id;
         this.username = username;
         this.password = password;

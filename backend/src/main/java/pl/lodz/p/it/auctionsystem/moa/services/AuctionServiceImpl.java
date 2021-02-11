@@ -245,7 +245,7 @@ public class AuctionServiceImpl implements AuctionService {
             throw new AccessForbiddenException(accessForbiddenMessage);
         }
 
-        Auction auctionCopy = new Auction(Long.parseLong(ifMatch.replace("\"", "")), auction.getBusinessKey(),
+        Auction auctionCopy = new Auction(Long.parseLong(ifMatch.replace("\"", "")),
                 auction.getId(), auctionUpdateDto.getStartingPrice().setScale(2, RoundingMode.DOWN),
                 auction.getStartDate(), auction.getEndDate(), auction.getUser(), auctionUpdateDto.getItemName(),
                 auctionUpdateDto.getItemDescription(), auction.getItemImage());
@@ -324,9 +324,9 @@ public class AuctionServiceImpl implements AuctionService {
             throw new InvalidDateException(deletionInvalidDateMessage);
         }
 
-        Auction auctionCopy = new Auction(Long.parseLong(ifMatch.replace("\"", "")), auction.getBusinessKey(),
-                auction.getId(), auction.getStartingPrice(), auction.getStartDate(), auction.getEndDate(),
-                auction.getUser(), auction.getItemName(), auction.getItemDescription(), auction.getItemImage());
+        Auction auctionCopy = new Auction(Long.parseLong(ifMatch.replace("\"", "")), auction.getId(),
+                auction.getStartingPrice(), auction.getStartDate(), auction.getEndDate(), auction.getUser(),
+                auction.getItemName(), auction.getItemDescription(), auction.getItemImage());
 
         auctionRepository.delete(auctionCopy);
     }
