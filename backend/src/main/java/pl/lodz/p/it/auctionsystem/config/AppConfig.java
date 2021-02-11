@@ -35,7 +35,7 @@ public class AppConfig implements WebMvcConfigurer {
         final long MAX_AGE_SECS = 3600;
 
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins("https://auction-system-frontend.herokuapp.com")
                 .allowedMethods("HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")
                 .allowedHeaders("*")
                 .exposedHeaders("ETag")

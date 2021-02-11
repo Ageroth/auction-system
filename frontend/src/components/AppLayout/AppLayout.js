@@ -17,7 +17,7 @@ const AppLayout = ({children}) => {
             <div className="app-content">
                 {children}
             </div>
-            <Footer className="app-footer"> Auction System ©2020 </Footer>
+            <Footer className="app-footer"> Auction System ©2021 </Footer>
         </Layout>
     );
 }

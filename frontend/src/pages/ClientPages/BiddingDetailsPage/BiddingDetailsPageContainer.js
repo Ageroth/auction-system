@@ -32,7 +32,7 @@ export default class BiddingDetailsPageContainer extends Component {
         const stompClient = Stomp.client();
 
         stompClient.webSocketFactory = () => {
-            return new SockJS('https://localhost:8443/ws');
+            return new SockJS('https://auction-system-backend.herokuapp.com/ws');
         }
 
         stompClient.onConnect = () => {
