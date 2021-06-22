@@ -1,17 +1,20 @@
 package pl.lodz.p.it.auctionsystem.mok.utils;
 
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.SendGridAPI;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import pl.lodz.p.it.auctionsystem.entities.User;
 import pl.lodz.p.it.auctionsystem.exceptions.ApplicationException;
 import pl.lodz.p.it.auctionsystem.exceptions.MailException;
 import pl.lodz.p.it.auctionsystem.utils.MessageService;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 
 /**
  * Klasa służaca do obsługi wysyłania emaili.
@@ -20,7 +23,7 @@ import javax.mail.internet.MimeMessage;
 @RequiredArgsConstructor
 public class MailService {
 
-    private final JavaMailSender javaMailSender;
+    private final SendGridAPI sendGridAPI;
 
     private final MessageService messageService;
 
@@ -30,6 +33,9 @@ public class MailService {
     @Value("${email}")
     private String email;
 
+    @Value("${name}")
+    private String name;
+
     /**
      * Wysyła wiadomość o wskazanych parametrach.
      *
@@ -38,17 +44,19 @@ public class MailService {
      * @param to      odbiorca wiadomości
      */
     private void sendMessage(String subject, String text, String to) throws ApplicationException {
-        MimeMessage message = javaMailSender.createMimeMessage();
+        Email from = new Email(email, name);
+        Content content = new Content("text/html", text);
+        Mail mail = new Mail(from, subject, new Email(to), content);
+        Request request = new Request();
 
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
 
-            helper.setFrom(email);
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(text);
-            javaMailSender.send(message);
-        } catch (MessagingException e) {
+            sendGridAPI.api(request);
+
+        } catch (IOException ex) {
             String mailMessage = messageService.getMessage("exception.mailException");
 
             throw new MailException(mailMessage);
@@ -62,7 +70,7 @@ public class MailService {
      */
     public void sendAccountActivationMail(User user) throws ApplicationException {
         final String subject = messageService.getMessage("email.subject.accountActivation");
-        final String url = baseFrontendUrl + "/activation/" + user.getActivationCode();
+        final String url = "<a href=" + baseFrontendUrl + "/activation/" + user.getActivationCode() + ">link</>";
         final String text = messageService.getMessage("email.text.accountActivation");
         final String to = user.getEmail();
 
@@ -76,7 +84,7 @@ public class MailService {
      */
     public void sendPasswordResetEmail(User user) throws ApplicationException {
         final String subject = messageService.getMessage("email.subject.passwordReset");
-        final String url = baseFrontendUrl + "/password_reset/" + user.getPasswordResetCode();
+        final String url = "<a href=" + baseFrontendUrl + "/password_reset/" + user.getPasswordResetCode() + ">link</>";
         final String text = messageService.getMessage("email.text.passwordReset");
         final String to = user.getEmail();
 

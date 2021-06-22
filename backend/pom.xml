@@ -13,11 +13,9 @@
     <version>1.0</version>
     <name>auction-system</name>
     <description>My bachelor thesis project</description>
-
     <properties>
         <java.version>8</java.version>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -83,8 +81,12 @@
             <artifactId>modelmapper</artifactId>
             <version>2.3.8</version>
         </dependency>
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>4.7.2</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -93,5 +95,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
